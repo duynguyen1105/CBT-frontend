@@ -1,0 +1,73 @@
+.ql-toolbar {
+  background: #fff;
+}
+.ql-formats button:hover {
+  background: #dedede90;
+}
+.ql-formats span:hover {
+  background: #dedede90;
+}
+.createAnswer {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+.createAnswer img {
+  margin-left: 5px;
+}
+.ql-createAnswer {
+  width: unset !important;
+  background-color: #304d95 !important;
+  border-radius: 5px;
+}
+.ql-createAnswer :hover {
+  opacity: 0.8;
+}
+.ql-createAnswer span:hover {
+  background: #304d95 !important;
+  opacity: 0.8;
+}
+.ql-editor {
+  background-color: #fafafa;
+}
+ans {
+  background-color: #d1def5;
+  color: #478dfd;
+  border: 1px solid green;
+  padding: 0px 2px;
+  margin: 0px 2px;
+}
+/*         
+        '& > .ql-formats': {
+          '& > button': {
+            '&:hover': {
+              background: '#dedede90'
+            },
+          },
+          '& > span': {
+            '&:hover': {
+              background: '#dedede'
+            }
+          },
+        },
+        '& > span': {
+          '&:last-child': {
+            borderRight: 'none !important',
+            '&:hover': {
+              background: 'unset'
+            }
+          },
+          marginRight: '0px !important',
+          borderRight: '1px solid #BDBDBD'
+        },
+        '& .ql-active': {
+          background: '#dedede'
+        },
+
+      }
+    },
+
+  })
+);
+
+// // export default useStyles; */
