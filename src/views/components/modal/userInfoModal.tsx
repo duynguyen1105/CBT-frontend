@@ -21,8 +21,6 @@ const defaultValues = {
 export const UserInfoModal = ({ opened, userData, onClose, onSubmit }: Props) => {
   const isCreateUserModal = !userData;
 
-  console.log(userData);
-
   const form = useForm<UserType>({
     validate: {
       email: (value: string) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),

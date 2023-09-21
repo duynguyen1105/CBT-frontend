@@ -1,10 +1,11 @@
 const USERS = {
-  GET_LIST: 'users/{workspaceName}',
+  GET_LIST: 'users/{workspaceName}?search={search}&page={page}&sort={sort}',
   DELETE_MANY: 'users/{workspaceName}/delete',
   LOGIN: 'auth/login',
   REGISTER: 'auth/register',
   ADD_TO_WORKSPACE: 'users/{workspaceName}/addUser',
   DELETE: 'users/{workspaceName}/{userId}',
+  UPDATE: 'users/{workspaceName}/{userId}',
 };
 
 const WORKSPACES = {

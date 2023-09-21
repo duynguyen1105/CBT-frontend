@@ -11,15 +11,18 @@ import { LayoutComponent } from 'types/layout';
 import { UserType } from 'types/user';
 
 import { DataTable, TableType } from 'views/components/base/dataTable';
-import { UserInfoModal } from 'views/components/modal/userInfoModal';
 import Shell from 'views/layout/Shell';
+import { UserInfoModal } from 'views/components/modal/userInfoModal';
+import { ConfirmModal } from 'views/components/modal/confirmModal';
 
 const { padding } = defaultTheme.layout;
 
 const Users: LayoutComponent = () => {
   const [page, setPage] = useState(1);
-  const [query, setQuery] = useState('');
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('');
   const [createModalOpened, setCreateModalOpened] = useState(false);
+  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
   const [clickedUser, setClickedUser] = useState<UserType | null>(null);
   const [users, setUsers] = useState<UserType[]>([]);
 
@@ -44,7 +47,13 @@ const Users: LayoutComponent = () => {
           >
             <IconEdit size={16} />
           </ActionIcon>
-          <ActionIcon color="red" onClick={() => deleteUser(user._id)}>
+          <ActionIcon
+            color="red"
+            onClick={() => {
+              setDeleteModalOpened(true);
+              setClickedUser(user as UserType);
+            }}
+          >
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
@@ -57,7 +66,7 @@ const Users: LayoutComponent = () => {
   };
 
   const sortStatusChange = (status: DataTableSortStatus) => {
-    console.log(status);
+    setSort(Object.values(status).join(','));
     setPage(1);
   };
 
@@ -117,9 +126,35 @@ const Users: LayoutComponent = () => {
     }
   };
 
+  const editUser = async (userData: UserType) => {
+    if (!userData?._id) return;
+
+    const res = await callApiWithAuth(
+      getApiPath(PATHS.USERS.UPDATE, { workspaceName: 'ws1', userId: userData._id }),
+      'PUT',
+      {
+        data: userData,
+      }
+    );
+
+    if (res.ok) {
+      await fetchListUsers();
+      notifications.show({
+        message: 'Create user successfully',
+        color: 'green',
+      });
+      setCreateModalOpened(false);
+    } else {
+      notifications.show({
+        message: 'Create user failed',
+        color: 'red',
+      });
+    }
+  };
+
   const fetchListUsers = async () => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.GET_LIST, { workspaceName: 'ws1' }),
+      getApiPath(PATHS.USERS.GET_LIST, { workspaceName: 'ws1', search, page, sort }),
       'GET'
     );
 
@@ -130,7 +165,7 @@ const Users: LayoutComponent = () => {
 
   useEffect(() => {
     fetchListUsers();
-  }, []);
+  }, [search, page, sort]);
 
   return (
     <Box pb={padding}>
@@ -139,8 +174,8 @@ const Users: LayoutComponent = () => {
         columns={columns}
         page={page}
         setPage={setPage}
-        query={query}
-        setQuery={setQuery}
+        query={search}
+        setQuery={setSearch}
         handleCreateNewRecord={() => setCreateModalOpened(true)}
         handleDeleteSelectedRecords={deleteSelectedRecords}
         handleSortStatusChange={sortStatusChange}
@@ -151,8 +186,18 @@ const Users: LayoutComponent = () => {
           setCreateModalOpened(false);
           setClickedUser(null);
         }}
-        onSubmit={createUser}
+        onSubmit={clickedUser ? editUser : createUser}
         userData={clickedUser}
+      />
+      <ConfirmModal
+        title="Delete user?"
+        description="This action can not be undo! Are you sure you want to do this?"
+        opened={deleteUserModalOpened}
+        onClose={() => {
+          setDeleteModalOpened(false);
+          setClickedUser(null);
+        }}
+        onConfirm={() => clickedUser?._id && deleteUser(clickedUser._id)}
       />
     </Box>
   );
