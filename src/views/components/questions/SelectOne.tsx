@@ -1,9 +1,9 @@
-import {Accordion, ActionIcon, Box, Group, Radio, createStyles} from '@mantine/core';
-import {IconBulb} from '@tabler/icons-react';
+import { Accordion, ActionIcon, Box, Group, Radio, createStyles } from '@mantine/core';
+import { IconBulb } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
-import {useId, useState} from 'react';
-import {LayoutComponent} from 'types/layout';
-import {IQuestion, fakeSelectOne} from 'types/question';
+import { useId, useState } from 'react';
+import { LayoutComponent } from 'types/layout';
+import { IQuestion, fakeSelectOne } from 'types/question';
 import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>(() => ({
@@ -20,9 +20,9 @@ interface SelectOneProps {
   question?: IQuestion;
 }
 const SelectOne: LayoutComponent = (props: SelectOneProps) => {
-  const {questionNo = 1, question = fakeSelectOne} = props;
+  const { questionNo = 1, question = fakeSelectOne } = props;
   const [showFeedback, setShowFeedback] = useState(false);
-  const {classes} = useStyle({}, {name: 'SelectOne'});
+  const { classes } = useStyle({}, { name: 'SelectOne' });
   const localId = useId();
 
   const questionContent = question?.content ?? 'Question content here...';
@@ -30,7 +30,7 @@ const SelectOne: LayoutComponent = (props: SelectOneProps) => {
     event.stopPropagation();
     setShowFeedback(!showFeedback);
   };
-  const sanitizedData = () => ({__html: DOMPurify.sanitize(questionContent)});
+  const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
   return (
     <Accordion defaultValue={localId} miw={'100%'} variant="filled">
       <Accordion.Item value={localId}>
@@ -53,11 +53,11 @@ const SelectOne: LayoutComponent = (props: SelectOneProps) => {
                   mt="sm"
                   value={`${answer.order}`}
                   label={answer.content}
-                  error={showFeedback && !answer.right ? answer.feedback : null}
-                  description={showFeedback && answer.right ? answer.feedback : null}
+                  error={showFeedback && !answer.isCorrect ? answer.feedback : null}
+                  description={showFeedback && answer.isCorrect ? answer.feedback : null}
                   classNames={{
                     description: classes.description,
-                    radio: showFeedback && answer.right ? classes.radioCorrect : '',
+                    radio: showFeedback && answer.isCorrect ? classes.radioCorrect : '',
                   }}
                 />
               ))}

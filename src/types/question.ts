@@ -1,11 +1,11 @@
-export enum QUESTIONTYPE {
-  SelectOne = 'selectOne',
-  SelectMany = 'selectMany',
-  Matching = 'matching',
-  Dropdown = 'dropdown',
-  FillInGap = 'fillInGap',
-  Essay = 'essay',
-  Record = 'record',
+export enum QUESTION_TYPE {
+  SelectOne = 'SELECT_ONE',
+  SelectMany = 'SELECT_MANY',
+  Matching = 'MATCHING',
+  DropdownSelect = 'DROPDOWN_SELECT',
+  FillInGap = 'FILL_IN_THE_GAPS',
+  Essay = 'ESSAY',
+  Record = 'RECORD',
 }
 
 export type IQuestionListItem = {
@@ -22,7 +22,7 @@ export interface IQuestion {
   id?: string;
   title: string;
   content: string;
-  type: QUESTIONTYPE;
+  type: QUESTION_TYPE;
   active: string;
   level?: string;
   score?: number;
@@ -33,7 +33,7 @@ export interface IQuestion {
 export interface IAnswer {
   id?: string;
   content: string;
-  right: boolean;
+  isCorrect: boolean;
   order: number;
   scorePercent: number;
   penaltyScore: number;
@@ -43,7 +43,7 @@ export interface IQuestionAPI {
   id?: string;
   title: string;
   content: string;
-  type: QUESTIONTYPE;
+  type: QUESTION_TYPE;
   active: string;
   level?: string;
   score?: number;
@@ -54,7 +54,7 @@ export interface IQuestionAPI {
 export interface IAnswerAPI {
   id?: string;
   content: string;
-  right: 'Y' | 'N';
+  isCorrect: boolean;
   order: number;
   scorePercent: number;
   penaltyScore: number;
@@ -65,14 +65,14 @@ export interface IAnswerAPI {
 export const fakeSelectOne: IQuestion = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content: 'What does the man imply when he says "Have you seen the interview questions we use?"',
-  type: QUESTIONTYPE.SelectOne,
+  type: QUESTION_TYPE.SelectOne,
   active: 'Y',
   level: 'normal',
   category_id: '1',
   answers: [
     {
       content: 'He is postponing an appointment',
-      right: true,
+      isCorrect: true,
       order: 0,
       scorePercent: 100,
       penaltyScore: 0,
@@ -80,7 +80,7 @@ export const fakeSelectOne: IQuestion = {
     },
     {
       content: 'He needs a record of the report',
-      right: false,
+      isCorrect: false,
       order: 1,
       scorePercent: 0,
       penaltyScore: 0,
@@ -88,7 +88,7 @@ export const fakeSelectOne: IQuestion = {
     },
     {
       content: 'He wants her to help him with the questions',
-      right: false,
+      isCorrect: false,
       order: 2,
       scorePercent: 0,
       penaltyScore: 0,
@@ -96,7 +96,7 @@ export const fakeSelectOne: IQuestion = {
     },
     {
       content: 'He will recruit some accountants',
-      right: false,
+      isCorrect: false,
       order: 3,
       scorePercent: 0,
       penaltyScore: 0,
@@ -108,14 +108,14 @@ export const fakeSelectOne: IQuestion = {
 export const fakeSelectMany: IQuestion = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content: 'What does the man imply when he says "Have you seen the interview questions we use?"',
-  type: QUESTIONTYPE.SelectMany,
+  type: QUESTION_TYPE.SelectMany,
   active: 'Y',
   level: 'normal',
   category_id: '1',
   answers: [
     {
       content: 'He is postponing an appointment',
-      right: true,
+      isCorrect: true,
       order: 0,
       scorePercent: 100,
       penaltyScore: 0,
@@ -123,7 +123,7 @@ export const fakeSelectMany: IQuestion = {
     },
     {
       content: 'He needs a record of the report',
-      right: false,
+      isCorrect: false,
       order: 1,
       scorePercent: 0,
       penaltyScore: 0,
@@ -131,7 +131,7 @@ export const fakeSelectMany: IQuestion = {
     },
     {
       content: 'He wants her to help him with the questions',
-      right: true,
+      isCorrect: true,
       order: 2,
       scorePercent: 0,
       penaltyScore: 0,
@@ -139,7 +139,7 @@ export const fakeSelectMany: IQuestion = {
     },
     {
       content: 'He will recruit some accountants',
-      right: false,
+      isCorrect: false,
       order: 3,
       scorePercent: 0,
       penaltyScore: 0,
@@ -147,7 +147,7 @@ export const fakeSelectMany: IQuestion = {
     },
     {
       content: 'He wants her to help him with the questions',
-      right: true,
+      isCorrect: true,
       order: 4,
       scorePercent: 0,
       penaltyScore: 0,
@@ -155,7 +155,7 @@ export const fakeSelectMany: IQuestion = {
     },
     {
       content: 'He will recruit some accountants',
-      right: false,
+      isCorrect: false,
       order: 5,
       scorePercent: 0,
       penaltyScore: 0,
@@ -168,14 +168,14 @@ export const fakeDropdownSelect: IQuestion = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content:
     'What does the <ans></ans> imply when he says "Have you <ans></ans> the interview questions we use?"',
-  type: QUESTIONTYPE.Dropdown,
+  type: QUESTION_TYPE.DropdownSelect,
   active: 'Y',
   level: 'normal',
   category_id: '1',
   answers: [
     {
       content: 'He is postponing an appointment',
-      right: true,
+      isCorrect: true,
       order: 0,
       scorePercent: 100,
       penaltyScore: 0,
@@ -183,7 +183,7 @@ export const fakeDropdownSelect: IQuestion = {
     },
     {
       content: 'He needs a record of the report',
-      right: false,
+      isCorrect: false,
       order: 1,
       scorePercent: 0,
       penaltyScore: 0,
@@ -191,7 +191,7 @@ export const fakeDropdownSelect: IQuestion = {
     },
     {
       content: 'He wants her to help him with the questions',
-      right: true,
+      isCorrect: true,
       order: 2,
       scorePercent: 0,
       penaltyScore: 0,
@@ -199,7 +199,7 @@ export const fakeDropdownSelect: IQuestion = {
     },
     {
       content: 'He will recruit some accountants',
-      right: false,
+      isCorrect: false,
       order: 3,
       scorePercent: 0,
       penaltyScore: 0,
@@ -207,7 +207,7 @@ export const fakeDropdownSelect: IQuestion = {
     },
     {
       content: 'He wants her to help him with the questions',
-      right: true,
+      isCorrect: true,
       order: 4,
       scorePercent: 0,
       penaltyScore: 0,
@@ -215,7 +215,7 @@ export const fakeDropdownSelect: IQuestion = {
     },
     {
       content: 'He will recruit some accountants',
-      right: false,
+      isCorrect: false,
       order: 5,
       scorePercent: 0,
       penaltyScore: 0,
@@ -228,14 +228,14 @@ export const fakeFillInGap: IQuestion = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content:
     'What does the <ans></ans> imply when he says "Have you <ans></ans> the interview questions we use?"',
-  type: QUESTIONTYPE.FillInGap,
+  type: QUESTION_TYPE.FillInGap,
   active: 'Y',
   level: 'normal',
   category_id: '1',
   answers: [
     {
       content: 'He is postponing an appointment',
-      right: true,
+      isCorrect: true,
       order: 0,
       scorePercent: 100,
       penaltyScore: 0,
@@ -243,7 +243,7 @@ export const fakeFillInGap: IQuestion = {
     },
     {
       content: 'He needs a record of the report',
-      right: true,
+      isCorrect: true,
       order: 1,
       scorePercent: 0,
       penaltyScore: 0,
@@ -251,7 +251,7 @@ export const fakeFillInGap: IQuestion = {
     },
     {
       content: 'He wants her to help him with the questions',
-      right: true,
+      isCorrect: true,
       order: 2,
       scorePercent: 0,
       penaltyScore: 0,

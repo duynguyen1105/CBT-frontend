@@ -1,16 +1,16 @@
-import {DragDropContext, Draggable, Droppable} from '@hello-pangea/dnd';
-import {Accordion, ActionIcon, Box, Flex, createStyles, rem} from '@mantine/core';
-import {useListState} from '@mantine/hooks';
-import {IconGripVertical, IconX} from '@tabler/icons-react';
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
+import { Accordion, ActionIcon, Box, Flex, createStyles, rem } from '@mantine/core';
+import { useListState } from '@mantine/hooks';
+import { IconGripVertical, IconX } from '@tabler/icons-react';
 import {
   IQuestion,
-  QUESTIONTYPE,
+  QUESTION_TYPE,
   fakeDropdownSelect,
   fakeFillInGap,
   fakeSelectMany,
   fakeSelectOne,
 } from 'types/question';
-import {IDescription, ISection} from 'types/test';
+import { IDescription, ISection } from 'types/test';
 import DropdownSelect from 'views/components/questions/DropdownSelect';
 import FillInGap from 'views/components/questions/FillInGap';
 import SelectMany from 'views/components/questions/SelectMany';
@@ -72,7 +72,7 @@ let fakedata = [
   {
     id: '1',
     type: ContentType.DescriptionType,
-    content: {description: '123'},
+    content: { description: '123' },
   },
   {
     id: '2',
@@ -96,8 +96,8 @@ let fakedata = [
   },
 ];
 
-export default function FormAddContentTestPage({data = fakedata}: DndListHandleProps) {
-  const {classes, cx} = useStyles();
+export default function FormAddContentTestPage({ data = fakedata }: DndListHandleProps) {
+  const { classes, cx } = useStyles();
   const [state, handlers] = useListState(data);
 
   const getComponent = (item: Content) => {
@@ -107,13 +107,13 @@ export default function FormAddContentTestPage({data = fakedata}: DndListHandleP
 
       case ContentType.QuestionType:
         switch ((item.content as IQuestion).type) {
-          case QUESTIONTYPE.Dropdown:
+          case QUESTION_TYPE.DropdownSelect:
             return <DropdownSelect />;
-          case QUESTIONTYPE.FillInGap:
+          case QUESTION_TYPE.FillInGap:
             return <FillInGap />;
-          case QUESTIONTYPE.SelectMany:
+          case QUESTION_TYPE.SelectMany:
             return <SelectMany />;
-          case QUESTIONTYPE.SelectOne:
+          case QUESTION_TYPE.SelectOne:
             return <SelectOne />;
           default:
             break;
@@ -129,7 +129,7 @@ export default function FormAddContentTestPage({data = fakedata}: DndListHandleP
     <Draggable key={item.id} index={index} draggableId={item.id}>
       {(provided, snapshot) => (
         <div
-          className={cx(classes.item, {[classes.itemDragging]: snapshot.isDragging})}
+          className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -166,8 +166,8 @@ export default function FormAddContentTestPage({data = fakedata}: DndListHandleP
     <Box>
       <Accordion miw={'100%'} variant="filled">
         <DragDropContext
-          onDragEnd={({destination, source}) =>
-            handlers.reorder({from: source.index, to: destination?.index || 0})
+          onDragEnd={({ destination, source }) =>
+            handlers.reorder({ from: source.index, to: destination?.index || 0 })
           }
         >
           <Droppable droppableId="dnd-list" direction="vertical">

@@ -1,9 +1,9 @@
 import QuestionForm from 'views/components/base/form/Question/FormQuestion';
-import {useParams} from 'react-router';
-import {useEffect, useState} from 'react';
-import {callApiWithAuth, getApiPath} from 'api/utils';
-import {PATHS} from 'api/paths';
-import {IQuestion, IQuestionAPI, QUESTIONTYPE} from 'types/question';
+import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
+import { callApiWithAuth, getApiPath } from 'api/utils';
+import { PATHS } from 'api/paths';
+import { IQuestion, IQuestionAPI, QUESTION_TYPE } from 'types/question';
 
 function QuestionDetail() {
   const params = useParams();
@@ -23,7 +23,7 @@ function QuestionDetail() {
         type: 'single',
         answers: question.answers.map((ans) => ({
           ...ans,
-          right: ans.right ? 'Y' : 'N',
+          right: ans.isCorrect ? 'Y' : 'N',
         })),
       },
     });

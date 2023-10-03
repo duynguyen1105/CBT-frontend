@@ -1,9 +1,9 @@
-import {Accordion, ActionIcon, Alert, Box, Group, createStyles} from '@mantine/core';
-import {IconAlertCircle, IconBulb, IconCircleCheck} from '@tabler/icons-react';
+import { Accordion, ActionIcon, Alert, Box, Group, createStyles } from '@mantine/core';
+import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
-import {useId, useState} from 'react';
-import {LayoutComponent} from 'types/layout';
-import {IQuestion, fakeDropdownSelect} from 'types/question';
+import { useId, useState } from 'react';
+import { LayoutComponent } from 'types/layout';
+import { IQuestion, fakeDropdownSelect } from 'types/question';
 import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>(() => ({
@@ -19,9 +19,9 @@ interface DropdownSelectProps {
   question?: IQuestion;
 }
 const DropdownSelect: LayoutComponent = (props: DropdownSelectProps) => {
-  const {questionNo = 1, question = fakeDropdownSelect} = props;
+  const { questionNo = 1, question = fakeDropdownSelect } = props;
   const [showFeedback, setShowFeedback] = useState(false);
-  const {classes} = useStyle({}, {name: 'DropdownSelect'});
+  const { classes } = useStyle({}, { name: 'DropdownSelect' });
   const localId = useId();
   const handleFeedback = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -42,7 +42,7 @@ const DropdownSelect: LayoutComponent = (props: DropdownSelectProps) => {
 
   // question?.content ?? 'Question content here...';
 
-  const sanitizedData = () => ({__html: DOMPurify.sanitize(newQuestionContent)});
+  const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
   return (
     <Accordion defaultValue={localId} miw={'100%'} variant="filled">
       <Accordion.Item value={localId}>
@@ -63,7 +63,7 @@ const DropdownSelect: LayoutComponent = (props: DropdownSelectProps) => {
             </Box>
             {showFeedback &&
               question.answers.map((answer) =>
-                answer.right ? (
+                answer.isCorrect ? (
                   <Alert
                     mt="sm"
                     icon={<IconCircleCheck size="1rem" />}

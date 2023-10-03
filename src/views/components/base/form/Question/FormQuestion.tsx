@@ -9,7 +9,6 @@ import {
   Modal,
   NumberInput,
   SegmentedControl,
-  Select,
   Table,
   TextInput,
   createStyles,
@@ -35,16 +34,18 @@ import Text from 'views/components/base/Text';
 import Button from '../../Button';
 
 import defaultTheme from 'apps/theme';
-import {IQuestion, IQuestionAPI, QUESTIONTYPE} from 'types/question';
+import { IQuestion, IQuestionAPI, QUESTION_TYPE } from 'types/question';
 
-import {isNotEmpty} from '@mantine/form';
-import {useEffect, useState} from 'react';
+import { isNotEmpty } from '@mantine/form';
+import { QUESTION_ELEMENT, QUESTION_ELEMENT_BY_TYPE } from 'apps/constants';
+import { useEffect, useState } from 'react';
+import { PreviewQuestionModal } from 'views/components/modal/previewQuestion';
 import Shell from 'views/layout/Shell';
-import QuestionContentInput from './QuestionContentInput';
-import {QuestionFormProvider, useQuestionForm} from './form-question-context';
 import QuestionCategory from './QuestionCategory';
+import QuestionContentInput from './QuestionContentInput';
+import { QuestionFormProvider, useQuestionForm } from './form-question-context';
 
-const {padding} = defaultTheme.layout;
+const { padding } = defaultTheme.layout;
 
 const useStyle = createStyles<string, {}>(() => ({
   answerTable: {
@@ -59,16 +60,17 @@ interface QuestionFormProps {
   onSaveQuestion: (question: IQuestion) => Promise<void>;
 }
 const QuestionForm = (props: QuestionFormProps) => {
-  const {content, onSaveQuestion} = props;
+  const { content, onSaveQuestion } = props;
 
-  const {classes} = useStyle({}, {name: 'QuestionForm'});
-  const [type, setType] = useState<QUESTIONTYPE | undefined>();
+  const { classes } = useStyle({}, { name: 'QuestionForm' });
+  const [type, setType] = useState<QUESTION_TYPE | undefined>();
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const form = useQuestionForm({
     initialValues: {
       title: '',
       content: '',
-      type: QUESTIONTYPE.SelectOne,
+      type: QUESTION_TYPE.SelectOne,
       active: 'N',
       level: 'normal',
       category_id: '',
@@ -76,7 +78,7 @@ const QuestionForm = (props: QuestionFormProps) => {
       answers: [
         {
           content: '',
-          right: true,
+          isCorrect: true,
           order: 0,
           scorePercent: 100,
           penaltyScore: 0,
@@ -90,13 +92,14 @@ const QuestionForm = (props: QuestionFormProps) => {
       answers: {
         content: isNotEmpty('Answer content is required'),
         scorePercent: (value, values, path) => {
-          if (
-            values.answers.reduce((prev, next) => {
-              return prev + next.scorePercent;
-            }, 0) !== 100
-          ) {
+          const totalScore = values.answers.reduce((prev, next) => {
+            return prev + next.scorePercent;
+          }, 0);
+
+          if (totalScore !== 100) {
             return 'Total score percent must be 100%';
           } else if (value === 0) {
+            return 'haha';
           }
           return null;
         },
@@ -110,9 +113,10 @@ const QuestionForm = (props: QuestionFormProps) => {
         ...content,
         answers: content.answers.map((ans) => ({
           ...ans,
-          right: ans.right === 'Y' ? true : false,
+          isCorrect: ans.isCorrect,
         })),
       };
+
       form.setValues(newQuestion);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -133,33 +137,35 @@ const QuestionForm = (props: QuestionFormProps) => {
     });
   };
 
-  const handleChangeRight = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeIsCorrect = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     switch (form.values.type) {
-      case QUESTIONTYPE.SelectOne:
+      case QUESTION_TYPE.SelectOne:
         if (!event.currentTarget.checked) {
           return;
         } else {
-          form.setFieldValue(`answers.${index}.right`, event.currentTarget.checked);
+          form.setFieldValue(`answers.${index}.isCorrect`, event.currentTarget.checked);
           form.setFieldValue(`answers.${index}.scorePercent`, 100);
           form.setFieldValue(`answers.${index}.penaltyScore`, 0);
           form.values.answers.forEach((ans, idx) => {
             if (idx !== index) {
-              form.setFieldValue(`answers.${idx}.right`, false);
+              form.setFieldValue(`answers.${idx}.isCorrect`, false);
               form.setFieldValue(`answers.${idx}.scorePercent`, 0);
             }
           });
         }
         break;
-      case QUESTIONTYPE.SelectMany:
-        form.setFieldValue(`answers.${index}.right`, event.currentTarget.checked);
+      case QUESTION_TYPE.SelectMany:
+        form.setFieldValue(`answers.${index}.isCorrect`, event.currentTarget.checked);
         break;
       default:
         break;
     }
   };
-  const handleChangeType = (value: QUESTIONTYPE) => {
+
+  const handleChangeType = (value: QUESTION_TYPE) => {
     setType(value);
   };
+
   const handleAcceptChangeType = () => {
     if (type !== undefined) {
       form.reset();
@@ -167,9 +173,12 @@ const QuestionForm = (props: QuestionFormProps) => {
       setType(undefined);
     }
   };
+
   const handleSubmitQuestion = (values: IQuestion) => {
-    onSaveQuestion({...values, active: 'Y'});
+    console.log(values);
+    // onSaveQuestion({ ...values, active: 'Y' });
   };
+
   return (
     <Box pb={padding}>
       <QuestionFormProvider form={form}>
@@ -187,7 +196,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Select One</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.SelectOne,
+                value: QUESTION_TYPE.SelectOne,
               },
               {
                 label: (
@@ -196,7 +205,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Select Many</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.SelectMany,
+                value: QUESTION_TYPE.SelectMany,
               },
               {
                 label: (
@@ -205,7 +214,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Matching</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.Matching,
+                value: QUESTION_TYPE.Matching,
               },
               {
                 label: (
@@ -214,7 +223,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Dropdown Select</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.Dropdown,
+                value: QUESTION_TYPE.DropdownSelect,
               },
               {
                 label: (
@@ -223,7 +232,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Fill in the gaps</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.FillInGap,
+                value: QUESTION_TYPE.FillInGap,
               },
               {
                 label: (
@@ -232,7 +241,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Essay</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.Essay,
+                value: QUESTION_TYPE.Essay,
               },
               {
                 label: (
@@ -241,136 +250,144 @@ const QuestionForm = (props: QuestionFormProps) => {
                     <Box ml={10}>Record</Box>
                   </Center>
                 ),
-                value: QUESTIONTYPE.Record,
+                value: QUESTION_TYPE.Record,
               },
             ]}
           />
 
           <Box mx="auto" mt="md">
             <Grid>
-              <Grid.Col span={10}>
-                <TextInput
-                  label="Question Title"
-                  placeholder="Insert question title here..."
-                  radius="xs"
-                  withAsterisk
-                  {...form.getInputProps('title')}
-                />
-              </Grid.Col>
-              <Grid.Col span={2}>
-                <QuestionCategory />
-                {/* <Select
-                  label="Category"
-                  placeholder="Pick one"
-                  data={[
-                    {value: 'react', label: 'React'},
-                    {value: 'ng', label: 'Angular'},
-                    {value: 'svelte', label: 'Svelte'},
-                    {value: 'vue', label: 'Vue'},
-                  ]}
-                  {...form.getInputProps('category_id')}
-                /> */}
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <FileInput
-                  placeholder="Upload file "
-                  accept=".mp3"
-                  label="Audio file (.mp3)"
-                  clearable
-                  radius={'xs'}
-                  icon={<IconUpload size={rem(14)} />}
-                  {...form.getInputProps('audio')}
-                />
-              </Grid.Col>
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.TITLE) && (
+                <Grid.Col span={10}>
+                  <TextInput
+                    label="Question Title"
+                    placeholder="Insert question title here..."
+                    radius="xs"
+                    withAsterisk
+                    {...form.getInputProps('title')}
+                  />
+                </Grid.Col>
+              )}
 
-              <Grid.Col span={12}>
-                <QuestionContentInput label="Question Content" />
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <Text size={'sm'}>Answers</Text>
-                <Table withBorder withColumnBorders className={classes.answerTable}>
-                  <thead>
-                    <tr>
-                      <th style={{width: 50}}>IND</th>
-                      <th>
-                        Answer Content
-                        <span style={{marginLeft: 5, color: 'red'}}>*</span>
-                      </th>
-                      <th>Feedback</th>
-                      <th style={{width: 100}}>
-                        Score<span style={{marginLeft: 5, color: 'red'}}>*</span> (%)
-                      </th>
-                      <th style={{width: 100}}>Penalty Score (-%)</th>
-                      <th style={{width: 50}}>Correct</th>
-                      <th style={{width: 30}}></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {form.values.answers.map((answer, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td style={{textAlign: 'left'}}>
-                          <TextInput {...form.getInputProps(`answers.${index}.content`)} />
-                        </td>
-                        <td>
-                          <TextInput {...form.getInputProps(`answers.${index}.feedback`)} />
-                        </td>
-                        <td>
-                          <NumberInput
-                            min={0}
-                            max={100}
-                            maw={80}
-                            maxLength={3}
-                            readOnly={form.values.type === QUESTIONTYPE.SelectOne}
-                            {...form.getInputProps(`answers.${index}.scorePercent`)}
-                          />
-                        </td>
-                        <td>
-                          <NumberInput
-                            min={0}
-                            max={100}
-                            maw={80}
-                            maxLength={3}
-                            {...form.getInputProps(`answers.${index}.penaltyScore`)}
-                          />
-                        </td>
-                        <td>
-                          <Center>
-                            <Checkbox
-                              // checked={form.values.answers[index].right}
-                              {...form.getInputProps(`answers.${index}.right`, {type: 'checkbox'})}
-                              onChange={handleChangeRight(index)}
-                            />
-                          </Center>
-                        </td>
-                        <td>
-                          <ActionIcon
-                            color="red"
-                            variant="light"
-                            mx={'auto'}
-                            onClick={handleRemoveAnswer(index)}
-                          >
-                            <IconTrash size="1.125rem" />
-                          </ActionIcon>
-                        </td>
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.CATEGORY) && (
+                <Grid.Col span={2}>
+                  <QuestionCategory />
+                </Grid.Col>
+              )}
+
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.AUDIO) && (
+                <Grid.Col span={12}>
+                  <FileInput
+                    placeholder="Upload file "
+                    accept=".mp3"
+                    label="Audio file (.mp3)"
+                    clearable
+                    radius={'xs'}
+                    icon={<IconUpload size={rem(14)} />}
+                    {...form.getInputProps('audio')}
+                  />
+                </Grid.Col>
+              )}
+
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.CONTENT) && (
+                <Grid.Col span={12}>
+                  <QuestionContentInput label="Question Content" />
+                </Grid.Col>
+              )}
+
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.ANSWER) && (
+                <Grid.Col span={12}>
+                  <Text size="sm">Answers</Text>
+                  <Table withBorder withColumnBorders className={classes.answerTable}>
+                    <thead>
+                      <tr>
+                        <th style={{ width: 50 }}>IND</th>
+                        <th>
+                          Answer Content
+                          <span style={{ marginLeft: 5, color: 'red' }}>*</span>
+                        </th>
+                        <th>Feedback</th>
+                        <th style={{ width: 100 }}>
+                          Score<span style={{ marginLeft: 5, color: 'red' }}>*</span> (%)
+                        </th>
+                        <th style={{ width: 100 }}>Penalty Score (-%)</th>
+                        <th style={{ width: 50 }}>Correct</th>
+                        <th style={{ width: 30 }}></th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
-                <Button
-                  variant="outline"
-                  mt={10}
-                  color="green"
-                  rightIcon={<IconCirclePlus strokeWidth={1.5} />}
-                  onClick={handleAddAnswer}
-                >
-                  More Option
-                </Button>
-              </Grid.Col>
+                    </thead>
+                    <tbody>
+                      {form.values.answers.map((answer, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td style={{ textAlign: 'left' }}>
+                            <TextInput {...form.getInputProps(`answers.${index}.content`)} />
+                          </td>
+                          <td>
+                            <TextInput {...form.getInputProps(`answers.${index}.feedback`)} />
+                          </td>
+                          <td>
+                            <NumberInput
+                              min={0}
+                              max={100}
+                              maw={80}
+                              maxLength={3}
+                              readOnly={form.values.type === QUESTION_TYPE.SelectOne}
+                              {...form.getInputProps(`answers.${index}.scorePercent`)}
+                            />
+                          </td>
+                          <td>
+                            <NumberInput
+                              min={0}
+                              max={100}
+                              maw={80}
+                              maxLength={3}
+                              {...form.getInputProps(`answers.${index}.penaltyScore`)}
+                            />
+                          </td>
+                          <td>
+                            <Center>
+                              <Checkbox
+                                // checked={form.values.answers[index].right}
+                                {...form.getInputProps(`answers.${index}.isCorrect`, {
+                                  type: 'checkbox',
+                                })}
+                                onChange={handleChangeIsCorrect(index)}
+                              />
+                            </Center>
+                          </td>
+                          <td>
+                            <ActionIcon
+                              color="red"
+                              variant="light"
+                              mx={'auto'}
+                              onClick={handleRemoveAnswer(index)}
+                            >
+                              <IconTrash size="1.125rem" />
+                            </ActionIcon>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                  <Button
+                    variant="outline"
+                    mt={10}
+                    color="green"
+                    rightIcon={<IconCirclePlus strokeWidth={1.5} />}
+                    onClick={handleAddAnswer}
+                  >
+                    More Option
+                  </Button>
+                </Grid.Col>
+              )}
             </Grid>
 
             <Group position="right" mt="md">
-              <Button variant="outline" rightIcon={<IconEye strokeWidth={1.5} />}>
+              <Button
+                variant="outline"
+                rightIcon={<IconEye strokeWidth={1.5} />}
+                onClick={() => setIsPreviewModalOpen(true)}
+              >
                 Preview
               </Button>
               <Button
@@ -399,6 +416,11 @@ const QuestionForm = (props: QuestionFormProps) => {
           </Button>
         </Group>
       </Modal>
+      <PreviewQuestionModal
+        opened={isPreviewModalOpen}
+        data={form.values}
+        onClose={() => setIsPreviewModalOpen(false)}
+      />
     </Box>
   );
 };

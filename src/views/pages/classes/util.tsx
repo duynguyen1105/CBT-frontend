@@ -11,15 +11,6 @@ export enum StatusTest {
   PREVIOUS = 'Previous',
 }
 
-export enum QuestionTypes {
-  SELECT_ONE = 'SelectOne',
-  SELECT_MANY = 'SelectMany',
-  MATCHING = 'Matching',
-  DROPDOWN_SELECT = 'Dropdown_Select',
-  FILL_IN_THE_GAP = 'FillInTheGap',
-  ESSAY = 'Essay',
-}
-
 export const TestTicketData = [
   {
     cate: 'Test',

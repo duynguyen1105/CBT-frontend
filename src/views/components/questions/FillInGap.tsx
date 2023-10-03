@@ -1,9 +1,9 @@
-import {Accordion, ActionIcon, Alert, Box, Group, createStyles} from '@mantine/core';
-import {IconAlertCircle, IconBulb, IconCircleCheck} from '@tabler/icons-react';
+import { Accordion, ActionIcon, Alert, Box, Group, createStyles } from '@mantine/core';
+import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
-import {useId, useState} from 'react';
-import {LayoutComponent} from 'types/layout';
-import {IQuestion, fakeFillInGap} from 'types/question';
+import { useId, useState } from 'react';
+import { LayoutComponent } from 'types/layout';
+import { IQuestion, fakeFillInGap } from 'types/question';
 import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>(() => ({
@@ -19,9 +19,9 @@ interface FillInGapProps {
   question?: IQuestion;
 }
 const FillInGap: LayoutComponent = (props: FillInGapProps) => {
-  const {questionNo = 1, question = fakeFillInGap} = props;
+  const { questionNo = 1, question = fakeFillInGap } = props;
   const [showFeedback, setShowFeedback] = useState(false);
-  const {classes} = useStyle({}, {name: 'FillInGap'});
+  const { classes } = useStyle({}, { name: 'FillInGap' });
   const localId = useId();
   const handleFeedback = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -35,7 +35,7 @@ const FillInGap: LayoutComponent = (props: FillInGapProps) => {
 
   // question?.content ?? 'Question content here...';
 
-  const sanitizedData = () => ({__html: DOMPurify.sanitize(newQuestionContent)});
+  const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
   return (
     <Accordion defaultValue={localId} miw={'100%'} variant="filled">
       <Accordion.Item value={localId}>
@@ -56,7 +56,7 @@ const FillInGap: LayoutComponent = (props: FillInGapProps) => {
             </Box>
             {showFeedback &&
               question.answers.map((answer) =>
-                answer.right ? (
+                answer.isCorrect ? (
                   <Alert
                     mt="sm"
                     icon={<IconCircleCheck size="1rem" />}
