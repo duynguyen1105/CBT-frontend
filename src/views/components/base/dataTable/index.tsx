@@ -7,6 +7,7 @@ import Button from '../Button';
 type Props<T> = {
   columns: DataTableColumn<T>[];
   records: T[];
+  totalRecord: number;
   page: number;
   query: string;
   setPage: (p: number) => void;
@@ -14,6 +15,7 @@ type Props<T> = {
   handleSortStatusChange: (status: DataTableSortStatus) => void;
   handleDeleteSelectedRecords: (records: TableType[]) => void;
   handleCreateNewRecord: () => void;
+  onRowClick?: (record: T) => void;
 };
 export type TableType = { [key in string]: any };
 
@@ -24,11 +26,13 @@ export const DataTable = ({
   records,
   page,
   query,
+  totalRecord,
   setPage,
   setQuery,
   handleSortStatusChange,
   handleDeleteSelectedRecords,
   handleCreateNewRecord,
+  onRowClick,
 }: Props<TableType>) => {
   const [selectedRecords, setSelectedRecords] = useState<TableType[]>([]);
 
@@ -92,11 +96,12 @@ export const DataTable = ({
         noRecordsText="No records to show"
         page={page}
         onPageChange={setPage}
-        totalRecords={records.length}
+        totalRecords={totalRecord}
         recordsPerPage={PAGE_SIZE}
         selectedRecords={selectedRecords}
         onSelectedRecordsChange={setSelectedRecords}
         idAccessor="_id"
+        onRowClick={onRowClick}
       />
     </Flex>
   );

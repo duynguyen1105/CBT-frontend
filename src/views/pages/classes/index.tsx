@@ -1,16 +1,16 @@
-import {ActionIcon, Grid, Group} from '@mantine/core';
-import {IconEdit, IconHome2, IconTrash} from '@tabler/icons-react';
-import {PATHS} from 'api/paths';
-import {callApiWithAuth, getApiPath} from 'api/utils';
+import { ActionIcon, Grid, Group } from '@mantine/core';
+import { IconEdit, IconHome2, IconTrash } from '@tabler/icons-react';
+import { PATHS } from 'api/paths';
+import { callApiWithAuth, getApiPath } from 'api/utils';
 import PageURL from 'apps/PageURL';
-import {DataTableSortStatus} from 'mantine-datatable';
-import {FC, useEffect, useState} from 'react';
-import {useNavigate} from 'react-router';
-import {Class} from 'types/class';
-import Breadcrumb, {DataBreadcrumb} from 'views/components/base/Breadcrumb';
+import { DataTableSortStatus } from 'mantine-datatable';
+import { FC, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { Class } from 'types/class';
+import Breadcrumb, { DataBreadcrumb } from 'views/components/base/Breadcrumb';
 import Text from 'views/components/base/Text';
-import {DataTable} from 'views/components/base/dataTable';
-import {CreateClassModal} from 'views/components/modal/createClassModal';
+import { DataTable } from 'views/components/base/dataTable';
+import { CreateClassModal } from 'views/components/modal/createClassModal';
 
 const Classes: FC = () => {
   const [classes, setClasses] = useState<Class[]>([]);
@@ -64,9 +64,9 @@ const Classes: FC = () => {
         w="100%"
         bg="#fff"
         span={12}
-        sx={{display: 'flex', alignItems: 'center', borderRadius: 5}}
+        sx={{ display: 'flex', alignItems: 'center', borderRadius: 5 }}
       >
-        <Text pr={13} fz={20} fw={700} sx={{borderRight: '1px solid #CECECE'}}>
+        <Text pr={13} fz={20} fw={700} sx={{ borderRight: '1px solid #CECECE' }}>
           My Classes
         </Text>
 
@@ -76,13 +76,14 @@ const Classes: FC = () => {
       <Grid.Col h="100%" span={12} bg="#fff">
         <CreateClassModal opened={createModalOpened} onClose={() => setCreateModalOpened(false)} />
         <DataTable
+          totalRecord={10}
           records={classes}
           columns={[
-            {accessor: 'id', width: '15%', sortable: true},
-            {accessor: 'title', width: '25%', sortable: true},
-            {accessor: 'description', width: '30%', sortable: true},
-            {accessor: 'date_start', width: '12%', sortable: true},
-            {accessor: 'date_end', width: '12%', sortable: true},
+            { accessor: 'id', width: '15%', sortable: true },
+            { accessor: 'title', width: '25%', sortable: true },
+            { accessor: 'description', width: '30%', sortable: true },
+            { accessor: 'date_start', width: '12%', sortable: true },
+            { accessor: 'date_end', width: '12%', sortable: true },
             {
               accessor: 'actions',
               title: <Text mr="xs">Actions</Text>,

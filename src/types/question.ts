@@ -8,6 +8,16 @@ export enum QUESTION_TYPE {
   Record = 'RECORD',
 }
 
+export const QUESTION_TYPE_LABEL = {
+  [QUESTION_TYPE.SelectOne]: 'Select One',
+  [QUESTION_TYPE.SelectMany]: 'Select Many',
+  [QUESTION_TYPE.Matching]: 'Matching',
+  [QUESTION_TYPE.DropdownSelect]: 'Dropdown Select',
+  [QUESTION_TYPE.FillInGap]: 'Fill in the gaps',
+  [QUESTION_TYPE.Essay]: 'Essay',
+  [QUESTION_TYPE.Record]: 'Record',
+};
+
 export type IQuestionListItem = {
   id: string;
   content: string;
@@ -18,8 +28,8 @@ export type IQuestionListItem = {
   score: string;
 };
 
-export interface IQuestion {
-  id?: string;
+export interface QuestionType {
+  _id?: string;
   title: string;
   content: string;
   type: QUESTION_TYPE;
@@ -28,9 +38,10 @@ export interface IQuestion {
   score?: number;
   category_id: string;
   audio?: File | null;
-  answers: IAnswer[];
+  answer: AnswerType[];
+  blankAnswer?: AnswerType[][];
 }
-export interface IAnswer {
+export interface AnswerType {
   id?: string;
   content: string;
   isCorrect: boolean;
@@ -49,7 +60,7 @@ export interface IQuestionAPI {
   score?: number;
   category_id: string;
   audio?: File | null;
-  answers: IAnswerAPI[];
+  answer: IAnswerAPI[];
 }
 export interface IAnswerAPI {
   id?: string;
@@ -62,14 +73,14 @@ export interface IAnswerAPI {
 }
 
 //fakedata
-export const fakeSelectOne: IQuestion = {
+export const fakeSelectOne: QuestionType = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   type: QUESTION_TYPE.SelectOne,
   active: 'Y',
   level: 'normal',
   category_id: '1',
-  answers: [
+  answer: [
     {
       content: 'He is postponing an appointment',
       isCorrect: true,
@@ -105,14 +116,14 @@ export const fakeSelectOne: IQuestion = {
   ],
 };
 
-export const fakeSelectMany: IQuestion = {
+export const fakeSelectMany: QuestionType = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   type: QUESTION_TYPE.SelectMany,
   active: 'Y',
   level: 'normal',
   category_id: '1',
-  answers: [
+  answer: [
     {
       content: 'He is postponing an appointment',
       isCorrect: true,
@@ -164,15 +175,15 @@ export const fakeSelectMany: IQuestion = {
   ],
 };
 
-export const fakeDropdownSelect: IQuestion = {
+export const fakeDropdownSelect: QuestionType = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content:
-    'What does the <ans></ans> imply when he says "Have you <ans></ans> the interview questions we use?"',
+    'What does the @dropdown:answer imply when he says "Have you @dropdown:answer the interview questions we use?"',
   type: QUESTION_TYPE.DropdownSelect,
   active: 'Y',
   level: 'normal',
   category_id: '1',
-  answers: [
+  answer: [
     {
       content: 'He is postponing an appointment',
       isCorrect: true,
@@ -224,15 +235,15 @@ export const fakeDropdownSelect: IQuestion = {
   ],
 };
 
-export const fakeFillInGap: IQuestion = {
+export const fakeFillInGap: QuestionType = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
   content:
-    'What does the <ans></ans> imply when he says "Have you <ans></ans> the interview questions we use?"',
+    'What does the @dropdown:answer imply when he says "Have you @dropdown:answer the interview questions we use?"',
   type: QUESTION_TYPE.FillInGap,
   active: 'Y',
   level: 'normal',
   category_id: '1',
-  answers: [
+  answer: [
     {
       content: 'He is postponing an appointment',
       isCorrect: true,

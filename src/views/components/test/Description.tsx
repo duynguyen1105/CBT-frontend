@@ -1,5 +1,5 @@
-import {Accordion} from '@mantine/core';
-import {useId} from 'react';
+import { Accordion } from '@mantine/core';
+import { useId } from 'react';
 import RichTextEditorCustom from '../base/RichTextEditorCustom';
 
 interface DescriptionProps {}
@@ -11,7 +11,7 @@ function Description(props: DescriptionProps) {
       <Accordion.Item value={descriptionId}>
         <Accordion.Control>Description</Accordion.Control>
         <Accordion.Panel>
-          <RichTextEditorCustom />
+          <RichTextEditorCustom editor={null} />
         </Accordion.Panel>
       </Accordion.Item>
     </Accordion>

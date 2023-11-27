@@ -1,7 +1,7 @@
-import {Box, Grid, createStyles} from '@mantine/core';
+import { Box, Grid, createStyles } from '@mantine/core';
 import DOMPurify from 'dompurify';
-import {LayoutComponent} from 'types/layout';
-import {IQuestion} from 'types/question';
+import { LayoutComponent } from 'types/layout';
+import { QuestionType } from 'types/question';
 import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>((theme) => ({
@@ -21,11 +21,11 @@ const useStyle = createStyles<string, {}>((theme) => ({
 }));
 interface MatchingProps {
   questionNo?: number;
-  content?: IQuestion;
+  content?: QuestionType;
 }
 const Matching: LayoutComponent = (props: MatchingProps) => {
-  const {questionNo, content} = props;
-  const {classes, cx} = useStyle({}, {name: 'Matching'});
+  const { questionNo, content } = props;
+  const { classes, cx } = useStyle({}, { name: 'Matching' });
 
   function allowDrop(ev: any) {
     ev.preventDefault();
@@ -46,7 +46,7 @@ const Matching: LayoutComponent = (props: MatchingProps) => {
 </div>
 
 <div id="div2" class="answer-drop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>`;
-  const sanitizedData = () => ({__html: DOMPurify.sanitize(data)});
+  const sanitizedData = () => ({ __html: DOMPurify.sanitize(data) });
   return (
     <Box className={classes.question}>
       {questionNo && <Text size={'md'}>{`Question ${questionNo}`}</Text>}

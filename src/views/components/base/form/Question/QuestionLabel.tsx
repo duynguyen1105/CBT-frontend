@@ -1,4 +1,4 @@
-import { ActionIcon, Flex, Select, Text } from '@mantine/core';
+import { ActionIcon, Flex, MultiSelect, Select, Text } from '@mantine/core';
 import { IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
@@ -13,21 +13,21 @@ interface Option {
   icon: JSX.Element;
   id: string;
 }
-interface QuestionCategoryProps {}
+interface QuestionLabelProps {}
 
-const QuestionCategory = (props: QuestionCategoryProps) => {
+const QuestionLabel = (props: QuestionLabelProps) => {
   const { workspace } = useSelector((state) => state.app.userInfo);
 
   const [data, setData] = useState<Option[]>([]);
   const form = useQuestionFormContext();
 
   useEffect(() => {
-    fetchCategories();
+    fetchLabels();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchLabels = async () => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.CATEGORIES.GET_LIST, { workspaceName: workspace }),
+      getApiPath(PATHS.LABELS.GET_LIST, { workspaceName: workspace }),
       'GET'
     );
 
@@ -41,17 +41,17 @@ const QuestionCategory = (props: QuestionCategoryProps) => {
     }
   };
 
-  const handleCreateCategory = (query: string) => {
-    postCategory({ name: query }).then(() => {
-      fetchCategories();
+  const handleCreateLabel = (query: string) => {
+    postLabel({ name: query }).then(() => {
+      fetchLabels();
     });
 
     return null;
   };
 
-  const handleDeleteCategory = async (id: string) => {
+  const handleDeleteLabel = async (id: string) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.CATEGORIES.DELETE, { workspaceName: workspace, id }),
+      getApiPath(PATHS.LABELS.DELETE, { workspaceName: workspace, id }),
       'DELETE'
     );
     if (res.ok) {
@@ -64,9 +64,9 @@ const QuestionCategory = (props: QuestionCategoryProps) => {
     setData(newData);
   };
 
-  const postCategory = async (data: { name: string }) => {
+  const postLabel = async (data: { name: string }) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.CATEGORIES.CREATE, { workspaceName: workspace }),
+      getApiPath(PATHS.LABELS.CREATE, { workspaceName: workspace }),
       'POST',
       { data }
     );
@@ -82,12 +82,7 @@ const QuestionCategory = (props: QuestionCategoryProps) => {
         <Text size="sm" w="80%" ref={ref} {...others}>
           {label}
         </Text>
-        <ActionIcon
-          color="red"
-          variant="light"
-          mx={'auto'}
-          onClick={() => handleDeleteCategory(id)}
-        >
+        <ActionIcon color="red" variant="light" mx={'auto'} onClick={() => handleDeleteLabel(id)}>
           <IconTrash size="1.125rem" />
         </ActionIcon>
       </Flex>
@@ -95,11 +90,11 @@ const QuestionCategory = (props: QuestionCategoryProps) => {
   ));
 
   return (
-    <Select
-      label="Category"
+    <MultiSelect
+      label="Label"
       data={data}
       itemComponent={SelectItem}
-      {...form.getInputProps('category')}
+      {...form.getInputProps('label')}
       placeholder="Select items"
       nothingFound="Nothing found"
       searchable
@@ -112,9 +107,9 @@ const QuestionCategory = (props: QuestionCategoryProps) => {
           </Text>
         </Flex>
       )}
-      onCreate={handleCreateCategory}
+      onCreate={handleCreateLabel}
     />
   );
 };
 
-export default QuestionCategory;
+export default QuestionLabel;

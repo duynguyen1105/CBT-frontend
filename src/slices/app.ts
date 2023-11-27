@@ -1,7 +1,8 @@
-import {ColorScheme} from '@mantine/core';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {primaryNavbar, NavItem} from 'apps/navbar';
+import { ColorScheme } from '@mantine/core';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { primaryNavbar, NavItem } from 'apps/navbar';
 import theme from 'apps/theme';
+import { UserType } from 'types/user';
 
 export interface AppNavbarVariant {
   primary: NavItem[];
@@ -16,6 +17,7 @@ export interface AppNavbarState extends AppNavbarVariant {
 export interface AppState {
   theme: ColorScheme;
   navbar: AppNavbarState;
+  userInfo: UserType;
 }
 
 export const initialState: AppState = {
@@ -25,6 +27,15 @@ export const initialState: AppState = {
     secondary: [],
     collapsed: false,
     show: 'primary',
+  },
+  userInfo: {
+    _id: '',
+    name: '',
+    password: '',
+    email: '',
+    gender: '',
+    role: ['ADMIN_WORKSPACE'],
+    workspace: 'ws1',
   },
 };
 
@@ -40,6 +51,9 @@ export const slice = createSlice({
     },
     switchNavbar(state: AppState, action: PayloadAction<keyof AppNavbarVariant>) {
       state.navbar.show = action.payload;
+    },
+    setUserInfo(state: AppState, action: PayloadAction<UserType>) {
+      state.userInfo = action.payload;
     },
   },
 });

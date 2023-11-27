@@ -15,7 +15,6 @@ import {
   rem,
 } from '@mantine/core';
 import {
-  IconArrowsShuffle,
   IconBrandTelegram,
   IconCirclePlus,
   IconDeviceFloppy,
@@ -34,7 +33,7 @@ import Text from 'views/components/base/Text';
 import Button from '../../Button';
 
 import defaultTheme from 'apps/theme';
-import { IQuestion, IQuestionAPI, QUESTION_TYPE } from 'types/question';
+import { IQuestionAPI, QUESTION_TYPE, QuestionType } from 'types/question';
 
 import { isNotEmpty } from '@mantine/form';
 import { QUESTION_ELEMENT, QUESTION_ELEMENT_BY_TYPE } from 'apps/constants';
@@ -43,6 +42,7 @@ import { PreviewQuestionModal } from 'views/components/modal/previewQuestion';
 import Shell from 'views/layout/Shell';
 import QuestionCategory from './QuestionCategory';
 import QuestionContentInput from './QuestionContentInput';
+import QuestionLabel from './QuestionLabel';
 import { QuestionFormProvider, useQuestionForm } from './form-question-context';
 
 const { padding } = defaultTheme.layout;
@@ -57,7 +57,7 @@ const useStyle = createStyles<string, {}>(() => ({
 
 interface QuestionFormProps {
   content?: IQuestionAPI;
-  onSaveQuestion: (question: IQuestion) => Promise<void>;
+  onSaveQuestion: (question: QuestionType) => Promise<void>;
 }
 const QuestionForm = (props: QuestionFormProps) => {
   const { content, onSaveQuestion } = props;
@@ -65,6 +65,7 @@ const QuestionForm = (props: QuestionFormProps) => {
   const { classes } = useStyle({}, { name: 'QuestionForm' });
   const [type, setType] = useState<QUESTION_TYPE | undefined>();
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [numberOfBlanks, setNumberOfBlanks] = useState(0);
 
   const form = useQuestionForm({
     initialValues: {
@@ -75,7 +76,7 @@ const QuestionForm = (props: QuestionFormProps) => {
       level: 'normal',
       category_id: '',
       audio: null,
-      answers: [
+      answer: [
         {
           content: '',
           isCorrect: true,
@@ -85,25 +86,27 @@ const QuestionForm = (props: QuestionFormProps) => {
           feedback: '',
         },
       ],
+      blankAnswer: [],
     },
     validate: {
       title: isNotEmpty('Question title is required'),
       content: isNotEmpty('Question content is required'),
-      answers: {
-        content: isNotEmpty('Answer content is required'),
-        scorePercent: (value, values, path) => {
-          const totalScore = values.answers.reduce((prev, next) => {
-            return prev + next.scorePercent;
-          }, 0);
+      answer:
+        type !== QUESTION_TYPE.FillInGap
+          ? undefined
+          : {
+              content: isNotEmpty('Answer content is required'),
+              scorePercent: (value, values, path) => {
+                const totalScore = values.answer.reduce((prev, next) => {
+                  return prev + next.scorePercent;
+                }, 0);
 
-          if (totalScore !== 100) {
-            return 'Total score percent must be 100%';
-          } else if (value === 0) {
-            return 'haha';
-          }
-          return null;
-        },
-      },
+                if (totalScore !== 100) {
+                  return 'Total score percent must be 100%';
+                }
+                return null;
+              },
+            },
     },
   });
 
@@ -111,10 +114,6 @@ const QuestionForm = (props: QuestionFormProps) => {
     if (!!content) {
       const newQuestion = {
         ...content,
-        answers: content.answers.map((ans) => ({
-          ...ans,
-          isCorrect: ans.isCorrect,
-        })),
       };
 
       form.setValues(newQuestion);
@@ -123,13 +122,24 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, [content]);
 
   const handleRemoveAnswer = (index: number) => () => {
-    form.removeListItem('answers', index);
+    form.removeListItem('answer', index);
   };
 
   const handleAddAnswer = () => {
-    form.insertListItem('answers', {
+    form.insertListItem('answer', {
       content: '',
-      right: false,
+      isCorrect: false,
+      order: 0,
+      scorePercent: 0,
+      penaltyScore: 0,
+      feedback: '',
+    });
+  };
+
+  const handleAddBlankAnswer = (index: number) => {
+    form.insertListItem(`blankAnswer.${index}`, {
+      content: '',
+      isCorrect: false,
       order: 0,
       scorePercent: 0,
       penaltyScore: 0,
@@ -143,24 +153,42 @@ const QuestionForm = (props: QuestionFormProps) => {
         if (!event.currentTarget.checked) {
           return;
         } else {
-          form.setFieldValue(`answers.${index}.isCorrect`, event.currentTarget.checked);
-          form.setFieldValue(`answers.${index}.scorePercent`, 100);
-          form.setFieldValue(`answers.${index}.penaltyScore`, 0);
-          form.values.answers.forEach((ans, idx) => {
+          form.setFieldValue(`answer.${index}.isCorrect`, event.currentTarget.checked);
+          form.setFieldValue(`answer.${index}.scorePercent`, 100);
+          form.setFieldValue(`answer.${index}.penaltyScore`, 0);
+          form.values.answer.forEach((ans, idx) => {
             if (idx !== index) {
-              form.setFieldValue(`answers.${idx}.isCorrect`, false);
-              form.setFieldValue(`answers.${idx}.scorePercent`, 0);
+              form.setFieldValue(`answer.${idx}.isCorrect`, false);
+              form.setFieldValue(`answer.${idx}.scorePercent`, 0);
             }
           });
         }
         break;
       case QUESTION_TYPE.SelectMany:
-        form.setFieldValue(`answers.${index}.isCorrect`, event.currentTarget.checked);
+        form.setFieldValue(`answer.${index}.isCorrect`, event.currentTarget.checked);
         break;
       default:
         break;
     }
   };
+
+  const handleBlankChangeIsCorrect =
+    (index: number, idx: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!event.currentTarget.checked) {
+        return;
+      } else {
+        form.setFieldValue(`blankAnswer.${index}.${idx}.isCorrect`, event.currentTarget.checked);
+        form.setFieldValue(`blankAnswer.${index}.${idx}.scorePercent`, 100);
+        form.setFieldValue(`blankAnswer.${index}.${idx}.penaltyScore`, 0);
+        form.values?.blankAnswer?.[index]?.forEach((ans, i) => {
+          if (i === idx) return;
+          else {
+            form.setFieldValue(`blankAnswer.${index}.${i}.isCorrect`, false);
+            form.setFieldValue(`blankAnswer.${index}.${i}.scorePercent`, 0);
+          }
+        });
+      }
+    };
 
   const handleChangeType = (value: QUESTION_TYPE) => {
     setType(value);
@@ -171,12 +199,14 @@ const QuestionForm = (props: QuestionFormProps) => {
       form.reset();
       form.setFieldValue('type', type);
       setType(undefined);
+      setNumberOfBlanks(0);
     }
   };
 
-  const handleSubmitQuestion = (values: IQuestion) => {
-    console.log(values);
-    // onSaveQuestion({ ...values, active: 'Y' });
+  const handleSubmitQuestion = (values: QuestionType) => {
+    console.log('dzoi');
+
+    onSaveQuestion(values);
   };
 
   return (
@@ -207,15 +237,15 @@ const QuestionForm = (props: QuestionFormProps) => {
                 ),
                 value: QUESTION_TYPE.SelectMany,
               },
-              {
-                label: (
-                  <Center>
-                    <IconArrowsShuffle strokeWidth={1.5} />
-                    <Box ml={10}>Matching</Box>
-                  </Center>
-                ),
-                value: QUESTION_TYPE.Matching,
-              },
+              // {
+              //   label: (
+              //     <Center>
+              //       <IconArrowsShuffle strokeWidth={1.5} />
+              //       <Box ml={10}>Matching</Box>
+              //     </Center>
+              //   ),
+              //   value: QUESTION_TYPE.Matching,
+              // },
               {
                 label: (
                   <Center>
@@ -258,7 +288,7 @@ const QuestionForm = (props: QuestionFormProps) => {
           <Box mx="auto" mt="md">
             <Grid>
               {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.TITLE) && (
-                <Grid.Col span={10}>
+                <Grid.Col span={6}>
                   <TextInput
                     label="Question Title"
                     placeholder="Insert question title here..."
@@ -270,8 +300,14 @@ const QuestionForm = (props: QuestionFormProps) => {
               )}
 
               {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.CATEGORY) && (
-                <Grid.Col span={2}>
+                <Grid.Col span={3}>
                   <QuestionCategory />
+                </Grid.Col>
+              )}
+
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.LABEL) && (
+                <Grid.Col span={3}>
+                  <QuestionLabel />
                 </Grid.Col>
               )}
 
@@ -291,7 +327,24 @@ const QuestionForm = (props: QuestionFormProps) => {
 
               {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.CONTENT) && (
                 <Grid.Col span={12}>
-                  <QuestionContentInput label="Question Content" />
+                  <QuestionContentInput
+                    label="Question Content"
+                    type={form.values.type}
+                    numberOfBlanks={numberOfBlanks}
+                    setNumberOfBlanks={(n) => {
+                      setNumberOfBlanks(n);
+                      form.insertListItem(`blankAnswer`, [
+                        {
+                          content: '',
+                          isCorrect: false,
+                          order: 0,
+                          scorePercent: 0,
+                          penaltyScore: 0,
+                          feedback: '',
+                        },
+                      ]);
+                    }}
+                  />
                 </Grid.Col>
               )}
 
@@ -316,14 +369,14 @@ const QuestionForm = (props: QuestionFormProps) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {form.values.answers.map((answer, index) => (
+                      {form.values.answer.map((answer, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td style={{ textAlign: 'left' }}>
-                            <TextInput {...form.getInputProps(`answers.${index}.content`)} />
+                            <TextInput {...form.getInputProps(`answer.${index}.content`)} />
                           </td>
                           <td>
-                            <TextInput {...form.getInputProps(`answers.${index}.feedback`)} />
+                            <TextInput {...form.getInputProps(`answer.${index}.feedback`)} />
                           </td>
                           <td>
                             <NumberInput
@@ -332,7 +385,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                               maw={80}
                               maxLength={3}
                               readOnly={form.values.type === QUESTION_TYPE.SelectOne}
-                              {...form.getInputProps(`answers.${index}.scorePercent`)}
+                              {...form.getInputProps(`answer.${index}.scorePercent`)}
                             />
                           </td>
                           <td>
@@ -341,14 +394,14 @@ const QuestionForm = (props: QuestionFormProps) => {
                               max={100}
                               maw={80}
                               maxLength={3}
-                              {...form.getInputProps(`answers.${index}.penaltyScore`)}
+                              {...form.getInputProps(`answer.${index}.penaltyScore`)}
                             />
                           </td>
                           <td>
                             <Center>
                               <Checkbox
-                                // checked={form.values.answers[index].right}
-                                {...form.getInputProps(`answers.${index}.isCorrect`, {
+                                // checked={form.values.answer[index].right}
+                                {...form.getInputProps(`answer.${index}.isCorrect`, {
                                   type: 'checkbox',
                                 })}
                                 onChange={handleChangeIsCorrect(index)}
@@ -380,6 +433,122 @@ const QuestionForm = (props: QuestionFormProps) => {
                   </Button>
                 </Grid.Col>
               )}
+
+              {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.BLANK_ANSWER) &&
+                Array(numberOfBlanks)
+                  .fill(0)
+                  .map((_, index) => (
+                    <Grid.Col span={12}>
+                      <Text size="sm">{`Answers ${
+                        type === QUESTION_TYPE.DropdownSelect ? 'dropdown' : 'blank'
+                      }  ${index + 1}`}</Text>
+                      <Table withBorder withColumnBorders className={classes.answerTable}>
+                        <thead>
+                          <tr>
+                            <th style={{ width: 50 }}>IND</th>
+                            <th>
+                              Answer Content
+                              <span style={{ marginLeft: 5, color: 'red' }}>*</span>
+                            </th>
+                            <th>Feedback</th>
+
+                            {type === QUESTION_TYPE.DropdownSelect && (
+                              <>
+                                <th style={{ width: 100 }}>
+                                  Score<span style={{ marginLeft: 5, color: 'red' }}>*</span> (%)
+                                </th>
+                                <th style={{ width: 100 }}>Penalty Score (-%)</th>
+                                <th style={{ width: 50 }}>Correct</th>
+                              </>
+                            )}
+
+                            <th style={{ width: 30 }}></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {form.values?.blankAnswer?.[index]?.map((answer, idx) => (
+                            <tr key={idx}>
+                              <td>{idx + 1}</td>
+                              <td style={{ textAlign: 'left' }}>
+                                <TextInput
+                                  {...form.getInputProps(`blankAnswer.${index}.${idx}.content`)}
+                                />
+                              </td>
+                              <td>
+                                <TextInput
+                                  {...form.getInputProps(`blankAnswer.${index}.${idx}.feedback`)}
+                                />
+                              </td>
+
+                              {type === QUESTION_TYPE.DropdownSelect && (
+                                <>
+                                  <td>
+                                    <NumberInput
+                                      min={0}
+                                      max={100}
+                                      maw={80}
+                                      maxLength={3}
+                                      readOnly={form.values.type === QUESTION_TYPE.SelectOne}
+                                      {...form.getInputProps(
+                                        `blankAnswer.${index}.${idx}.scorePercent`
+                                      )}
+                                    />
+                                  </td>
+                                  <td>
+                                    <NumberInput
+                                      min={0}
+                                      max={100}
+                                      maw={80}
+                                      maxLength={3}
+                                      {...form.getInputProps(
+                                        `blankAnswer.${index}.${idx}.penaltyScore`
+                                      )}
+                                    />
+                                  </td>
+                                  <td>
+                                    <Center>
+                                      <Checkbox
+                                        // checked={form.values.blankAnswer.${index}[idx].right}
+                                        {...form.getInputProps(
+                                          `blankAnswer.${index}.${idx}.isCorrect`,
+                                          {
+                                            type: 'checkbox',
+                                          }
+                                        )}
+                                        onChange={handleBlankChangeIsCorrect(index, idx)}
+                                      />
+                                    </Center>
+                                  </td>
+                                </>
+                              )}
+
+                              <td>
+                                <ActionIcon
+                                  color="red"
+                                  variant="light"
+                                  mx={'auto'}
+                                  onClick={handleRemoveAnswer(idx)}
+                                >
+                                  <IconTrash size="1.125rem" />
+                                </ActionIcon>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                      {type === QUESTION_TYPE.DropdownSelect && (
+                        <Button
+                          variant="outline"
+                          mt={10}
+                          color="green"
+                          rightIcon={<IconCirclePlus strokeWidth={1.5} />}
+                          onClick={() => handleAddBlankAnswer(index)}
+                        >
+                          More Option
+                        </Button>
+                      )}
+                    </Grid.Col>
+                  ))}
             </Grid>
 
             <Group position="right" mt="md">
@@ -397,7 +566,9 @@ const QuestionForm = (props: QuestionFormProps) => {
               >
                 Save As Draft
               </Button>
-              <Button rightIcon={<IconBrandTelegram strokeWidth={1.5} />}>Publish</Button>
+              <Button type="submit" rightIcon={<IconBrandTelegram strokeWidth={1.5} />}>
+                Publish
+              </Button>
             </Group>
           </Box>
         </form>

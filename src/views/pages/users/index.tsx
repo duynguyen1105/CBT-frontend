@@ -14,18 +14,11 @@ import { DataTable, TableType } from 'views/components/base/dataTable';
 import Shell from 'views/layout/Shell';
 import { UserInfoModal } from 'views/components/modal/userInfoModal';
 import { ConfirmModal } from 'views/components/modal/confirmModal';
+import { useSelector } from 'store';
 
 const { padding } = defaultTheme.layout;
 
 const Users: LayoutComponent = () => {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sort, setSort] = useState('');
-  const [createModalOpened, setCreateModalOpened] = useState(false);
-  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
-  const [clickedUser, setClickedUser] = useState<UserType | null>(null);
-  const [users, setUsers] = useState<UserType[]>([]);
-
   const columns: DataTableColumn<TableType>[] = [
     { accessor: '_id', width: '20%', sortable: true, title: 'ID' },
     { accessor: 'name', sortable: true, title: 'Full name' },
@@ -61,6 +54,17 @@ const Users: LayoutComponent = () => {
     },
   ];
 
+  const { workspace } = useSelector((state) => state.app.userInfo);
+
+  const [page, setPage] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(1);
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('');
+  const [createModalOpened, setCreateModalOpened] = useState(false);
+  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
+  const [clickedUser, setClickedUser] = useState<UserType | null>(null);
+  const [users, setUsers] = useState<UserType[]>([]);
+
   const deleteSelectedRecords = (records: TableType[]) => {
     deleteUsers(records.map((user) => user._id));
   };
@@ -72,7 +76,7 @@ const Users: LayoutComponent = () => {
 
   const deleteUser = async (id: string) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.DELETE, { workspaceName: 'ws1', userId: id }),
+      getApiPath(PATHS.USERS.DELETE, { workspaceName: workspace, userId: id }),
       'DELETE'
     );
     if (res.ok) {
@@ -86,7 +90,7 @@ const Users: LayoutComponent = () => {
 
   const deleteUsers = async (ids: string[]) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.DELETE_MANY, { workspaceName: 'ws1' }),
+      getApiPath(PATHS.USERS.DELETE_MANY, { workspaceName: workspace }),
       'DELETE',
       {
         data: {
@@ -104,7 +108,7 @@ const Users: LayoutComponent = () => {
 
   const createUser = async (userData: UserType) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.REGISTER, { workspaceName: 'ws1' }),
+      getApiPath(PATHS.USERS.REGISTER, { workspaceName: workspace }),
       'POST',
       {
         data: userData,
@@ -130,7 +134,7 @@ const Users: LayoutComponent = () => {
     if (!userData?._id) return;
 
     const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.UPDATE, { workspaceName: 'ws1', userId: userData._id }),
+      getApiPath(PATHS.USERS.UPDATE, { workspaceName: workspace, userId: userData._id }),
       'PUT',
       {
         data: userData,
@@ -154,12 +158,13 @@ const Users: LayoutComponent = () => {
 
   const fetchListUsers = async () => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.GET_LIST, { workspaceName: 'ws1', search, page, sort }),
+      getApiPath(PATHS.USERS.GET_LIST, { workspaceName: workspace, search, page, sort }),
       'GET'
     );
 
     if (res.ok) {
       setUsers(res.data);
+      setTotalRecords(res.total);
     }
   };
 
@@ -175,6 +180,7 @@ const Users: LayoutComponent = () => {
         page={page}
         setPage={setPage}
         query={search}
+        totalRecord={totalRecords}
         setQuery={setSearch}
         handleCreateNewRecord={() => setCreateModalOpened(true)}
         handleDeleteSelectedRecords={deleteSelectedRecords}

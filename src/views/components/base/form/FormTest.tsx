@@ -15,16 +15,16 @@ import {
 } from '@mantine/core';
 
 import defaultTheme from 'apps/theme';
-import {LayoutComponent} from 'types/layout';
+import { LayoutComponent } from 'types/layout';
 
-import {DateTimePicker} from '@mantine/dates';
-import {IconArrowRight, IconArticle, IconPageBreak, IconSettings} from '@tabler/icons-react';
-import {useState} from 'react';
+import { DateTimePicker } from '@mantine/dates';
+import { IconArrowRight, IconArticle, IconPageBreak, IconSettings } from '@tabler/icons-react';
+import { useState } from 'react';
 import Shell from 'views/layout/Shell';
 import ModalAddTestContent from '../ModalAddTestContent';
 import FormAddContentTest from './FormAddContentTest';
 
-const {padding} = defaultTheme.layout;
+const { padding } = defaultTheme.layout;
 
 const useStyle = createStyles<string, {}>(() => ({
   steps: {
@@ -34,9 +34,8 @@ const useStyle = createStyles<string, {}>(() => ({
 }));
 
 const FormTest: LayoutComponent = () => {
-  const {classes} = useStyle({}, {name: 'FormTest'});
+  const { classes } = useStyle({}, { name: 'FormTest' });
   const [active, setActive] = useState(0);
-  const [whenDoingOptions, setWhenDoingOptions] = useState<string[]>([]);
   const [afterSubmit, setAfterSubmit] = useState<string[]>([]);
   const [afterTestClosed, setAfterTestClosed] = useState<string[]>([]);
   const nextStep = () => setActive((current) => (current < 1 ? current + 1 : current));
@@ -46,7 +45,7 @@ const FormTest: LayoutComponent = () => {
     <Box pb={padding}>
       <Grid justify="center">
         <Grid.Col>
-          <Stepper active={active} onStepClick={setActive} classNames={{steps: classes.steps}}>
+          <Stepper active={active} onStepClick={setActive} classNames={{ steps: classes.steps }}>
             <Stepper.Step label="Setting" icon={<IconSettings size="1.5rem" />}>
               <Accordion
                 variant="separated"
@@ -62,7 +61,7 @@ const FormTest: LayoutComponent = () => {
                 </Accordion.Item>
 
                 <Accordion.Item value="time">
-                  <Accordion.Control>Schedule</Accordion.Control>
+                  <Accordion.Control>Time Setting</Accordion.Control>
                   <Accordion.Panel px={20}>
                     <Group align="center">
                       <DateTimePicker
@@ -80,12 +79,12 @@ const FormTest: LayoutComponent = () => {
                         miw={185}
                         mx="0"
                       />
-                      <NumberInput label="Time Limit" ml={10} placeholder="1" />
+                      <NumberInput label="Duration (minutes)" ml={10} placeholder="60" />
                     </Group>
                   </Accordion.Panel>
                 </Accordion.Item>
 
-                <Accordion.Item value="score">
+                {/* <Accordion.Item value="score">
                   <Accordion.Control>Score</Accordion.Control>
                   <Accordion.Panel px={20}>
                     <Group>
@@ -96,47 +95,19 @@ const FormTest: LayoutComponent = () => {
                         label="Score method"
                         placeholder="Pick one"
                         data={[
-                          {value: 'hightest-score', label: 'Hightest score'},
-                          {value: 'last-time', label: 'Last time'},
-                          {value: 'average-score', label: 'Average score'},
+                          { value: 'hightest-score', label: 'Hightest score' },
+                          { value: 'last-time', label: 'Last time' },
+                          { value: 'average-score', label: 'Average score' },
                         ]}
                       />
                     </Group>
                   </Accordion.Panel>
-                </Accordion.Item>
+                </Accordion.Item> */}
+
                 <Accordion.Item value="display-options">
                   <Accordion.Control>Display Options</Accordion.Control>
                   <Accordion.Panel px={20}>
                     <Grid>
-                      <Grid.Col span={4}>
-                        <Checkbox.Group
-                          label="When doing options"
-                          value={whenDoingOptions}
-                          onChange={setWhenDoingOptions}
-                        >
-                          <Checkbox mt={10} ml={10} value="answer" label="Answer" />
-                          <Checkbox
-                            mt={10}
-                            ml={10}
-                            value="feedback-of-correct-answer"
-                            label="Feedback of correct answer"
-                          />
-                          <Checkbox
-                            mt={10}
-                            ml={10}
-                            value="feedback-of-incorrect-answer"
-                            label="Feedback of incorrect answer"
-                          />
-                          <Checkbox mt={10} ml={10} value="score" label="Score" />
-                          <Checkbox mt={10} ml={10} value="take-note" label="Take note" />
-                          <Checkbox
-                            mt={10}
-                            ml={10}
-                            value="mark-question-to-review"
-                            label="Mark question to review"
-                          />
-                        </Checkbox.Group>
-                      </Grid.Col>
                       <Grid.Col span={4}>
                         <Checkbox.Group
                           label="After submit"

@@ -5,4 +5,5 @@ export type UserType = {
   email: string;
   gender: string;
   role: string[];
+  workspace: string;
 };

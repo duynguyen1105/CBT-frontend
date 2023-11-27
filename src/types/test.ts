@@ -1,4 +1,4 @@
-import {IQuestion} from './question';
+import { QuestionType } from './question';
 
 export interface Test {
   setting: TestSetting;
@@ -44,7 +44,7 @@ export interface TestContent {
 }
 
 export interface TestContentPage {
-  pageContent: (IDescription | IQuestion | ISection)[];
+  pageContent: (IDescription | QuestionType | ISection)[];
 }
 
 export interface IDescription {
@@ -57,5 +57,5 @@ export interface ISection {
 }
 
 export interface ISectionPart {
-  partContent: (IDescription | IQuestion | ISection)[];
+  partContent: (IDescription | QuestionType | ISection)[];
 }

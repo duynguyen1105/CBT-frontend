@@ -1,9 +1,8 @@
-import { Accordion, ActionIcon, Alert, Box, Group, createStyles } from '@mantine/core';
+import { ActionIcon, Alert, Box, Group, createStyles } from '@mantine/core';
 import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
-import { useId, useState } from 'react';
-import { LayoutComponent } from 'types/layout';
-import { IQuestion, fakeFillInGap } from 'types/question';
+import { useState } from 'react';
+import { QuestionType } from 'types/question';
 import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>(() => ({
@@ -14,48 +13,51 @@ const useStyle = createStyles<string, {}>(() => ({
   },
 }));
 
-interface FillInGapProps {
+interface DropdownSelectProps {
+  question: QuestionType;
   questionNo?: number;
-  question?: IQuestion;
 }
-const FillInGap: LayoutComponent = (props: FillInGapProps) => {
-  const { questionNo = 1, question = fakeFillInGap } = props;
+const FillInGap = ({ question, questionNo = 1 }: DropdownSelectProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'FillInGap' });
-  const localId = useId();
   const handleFeedback = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setShowFeedback(!showFeedback);
   };
-  let n = 0;
-  const newQuestionContent = question?.content.replaceAll(/<ans>(.*?)<\/ans>/g, (v) => {
-    n++;
-    return `<input id="input-${n}" />`;
-  });
 
-  // question?.content ?? 'Question content here...';
+  let newQuestionContent = question?.content;
+
+  for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
+    const selectAnswer = `<input id="input-${index}" name="input-${index}" />`;
+
+    newQuestionContent = newQuestionContent.replace(
+      `@fill-in-gap:answer:${index + 1}`,
+      selectAnswer
+    );
+  }
+  console.log({ newQuestionContent, question });
 
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
   return (
-    <Accordion defaultValue={localId} miw={'100%'} variant="filled">
-      <Accordion.Item value={localId}>
-        <Accordion.Control>
-          <Group>
-            <Text size="md">{`Question ${questionNo} ${
-              question?.title ? `: ${question?.title}` : ''
-            }`}</Text>
-            <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
-              <IconBulb size="1.125rem" />
-            </ActionIcon>
-          </Group>
-        </Accordion.Control>
-        <Accordion.Panel>
-          <Box my="md" classNames={classes.root}>
-            <Box pl="sm" mt="sm">
-              <div dangerouslySetInnerHTML={sanitizedData()} />
-            </Box>
-            {showFeedback &&
-              question.answers.map((answer) =>
+    <Box p="md">
+      <Group>
+        <Text size="md">{`Question ${questionNo} ${
+          question?.title ? `: ${question?.title}` : ''
+        }`}</Text>
+        <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
+          <IconBulb size="1.125rem" />
+        </ActionIcon>
+      </Group>
+
+      <Box my="md" classNames={classes.root}>
+        <Box pl="sm" mt="sm">
+          <div dangerouslySetInnerHTML={sanitizedData()} />
+        </Box>
+        {showFeedback &&
+          question?.blankAnswer?.map((blnk, index) => (
+            <>
+              <Text size="sm" color="dark">{`Blank ${index + 1}`}</Text>
+              {blnk.map((answer: any) =>
                 answer.isCorrect ? (
                   <Alert
                     mt="sm"
@@ -76,10 +78,10 @@ const FillInGap: LayoutComponent = (props: FillInGapProps) => {
                   </Alert>
                 )
               )}
-          </Box>
-        </Accordion.Panel>
-      </Accordion.Item>
-    </Accordion>
+            </>
+          ))}
+      </Box>
+    </Box>
   );
 };
 

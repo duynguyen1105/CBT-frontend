@@ -3,7 +3,7 @@ import { Accordion, ActionIcon, Box, Flex, createStyles, rem } from '@mantine/co
 import { useListState } from '@mantine/hooks';
 import { IconGripVertical, IconX } from '@tabler/icons-react';
 import {
-  IQuestion,
+  QuestionType,
   QUESTION_TYPE,
   fakeDropdownSelect,
   fakeFillInGap,
@@ -65,7 +65,7 @@ interface DndListHandleProps {
 interface Content {
   id: string;
   type: ContentType;
-  content: IDescription | IQuestion | ISection;
+  content: IDescription | QuestionType | ISection;
 }
 
 let fakedata = [
@@ -106,15 +106,15 @@ export default function FormAddContentTestPage({ data = fakedata }: DndListHandl
         return <Description />;
 
       case ContentType.QuestionType:
-        switch ((item.content as IQuestion).type) {
-          case QUESTION_TYPE.DropdownSelect:
-            return <DropdownSelect />;
-          case QUESTION_TYPE.FillInGap:
-            return <FillInGap />;
-          case QUESTION_TYPE.SelectMany:
-            return <SelectMany />;
-          case QUESTION_TYPE.SelectOne:
-            return <SelectOne />;
+        switch ((item.content as QuestionType).type) {
+          // case QUESTION_TYPE.DropdownSelect:
+          // return <DropdownSelect />;
+          // case QUESTION_TYPE.FillInGap:
+          //   return <FillInGap />;
+          // case QUESTION_TYPE.SelectMany:
+          //   return <SelectMany />;
+          // case QUESTION_TYPE.SelectOne:
+          //   return <SelectOne />;
           default:
             break;
         }
