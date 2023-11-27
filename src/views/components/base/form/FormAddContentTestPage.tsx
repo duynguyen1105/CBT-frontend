@@ -107,14 +107,14 @@ export default function FormAddContentTestPage({ data = fakedata }: DndListHandl
 
       case ContentType.QuestionType:
         switch ((item.content as QuestionType).type) {
-          // case QUESTION_TYPE.DropdownSelect:
-          // return <DropdownSelect />;
-          // case QUESTION_TYPE.FillInGap:
-          //   return <FillInGap />;
-          // case QUESTION_TYPE.SelectMany:
-          //   return <SelectMany />;
-          // case QUESTION_TYPE.SelectOne:
-          //   return <SelectOne />;
+          case QUESTION_TYPE.DropdownSelect:
+            return <DropdownSelect question={item.content as QuestionType} />;
+          case QUESTION_TYPE.FillInGap:
+            return <FillInGap question={item.content as QuestionType} />;
+          case QUESTION_TYPE.SelectMany:
+            return <SelectMany question={item.content as QuestionType} />;
+          case QUESTION_TYPE.SelectOne:
+            return <SelectOne question={item.content as QuestionType} />;
           default:
             break;
         }

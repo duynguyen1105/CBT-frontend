@@ -10,12 +10,14 @@ type Props<T> = {
   totalRecord: number;
   page: number;
   query: string;
+  isAdding?: boolean;
   setPage: (p: number) => void;
   setQuery: (q: string) => void;
   handleSortStatusChange: (status: DataTableSortStatus) => void;
   handleDeleteSelectedRecords: (records: TableType[]) => void;
   handleCreateNewRecord: () => void;
   onRowClick?: (record: T) => void;
+  handleAddRecord?: (records: TableType[]) => void;
 };
 export type TableType = { [key in string]: any };
 
@@ -27,6 +29,8 @@ export const DataTable = ({
   page,
   query,
   totalRecord,
+  isAdding,
+  handleAddRecord,
   setPage,
   setQuery,
   handleSortStatusChange,
@@ -48,42 +52,54 @@ export const DataTable = ({
 
   return (
     <Flex gap="lg" direction="column">
-      <Flex gap={16} justify="space-between">
-        <Flex gap={16} w="80%">
-          <TextInput
-            sx={{ flexBasis: '60%' }}
-            placeholder="Search here..."
-            icon={<IconSearch size={16} />}
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-          />
+      {isAdding && handleAddRecord ? (
+        <Flex gap={16} justify="flex-end">
           <Button
+            onClick={() => handleAddRecord(selectedRecords)}
             w="max-content"
-            variant="outline"
-            leftIcon={<IconTrash size={16} />}
-            color="red"
-            disabled={!selectedRecords.length}
-            onClick={() => handleDeleteSelectedRecords(selectedRecords)}
+            leftIcon={<IconCirclePlus size={16} />}
           >
-            <Text weight={400}>
-              {selectedRecords.length
-                ? `Delete ${
-                    selectedRecords.length === 1
-                      ? 'one selected record'
-                      : `${selectedRecords.length} selected records`
-                  }`
-                : 'Select records to delete'}
-            </Text>
+            Add
           </Button>
         </Flex>
-        <Button
-          onClick={handleCreateNewRecord}
-          w="max-content"
-          leftIcon={<IconCirclePlus size={16} />}
-        >
-          Create
-        </Button>
-      </Flex>
+      ) : (
+        <Flex gap={16} justify="space-between">
+          <Flex gap={16} w="80%">
+            <TextInput
+              sx={{ flexBasis: '60%' }}
+              placeholder="Search here..."
+              icon={<IconSearch size={16} />}
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
+            <Button
+              w="max-content"
+              variant="outline"
+              leftIcon={<IconTrash size={16} />}
+              color="red"
+              disabled={!selectedRecords.length}
+              onClick={() => handleDeleteSelectedRecords(selectedRecords)}
+            >
+              <Text weight={400}>
+                {selectedRecords.length
+                  ? `Delete ${
+                      selectedRecords.length === 1
+                        ? 'one selected record'
+                        : `${selectedRecords.length} selected records`
+                    }`
+                  : 'Select records to delete'}
+              </Text>
+            </Button>
+          </Flex>
+          <Button
+            onClick={handleCreateNewRecord}
+            w="max-content"
+            leftIcon={<IconCirclePlus size={16} />}
+          >
+            Create
+          </Button>
+        </Flex>
+      )}
 
       <MDataTable<{ [key in string]: string }>
         records={records}

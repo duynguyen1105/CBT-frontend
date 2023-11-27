@@ -100,11 +100,9 @@ function ModalAddTestContent() {
         <Menu.Item
           icon={<IconQuestionMark size={20} />}
           onClick={() =>
-            modals.openConfirmModal({
+            modals.open({
               size: 'xl',
               title: 'Add question',
-              closeOnConfirm: false,
-              labels: { confirm: 'Add', cancel: 'Cancel' },
               children: (
                 <Box pb={padding}>
                   <DataTable
@@ -114,22 +112,19 @@ function ModalAddTestContent() {
                     setPage={setPage}
                     totalRecord={totalRecord}
                     query={search}
+                    isAdding
+                    handleAddRecord={(records) => {
+                      console.log(records);
+                      modals.closeAll();
+                    }}
                     setQuery={setSearch}
                     handleCreateNewRecord={() => null}
                     handleDeleteSelectedRecords={deleteSelectedRecords}
                     handleSortStatusChange={sortStatusChange}
                   />
-                  <PreviewQuestionModal
-                    data={clickedQuestion}
-                    opened={isPreviewModalOpened}
-                    onClose={() => {
-                      setIsPreviewModalOpened(false);
-                      setClickedQuestion(null);
-                    }}
-                  />
                 </Box>
               ),
-              onConfirm: () => console.log('Add question'),
+              // onConfirm: () => console.log('Add question'),
             })
           }
         >
