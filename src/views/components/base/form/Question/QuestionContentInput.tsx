@@ -9,7 +9,7 @@ import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 // import ImageResize from 'tiptap-imagresize';
 import { Box, createStyles, Text } from '@mantine/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { QUESTION_TYPE } from 'types/question';
 import RichTextEditorCustom from '../../RichTextEditorCustom';
 import { useQuestionFormContext } from './form-question-context';
@@ -36,13 +36,6 @@ const QuestionContentInput = ({
 }: QuestionContentInputProps) => {
   const { classes, cx } = useStyle({}, { name: 'QuestionContentInput' });
   const form = useQuestionFormContext();
-  const [content, setContent] = useState('');
-
-  useEffect(() => {
-    setContent(form.values.content);
-    editor?.commands.setContent(form.values.content);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.values.content]);
 
   const editor = useEditor({
     extensions: [
@@ -66,7 +59,7 @@ const QuestionContentInput = ({
         content: editor.getHTML(),
       }));
     },
-    content: content,
+    content: form.values.content,
     parseOptions: {
       preserveWhitespace: false,
     },
