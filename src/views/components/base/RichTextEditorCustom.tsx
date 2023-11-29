@@ -1,18 +1,11 @@
-import { Link, RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
-import Highlight from '@tiptap/extension-highlight';
-import Image from '@tiptap/extension-image';
-import SubScript from '@tiptap/extension-subscript';
-import Superscript from '@tiptap/extension-superscript';
-import TextAlign from '@tiptap/extension-text-align';
-import Underline from '@tiptap/extension-underline';
-import { Editor, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
+import { Editor } from '@tiptap/react';
 // import ImageResize from 'tiptap-imagresize';
 import { ActionIcon, Box, createStyles } from '@mantine/core';
 import { IconPhoto, IconTag } from '@tabler/icons-react';
 import { useCallback } from 'react';
-import Text from './Text';
 import { QUESTION_TYPE } from 'types/question';
+import Text from './Text';
 
 interface RichTextEditorCustomProps {
   editor: Editor | null;
@@ -67,23 +60,7 @@ const RichTextEditorCustom = (props: RichTextEditorCustomProps) => {
   const { classes } = useStyle({}, { name: 'RichTextEditorCustom' });
 
   const { editor, label, type, numberOfBlanks, setNumberOfBlanks } = props;
-  // const editor = useEditor({
-  //   extensions: [
-  //     StarterKit,
-  //     Underline,
-  //     Link,
-  //     Superscript,
-  //     SubScript,
-  //     Highlight,
-  //     TextAlign.configure({ types: ['heading', 'paragraph'] }),
-  //     Image.configure({
-  //       inline: true,
-  //       HTMLAttributes: {
-  //         class: 'tiptap-image',
-  //       },
-  //     }),
-  //   ],
-  // });
+
   const addImage = useCallback(() => {
     const url = window.prompt('Enter Image URL');
 
@@ -91,10 +68,6 @@ const RichTextEditorCustom = (props: RichTextEditorCustomProps) => {
       editor?.chain().focus().setImage({ src: url }).run();
     }
   }, [editor]);
-
-  // if (!editor) {
-  //   return null;
-  // }
 
   return (
     <Box className={classes.wrapper}>
