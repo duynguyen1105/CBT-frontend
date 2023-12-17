@@ -1,8 +1,7 @@
-import { Box, Grid, createStyles } from '@mantine/core';
+import { Box, Text, createStyles } from '@mantine/core';
 import DOMPurify from 'dompurify';
 import { LayoutComponent } from 'types/layout';
 import { QuestionType } from 'types/question';
-import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>((theme) => ({
   question: {

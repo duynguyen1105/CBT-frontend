@@ -1,4 +1,4 @@
-import { ActionIcon, Grid, Group } from '@mantine/core';
+import { ActionIcon, Grid, Group, Text } from '@mantine/core';
 import { IconEdit, IconHome2, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
@@ -8,7 +8,6 @@ import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Class } from 'types/class';
 import Breadcrumb, { DataBreadcrumb } from 'views/components/base/Breadcrumb';
-import Text from 'views/components/base/Text';
 import { DataTable } from 'views/components/base/dataTable';
 import { CreateClassModal } from 'views/components/modal/createClassModal';
 

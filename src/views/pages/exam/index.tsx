@@ -1,4 +1,4 @@
-import { Box } from '@mantine/core';
+import { Box, Button, Flex } from '@mantine/core';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import { useCountdown } from 'hooks/useCountdown';
@@ -8,24 +8,12 @@ import DropdownSelect from 'views/components/questions/DropdownSelect';
 import FillInGap from 'views/components/questions/FillInGap';
 import SelectMany from 'views/components/questions/SelectMany';
 import SelectOne from 'views/components/questions/SelectOne';
-
-const renderQuestion = (question: QuestionType, questionNo: number) => {
-  switch (question.type) {
-    case QUESTION_TYPE.DropdownSelect:
-      return <DropdownSelect question={question} questionNo={questionNo} />;
-    case QUESTION_TYPE.FillInGap:
-      return <FillInGap question={question} questionNo={questionNo} />;
-    case QUESTION_TYPE.SelectMany:
-      return <SelectMany question={question} questionNo={questionNo} />;
-    case QUESTION_TYPE.SelectOne:
-      return <SelectOne question={question} questionNo={questionNo} />;
-    default:
-      break;
-  }
-};
+import { Countdown } from './Countdown';
+import { Form } from 'react-router-dom';
+import FormExam from 'views/components/base/form/FormExam';
 
 export const ExamPage = () => {
-  // const { time } = useCountdown();
+  const { time } = useCountdown();
 
   const [questions, setQuestions] = useState<QuestionType[]>([]);
 
@@ -45,12 +33,10 @@ export const ExamPage = () => {
   }, []);
 
   return (
-    <Box p="md">
+    <Flex p="md" direction="column" align="center" bg="#d5dbd5">
       <h1>ExamPage</h1>
-      {/* <div>Countdown: {time}</div> */}
-      {questions.map((question, idx) => (
-        <div key={question._id}>{renderQuestion(question, idx + 1)}</div>
-      ))}
-    </Box>
+      <Countdown />
+      <FormExam exam={{ _id: '1', questions }} />
+    </Flex>
   );
 };

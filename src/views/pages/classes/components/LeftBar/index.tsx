@@ -1,4 +1,4 @@
-import {Box} from '@mantine/core';
+import { Box, Text } from '@mantine/core';
 import {
   IconAlarm,
   IconEye,
@@ -7,15 +7,14 @@ import {
   IconMap,
   IconSend,
 } from '@tabler/icons-react';
-import {FC, useState} from 'react';
-import Text from 'views/components/base/Text';
+import { FC, useState } from 'react';
 import BadgeQuestion from '../base/BadgeQuestion';
 import Button from 'views/components/base/Button';
 import useStyle from './style';
 import DialogSubmit from '../base/DialogSubmit';
 
 const LeftBar: FC = () => {
-  const {classes} = useStyle({}, {name: 'LeftBar'});
+  const { classes } = useStyle({}, { name: 'LeftBar' });
   const [open, setOpen] = useState<boolean>(false);
   const handleOpenModal = () => {
     setOpen(true);
@@ -70,11 +69,11 @@ const LeftBar: FC = () => {
       </Box>
 
       <Box p={12}>
-        <Box sx={{display: 'flex', gap: 12}}>
+        <Box sx={{ display: 'flex', gap: 12 }}>
           <IconListCheck />
           <Text fz={16}>Preview list</Text>
         </Box>
-        <Box mt={8} sx={{display: 'flex', gap: 4, flexWrap: 'wrap'}}>
+        <Box mt={8} sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
           <BadgeQuestion title="1" variant="question" />
           <BadgeQuestion title="2" variant="question" />
           <BadgeQuestion title="3" variant="question" />
@@ -90,7 +89,7 @@ const LeftBar: FC = () => {
         </Box>
       </Box>
 
-      <Box pl={12} sx={{display: 'flex', flexDirection: 'column', gap: 12}}>
+      <Box pl={12} sx={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <Button fw={400} w={123} rightIcon={<IconEye />}>
           Review
         </Button>

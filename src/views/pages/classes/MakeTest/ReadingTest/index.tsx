@@ -1,15 +1,14 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import {Box, Button, Grid, ScrollArea} from '@mantine/core';
-import {IconArrowNarrowLeft, IconArrowNarrowRight} from '@tabler/icons-react';
-import {FC, useState} from 'react';
-import Text from 'views/components/base/Text';
+import { Box, Button, Grid, ScrollArea, Text } from '@mantine/core';
+import { IconArrowNarrowLeft, IconArrowNarrowRight } from '@tabler/icons-react';
+import { FC, useState } from 'react';
 import BottomBar from '../../components/BottomBar';
 import TrueFalse from '../../components/Question/TrueFalse';
 import ButtonNotePad from '../../components/base/ButtonNotePad';
 import DropdownSelect from '../../components/Question/DropdownSelect';
-import {DataReadingPart1, DataReadingPart2} from '../../util';
+import { DataReadingPart1, DataReadingPart2 } from '../../util';
 import Matching from '../../components/Question/Matching';
-import {useNavigate, useParams} from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 export enum ReadingPart {
   PART_1 = 'Part1',
@@ -26,7 +25,7 @@ const Content = (data: any) => {
         You should spend about 20 minutes on Questions 1 -13, which are based on Reading Passage 1
         below.
       </Text>
-      <Box sx={{display: 'flex', justifyContent: 'center'}}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <img src={data.image} alt="reading-image" />
       </Box>
       <Text fz={13} p={4}>
@@ -38,7 +37,7 @@ const Content = (data: any) => {
 
 const ReadingTest: FC = () => {
   const navigate = useNavigate();
-  const {test_id} = useParams();
+  const { test_id } = useParams();
   const [readingPart, setReadingPart] = useState<ReadingPart>(ReadingPart.PART_1);
   const [data, setData] = useState(DataReadingPart1);
 
@@ -61,13 +60,13 @@ const ReadingTest: FC = () => {
   };
   return (
     <Grid>
-      <Grid.Col span={12} bg="#fff" sx={{borderRadius: 5}}>
+      <Grid.Col span={12} bg="#fff" sx={{ borderRadius: 5 }}>
         <Text ta="center" py={4} fz={18} fw={700}>
           GT Writing Test - Informal Letters
         </Text>
       </Grid.Col>
 
-      <Grid.Col p={8} mt={8} span={12} bg="#fff" sx={{borderRadius: 5}}>
+      <Grid.Col p={8} mt={8} span={12} bg="#fff" sx={{ borderRadius: 5 }}>
         <Text fw={600}>{DataReadingPart1.title}</Text>
         <Grid mt={2} w="100%" h="calc(100vh - 315px)">
           <Grid.Col p={0} span={6} h="100%" w="100%" bg="#D7E6DC">
@@ -78,7 +77,7 @@ const ReadingTest: FC = () => {
             <ScrollArea h="100%">
               {readingPart === ReadingPart.PART_1 ? (
                 <>
-                  <Box sx={{display: 'flex', gap: 12}}>
+                  <Box sx={{ display: 'flex', gap: 12 }}>
                     <Text fw={600}>Question 12-14</Text>
                     <ButtonNotePad />
                   </Box>
@@ -88,7 +87,7 @@ const ReadingTest: FC = () => {
                   </Text>
 
                   <Box p={18}>
-                    <Box fw={400} sx={{border: '1px solid #999', display: 'flex'}}>
+                    <Box fw={400} sx={{ border: '1px solid #999', display: 'flex' }}>
                       <Text tt="uppercase" fw={400} w="25%">
                         true
                       </Text>
@@ -113,7 +112,7 @@ const ReadingTest: FC = () => {
                         if the statement contradicts the information
                       </Text>
                     </Box>
-                    <Box fw={400} sx={{border: '1px solid #999', display: 'flex'}}>
+                    <Box fw={400} sx={{ border: '1px solid #999', display: 'flex' }}>
                       <Text tt="uppercase" fw={400} w="25%">
                         not given
                       </Text>
@@ -125,27 +124,27 @@ const ReadingTest: FC = () => {
                   <>
                     <TrueFalse
                       data={[
-                        {value: 'true', label: 'True'},
-                        {value: 'false', label: 'False'},
-                        {value: 'notGiven', label: 'Not Given'},
+                        { value: 'true', label: 'True' },
+                        { value: 'false', label: 'False' },
+                        { value: 'notGiven', label: 'Not Given' },
                       ]}
                       content="Ganpat Jadhav’s monthly ration of kerosene was insufficient."
                       numberQuestion="12"
                     />
                     <TrueFalse
                       data={[
-                        {value: 'true', label: 'True'},
-                        {value: 'false', label: 'False'},
-                        {value: 'notGiven', label: 'Not Given'},
+                        { value: 'true', label: 'True' },
+                        { value: 'false', label: 'False' },
+                        { value: 'notGiven', label: 'Not Given' },
                       ]}
                       content="Kerosene causes many fires in homes in developing countries."
                       numberQuestion="13"
                     />
                     <TrueFalse
                       data={[
-                        {value: 'true', label: 'True'},
-                        {value: 'false', label: 'False'},
-                        {value: 'notGiven', label: 'Not Given'},
+                        { value: 'true', label: 'True' },
+                        { value: 'false', label: 'False' },
+                        { value: 'notGiven', label: 'Not Given' },
                       ]}
                       content="LED systems could solve the world’s energy problems."
                       numberQuestion="14"
@@ -154,7 +153,7 @@ const ReadingTest: FC = () => {
                   <Text fw={600}>Question 15 - 19</Text>
                   <Text fs="italic" fw={400} fz={12}>
                     Complete the following sentences using{' '}
-                    <span style={{color: 'red'}}>NO MORE THAN THREE WORDS</span> from the text for
+                    <span style={{ color: 'red' }}>NO MORE THAN THREE WORDS</span> from the text for
                     each gap.
                   </Text>
 
@@ -179,7 +178,7 @@ const ReadingTest: FC = () => {
           w="100%"
           mt={14}
           span={12}
-          sx={{display: 'flex', justifyContent: 'space-between'}}
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <Button onClick={() => handleChangePage('previous')} leftIcon={<IconArrowNarrowLeft />}>
             Previous

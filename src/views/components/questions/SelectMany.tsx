@@ -1,9 +1,9 @@
-import { ActionIcon, Box, Checkbox, Group, createStyles } from '@mantine/core';
+import { ActionIcon, Box, Checkbox, Group, Text, createStyles } from '@mantine/core';
 import { IconBulb } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
-import { QuestionType } from 'types/question';
-import Text from '../base/Text';
+import { ExamResultType, QuestionType } from 'types/question';
+import { UseFormReturnType } from '@mantine/form';
 
 const useStyle = createStyles<string, {}>(() => ({
   description: {
@@ -17,8 +17,9 @@ const useStyle = createStyles<string, {}>(() => ({
 interface SelectManyProps {
   question: QuestionType;
   questionNo?: number;
+  form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
 }
-const SelectMany = ({ question, questionNo = 1 }: SelectManyProps) => {
+const SelectMany = ({ question, questionNo = 1, form }: SelectManyProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectMany' });
 
@@ -40,7 +41,7 @@ const SelectMany = ({ question, questionNo = 1 }: SelectManyProps) => {
       </Group>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />
-        <Checkbox.Group mt={'sm'}>
+        <Checkbox.Group mt={'sm'} {...form?.getInputProps(`answers.${questionNo - 1}`)}>
           {question?.answer.map((answer, index) => (
             <Checkbox
               mt="sm"

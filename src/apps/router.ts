@@ -13,6 +13,7 @@ import ReadingTest from 'views/pages/classes/MakeTest/ReadingTest';
 import WritingTest from 'views/pages/classes/MakeTest/WritingTest';
 import SpeakingTest from 'views/pages/classes/MakeTest/SpeakingTest';
 import QuestionDetail from 'views/pages/question/QuestionDetail';
+import TestForm from 'views/components/base/form/FormTest';
 import { ExamPage } from 'views/pages/exam';
 
 export interface RouteItem {
@@ -76,6 +77,10 @@ export const publicRoutes: RouteItem[] = [
   {
     path: PageURL.TESTS,
     element: Test,
+  },
+  {
+    path: PageURL.TESTS_DETAIL,
+    element: TestForm,
   },
   // {
   //   path: '/exam',

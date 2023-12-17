@@ -1,8 +1,7 @@
-import {FC} from 'react';
+import { FC } from 'react';
 import BadgeQuestion from '../base/BadgeQuestion';
-import Text from 'views/components/base/Text';
-import {Group, Select} from '@mantine/core';
-import {IconChevronDown} from '@tabler/icons-react';
+import { Group, Select, Text } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons-react';
 import useStyle from './style';
 
 export interface DataDropdown {
@@ -17,8 +16,8 @@ export interface DropdownSelectProps {
 }
 
 const TrueFalse: FC<DropdownSelectProps> = (props) => {
-  const {data, content, numberQuestion, ...rest} = props;
-  const {classes} = useStyle({}, {name: 'QuestionComponent'});
+  const { data, content, numberQuestion, ...rest } = props;
+  const { classes } = useStyle({}, { name: 'QuestionComponent' });
   return (
     <Group {...rest} mt={4}>
       <BadgeQuestion title={numberQuestion} variant="question" />

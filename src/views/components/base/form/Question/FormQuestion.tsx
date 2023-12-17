@@ -13,6 +13,7 @@ import {
   TextInput,
   createStyles,
   rem,
+  Text,
 } from '@mantine/core';
 import {
   IconBrandTelegram,
@@ -28,7 +29,6 @@ import {
   IconUpload,
 } from '@tabler/icons-react';
 
-import Text from 'views/components/base/Text';
 import Button from '../../Button';
 
 import defaultTheme from 'apps/theme';

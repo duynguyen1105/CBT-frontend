@@ -1,14 +1,13 @@
-import {Box, Group, TextInput} from '@mantine/core';
-import {FC} from 'react';
-import Text from 'views/components/base/Text';
+import { Box, Group, TextInput, Text } from '@mantine/core';
+import { FC } from 'react';
 import BadgeQuestion from '../base/BadgeQuestion';
 import Button from 'views/components/base/Button';
 
 const Matching: FC = () => {
   return (
-    <Box sx={{display: 'flex'}}>
-      <Box w="100%" sx={{flex: 2}}>
-        <Text sx={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 4}}>
+    <Box sx={{ display: 'flex' }}>
+      <Box w="100%" sx={{ flex: 2 }}>
+        <Text sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 4 }}>
           Another example o
           <Group>
             <BadgeQuestion variant="question" title="15" />
@@ -34,7 +33,7 @@ const Matching: FC = () => {
           working well.
         </Text>
       </Box>
-      <Box w="100%" sx={{flex: 1}}>
+      <Box w="100%" sx={{ flex: 1 }}>
         <Button my={4} h={25} fz={14} fw={400} variant="default" bg="rgba(189, 189, 189, 0.2)">
           affluent countries
         </Button>

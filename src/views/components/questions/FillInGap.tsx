@@ -1,9 +1,8 @@
-import { ActionIcon, Alert, Box, Group, createStyles } from '@mantine/core';
+import { ActionIcon, Alert, Box, Group, createStyles, Text } from '@mantine/core';
 import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
 import { QuestionType } from 'types/question';
-import Text from '../base/Text';
 
 const useStyle = createStyles<string, {}>(() => ({
   root: {

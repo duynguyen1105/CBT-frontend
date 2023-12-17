@@ -53,6 +53,36 @@ export type TestType = {
   questions: QuestionType[];
 };
 
+export type ExamType = {
+  _id: string;
+  // title: string;
+  // description: string;
+  // timeSetting?: {
+  //   startTime?: Date;
+  //   finishTime?: Date;
+  //   duration?: number;
+  // };
+  // password?: string;
+  // displayOptions?: {
+  //   afterSubmit?: {
+  //     showScore?: boolean;
+  //     showAnswer?: boolean;
+  //     showFeedback?: boolean;
+  //   };
+  //   afterDeadline?: {
+  //     showScore?: boolean;
+  //     showAnswer?: boolean;
+  //     showFeedback?: boolean;
+  //   };
+  // };
+  questions: QuestionType[];
+};
+
+export type ExamResultType = {
+  _id: string;
+  answers: any[];
+};
+
 export interface QuestionType {
   _id?: string;
   title: string;

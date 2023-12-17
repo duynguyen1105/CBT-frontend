@@ -1,14 +1,13 @@
 import React, { FC, MouseEvent } from 'react';
-import { Box, createStyles } from '@mantine/core';
+import { Box, createStyles, Text } from '@mantine/core';
 
 import { IconSettings } from '@tabler/icons-react';
 
 import Title from 'views/components/base/Title';
-import Text from 'views/components/base/Text';
 import Button from 'views/components/base/Button';
 
 export interface NotificationProps {
-  onClickSetting(event: MouseEvent<HTMLButtonElement>) : void;
+  onClickSetting(event: MouseEvent<HTMLButtonElement>): void;
 }
 
 const useStyle = createStyles<string, {}>(() => ({
@@ -18,18 +17,17 @@ const useStyle = createStyles<string, {}>(() => ({
     '.notification-header': {
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
     },
 
     '.notification-toolbar': {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
-  }
+  },
 }));
 
-const Notification: FC<NotificationProps> = props => {
-
+const Notification: FC<NotificationProps> = (props) => {
   const { onClickSetting } = props;
   const { classes } = useStyle({}, { name: 'HeaderNotification' });
 
@@ -46,7 +44,7 @@ const Notification: FC<NotificationProps> = props => {
       </Box>
     </Box>
   );
-}
+};
 
 Notification.displayName = 'Header.Notification';
 export default Notification;

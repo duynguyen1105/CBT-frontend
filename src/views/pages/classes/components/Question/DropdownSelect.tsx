@@ -1,15 +1,14 @@
-import {Group, Select} from '@mantine/core';
-import {FC} from 'react';
-import Text from 'views/components/base/Text';
+import { Group, Select, Text } from '@mantine/core';
+import { FC } from 'react';
 import BadgeQuestion from '../base/BadgeQuestion';
 import useStyle from './style';
-import {IconChevronDown} from '@tabler/icons-react';
+import { IconChevronDown } from '@tabler/icons-react';
 
 const DropdownSelect: FC = () => {
-  const {classes} = useStyle({}, {name: 'QuestionComponent'});
+  const { classes } = useStyle({}, { name: 'QuestionComponent' });
   return (
     <>
-      <Text fz={13} p={8} sx={{display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
+      <Text fz={13} p={8} sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         Another example of cheap technology helping poor people in the countryside is
         <Group my={12}>
           <BadgeQuestion title={'12'} variant="question" />

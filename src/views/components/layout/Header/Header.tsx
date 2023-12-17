@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import {
   Anchor,
   Avatar,
@@ -8,13 +8,13 @@ import {
   Header as MHeader,
   Menu,
   Popover,
+  Text,
 } from '@mantine/core';
 
-import {IconBell, IconLogout, IconSettings} from '@tabler/icons-react';
+import { IconBell, IconLogout, IconSettings } from '@tabler/icons-react';
 
 import Image from 'views/components/base/Image';
 import Button from 'views/components/base/Button';
-import Text from 'views/components/base/Text';
 
 import defaultTheme from 'apps/theme';
 import PageURL from 'apps/PageURL';
@@ -25,7 +25,7 @@ import avatar from 'assets/images/avatar.png';
 import NotificationContainer from './NotificationContainer';
 import UserCard from '../UserCard';
 
-const {header, padding, dropdown} = defaultTheme.layout;
+const { header, padding, dropdown } = defaultTheme.layout;
 
 const useStyle = createStyles<string, {}>((theme) => {
   const bgcolor = theme.colorScheme === 'dark' ? theme.colors.gray[9] : undefined;
@@ -57,7 +57,7 @@ const useStyle = createStyles<string, {}>((theme) => {
 });
 
 const Header: FC = () => {
-  const {classes} = useStyle({}, {name: 'LayoutHeader'});
+  const { classes } = useStyle({}, { name: 'LayoutHeader' });
 
   return (
     <MHeader height={header.height} className={classes.root}>

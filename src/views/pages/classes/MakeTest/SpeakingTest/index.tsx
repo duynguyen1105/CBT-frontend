@@ -1,16 +1,15 @@
-import {ActionIcon, Box, Button, Grid} from '@mantine/core';
+import { ActionIcon, Box, Button, Grid, Text } from '@mantine/core';
 import {
   IconArrowNarrowLeft,
   IconArrowNarrowRight,
   IconMicrophone,
   IconPlayerPause,
 } from '@tabler/icons-react';
-import {FC, useState} from 'react';
-import Text from 'views/components/base/Text';
+import { FC, useState } from 'react';
 import BottomBar from '../../components/BottomBar';
-import {AudioRecorder, useAudioRecorder} from 'react-audio-voice-recorder';
+import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import useStyle from './style';
-import {useNavigate, useParams} from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 export enum SpeakingStep {
   STEP_1 = 'Step1',
@@ -18,10 +17,10 @@ export enum SpeakingStep {
 }
 
 const SpeakingTest: FC = () => {
-  const {classes} = useStyle({}, {name: 'SpeakingTest'});
+  const { classes } = useStyle({}, { name: 'SpeakingTest' });
   const recorderControls = useAudioRecorder();
   const navigate = useNavigate();
-  const {test_id} = useParams();
+  const { test_id } = useParams();
 
   const [step, setStep] = useState<SpeakingStep>(SpeakingStep.STEP_1);
 
@@ -45,7 +44,7 @@ const SpeakingTest: FC = () => {
   };
   return (
     <Grid>
-      <Grid.Col span={12} bg="#fff" sx={{borderRadius: 5}}>
+      <Grid.Col span={12} bg="#fff" sx={{ borderRadius: 5 }}>
         <Text ta="center" py={4} fz={18} fw={700}>
           GT Writing Test - Informal Letters
         </Text>
@@ -53,7 +52,7 @@ const SpeakingTest: FC = () => {
 
       <Grid.Col mt={8} span={12} bg="#fff">
         <Text fw={600}>Speaking Part</Text>
-        <Grid.Col sx={{display: 'grid', placeItems: 'center'}} span={12} h="calc(100vh - 330px)">
+        <Grid.Col sx={{ display: 'grid', placeItems: 'center' }} span={12} h="calc(100vh - 330px)">
           {step === SpeakingStep.STEP_1 ? (
             <Box h="100%" w="60%" bg="#F3F3F3">
               <Text c="#C86478" pt={18} tt="uppercase" ta="center" fw={600}>
@@ -68,7 +67,7 @@ const SpeakingTest: FC = () => {
                   onRecordingComplete={recordComplte}
                 />
                 <ActionIcon
-                  sx={{width: 100, height: 100, backgroundColor: '#fff', borderRadius: '50%'}}
+                  sx={{ width: 100, height: 100, backgroundColor: '#fff', borderRadius: '50%' }}
                   onClick={recorderControls.startRecording}
                 >
                   <IconMicrophone size={56} />
@@ -84,7 +83,7 @@ const SpeakingTest: FC = () => {
               </Box>
             </Box>
           ) : (
-            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Text fw={600} fz={14} c="#999" ta="center">
                 You should spend about 30 minutes on this test. <br />
                 You will meeting and answer an interview with Supervisor
@@ -102,7 +101,7 @@ const SpeakingTest: FC = () => {
           w="100%"
           mt={14}
           span={12}
-          sx={{display: 'flex', justifyContent: 'space-between'}}
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <Button onClick={() => handleChangePage('previous')} leftIcon={<IconArrowNarrowLeft />}>
             Previous

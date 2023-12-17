@@ -1,12 +1,11 @@
-import {Box, Grid} from '@mantine/core';
-import {IconHome2} from '@tabler/icons-react';
+import { Box, Grid, Text } from '@mantine/core';
+import { IconHome2 } from '@tabler/icons-react';
 import PageURL from 'apps/PageURL';
-import {FC} from 'react';
-import Breadcrumb, {DataBreadcrumb} from 'views/components/base/Breadcrumb';
-import Text from 'views/components/base/Text';
+import { FC } from 'react';
+import Breadcrumb, { DataBreadcrumb } from 'views/components/base/Breadcrumb';
 import useStyle from './style';
 import Button from 'views/components/base/Button';
-import {useNavigate, useParams} from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 const breadcrumb: DataBreadcrumb[] = [
   {
     title: <IconHome2 color="#E1000A" size={24} />,
@@ -22,9 +21,9 @@ const breadcrumb: DataBreadcrumb[] = [
   },
 ];
 const MakeTest: FC = () => {
-  const {classes} = useStyle({}, {name: 'MakeTest'});
+  const { classes } = useStyle({}, { name: 'MakeTest' });
   const navigate = useNavigate();
-  const {test_id} = useParams();
+  const { test_id } = useParams();
 
   const onStartTest = () => {
     navigate(`/classes/make-test/${test_id}/listening-test`);
@@ -37,9 +36,9 @@ const MakeTest: FC = () => {
         w="100%"
         bg="#fff"
         span={12}
-        sx={{display: 'flex', alignItems: 'center', borderRadius: 5}}
+        sx={{ display: 'flex', alignItems: 'center', borderRadius: 5 }}
       >
-        <Text pr={13} fz={20} fw={700} sx={{borderRight: '1px solid #CECECE'}}>
+        <Text pr={13} fz={20} fw={700} sx={{ borderRight: '1px solid #CECECE' }}>
           My Classes
         </Text>
 
@@ -47,7 +46,14 @@ const MakeTest: FC = () => {
       </Grid.Col>
 
       <Grid.Col className={classes.root} mt={12} span={12} bg="#fff">
-        <Text fz={20} fw={700} py={12} mx={36} ta="center" sx={{borderBottom: '1px solid #BDBDBD'}}>
+        <Text
+          fz={20}
+          fw={700}
+          py={12}
+          mx={36}
+          ta="center"
+          sx={{ borderBottom: '1px solid #BDBDBD' }}
+        >
           GT Writing Test - Informal Letters
         </Text>
         <Box lh={1.8}>
@@ -67,7 +73,7 @@ const MakeTest: FC = () => {
             Score method: Lastime
           </Text>
         </Box>
-        <Box mt={24} sx={{display: 'flex', justifyContent: 'center'}}>
+        <Box mt={24} sx={{ display: 'flex', justifyContent: 'center' }}>
           <Button onClick={onStartTest} h={42} fz={16}>
             Begin The Test
           </Button>

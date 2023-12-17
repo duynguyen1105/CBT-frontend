@@ -1,8 +1,7 @@
 import React, { ChangeEvent, forwardRef, useState } from 'react';
-import { Box, PasswordInput, PasswordInputProps, Popover, Progress } from '@mantine/core';
+import { Box, PasswordInput, PasswordInputProps, Popover, Progress, Text } from '@mantine/core';
 import { IconX, IconCheck } from '@tabler/icons-react';
 
-import Text from '../Text';
 import { useTranslation } from 'react-i18next';
 import useTranslate from 'hooks/useTranslate';
 import useInputStyle from './useInputStyle';
@@ -25,10 +24,7 @@ function Requirement({ meets, label }: RequirementProps) {
       mt={7}
       size="sm"
     >
-      {meets
-        ? <IconCheck size="0.9rem" />
-        : <IconX size="0.9rem" />
-      }
+      {meets ? <IconCheck size="0.9rem" /> : <IconX size="0.9rem" />}
       <Box ml={10}>{label}</Box>
     </Text>
   );
@@ -43,7 +39,7 @@ const requirements = [
 
 function getStrength(password: string, min?: number) {
   let multiplier = 0;
-  
+
   if (min !== undefined && min > 0 && password.length <= min) {
     multiplier = 1;
   }
@@ -57,106 +53,98 @@ function getStrength(password: string, min?: number) {
   return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10);
 }
 
+const FormPassword = forwardRef<HTMLInputElement, FormPasswordProps>(function FormPassword(
+  props,
+  ref
+) {
+  const {
+    value = '',
+    onChange,
+    label,
+    placeholder,
+    minLength,
+    disableStrength,
+    className,
+    ...rest
+  } = props;
 
-const FormPassword = forwardRef<HTMLInputElement, FormPasswordProps>(
-  function FormPassword(props, ref) {
+  const { t } = useTranslation();
+  const { classes, cx } = useInputStyle({}, { name: 'FormInput' });
 
-    const {
-      value = '',
-      onChange,
-      label,
-      placeholder,
-      minLength,
-      disableStrength,
-      className,
-      ...rest
-    } = props;
+  const [popoverOpened, setPopoverOpened] = useState(false);
+  const [currentValue, setCurrentValue] = useState(value.toString());
 
-    const { t } = useTranslation();
-    const { classes, cx } = useInputStyle({}, { name: 'FormInput' });
+  const inputLabel = useTranslate(label);
+  const inputPlaceholder = useTranslate(placeholder);
 
-    const [popoverOpened, setPopoverOpened] = useState(false);
-    const [currentValue, setCurrentValue] = useState(value.toString());
+  const checks = requirements.map((requirement, index) => {
+    const rlabel = t(`${requirement.label}`);
 
-    const inputLabel = useTranslate(label);
-    const inputPlaceholder = useTranslate(placeholder);
+    return <Requirement key={index} label={rlabel} meets={requirement.re.test(currentValue)} />;
+  });
 
-    const checks = requirements.map((requirement, index) => {
+  const strength = getStrength(currentValue, minLength);
+  const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red';
 
-      const rlabel = t(`${requirement.label}`);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCurrentValue(e.currentTarget.value);
+    onChange?.(e);
+  };
 
-      return (
-        <Requirement
-          key={index}
-          label={rlabel}
-          meets={requirement.re.test(currentValue)}
-        />
-      )
-    });
-
-    const strength = getStrength(currentValue, minLength);
-    const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red';
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setCurrentValue(e.currentTarget.value);
-      onChange?.(e);
-    }
-
-    if (disableStrength) {
-      return (
-        <PasswordInput
-          {...rest}
-          ref={ref}
-          label={inputLabel}
-          placeholder={inputPlaceholder}
-          value={currentValue}
-          onChange={handleChange}
-          minLength={minLength}
-          className={cx(classes.input, className)}
-        />
-      );
-    }
-
+  if (disableStrength) {
     return (
-      <Box maw="100%" mx="auto">
-        <Popover
-          opened={popoverOpened}
-          position="bottom"
-          width="target"
-          transitionProps={{ transition: 'pop' }}
-        >
-          <Popover.Target>
-            <Box
-              onFocusCapture={() => setPopoverOpened(true)}
-              onBlurCapture={() => setPopoverOpened(false)}
-            >
-              <PasswordInput
-                {...rest}
-                ref={ref}
-                label={inputLabel}
-                placeholder={inputPlaceholder}
-                value={currentValue}
-                onChange={handleChange}
-                minLength={minLength}
-                className={cx(classes.input, className)}
-              />
-            </Box>
-          </Popover.Target>
-          <Popover.Dropdown>
-            <Progress color={color} value={strength} size={5} mb="xs" />
-            {minLength !== undefined && minLength > 0 && (
-              <Requirement
-                label={t(`Includes at least ${minLength} characters`)}
-                meets={currentValue.length > minLength}
-              />
-            )}
-            {checks}
-          </Popover.Dropdown>
-        </Popover>
-      </Box>
-    )
+      <PasswordInput
+        {...rest}
+        ref={ref}
+        label={inputLabel}
+        placeholder={inputPlaceholder}
+        value={currentValue}
+        onChange={handleChange}
+        minLength={minLength}
+        className={cx(classes.input, className)}
+      />
+    );
   }
-);
+
+  return (
+    <Box maw="100%" mx="auto">
+      <Popover
+        opened={popoverOpened}
+        position="bottom"
+        width="target"
+        transitionProps={{ transition: 'pop' }}
+      >
+        <Popover.Target>
+          <Box
+            onFocusCapture={() => setPopoverOpened(true)}
+            onBlurCapture={() => setPopoverOpened(false)}
+          >
+            <PasswordInput
+              {...rest}
+              ref={ref}
+              label={inputLabel}
+              placeholder={inputPlaceholder}
+              value={currentValue}
+              onChange={handleChange}
+              minLength={minLength}
+              className={cx(classes.input, className)}
+            />
+          </Box>
+        </Popover.Target>
+        <Popover.Dropdown>
+          <Progress color={color} value={strength} size={5} mb="xs" />
+          {minLength !== undefined && minLength > 0 && (
+            <Requirement
+              label={t(`Includes at least ${minLength} characters`)}
+              meets={currentValue.length > minLength}
+            />
+          )}
+          {checks}
+        </Popover.Dropdown>
+      </Popover>
+    </Box>
+  );
+});
 
 FormPassword.displayName = 'FormPassword';
 export default FormPassword;

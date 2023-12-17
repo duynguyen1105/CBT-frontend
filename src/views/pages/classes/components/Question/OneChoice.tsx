@@ -1,16 +1,15 @@
-import {Box, Radio} from '@mantine/core';
-import {FC} from 'react';
-import Text from 'views/components/base/Text';
+import { Box, Radio, Text } from '@mantine/core';
+import { FC } from 'react';
 import BadgeQuestion from '../base/BadgeQuestion';
 import useStyle from './style';
 
 const OneChoice: FC = () => {
-  const {classes} = useStyle({}, {name: 'QuestionComponent'});
+  const { classes } = useStyle({}, { name: 'QuestionComponent' });
   return (
     <Box>
-      <Box sx={{display: 'flex', lineHeight: 0, gap: 8}}>
+      <Box sx={{ display: 'flex', lineHeight: 0, gap: 8 }}>
         <BadgeQuestion title="1" variant="question" />
-        <Text fz={14} fw={700} sx={{display: 'flex', alignItems: 'center'}}>
+        <Text fz={14} fw={700} sx={{ display: 'flex', alignItems: 'center' }}>
           How much will the evening cost?
         </Text>
       </Box>

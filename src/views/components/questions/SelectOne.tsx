@@ -1,9 +1,9 @@
-import { ActionIcon, Box, Group, Radio, createStyles } from '@mantine/core';
+import { ActionIcon, Box, Group, Radio, Text, createStyles } from '@mantine/core';
 import { IconBulb } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
-import { QuestionType } from 'types/question';
-import Text from '../base/Text';
+import { ExamResultType, ExamType, QuestionType } from 'types/question';
+import { UseFormReturnType } from '@mantine/form';
 
 const useStyle = createStyles<string, {}>(() => ({
   description: {
@@ -17,8 +17,9 @@ const useStyle = createStyles<string, {}>(() => ({
 interface SelectOneProps {
   question: QuestionType;
   questionNo?: number;
+  form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
 }
-const SelectOne = ({ question, questionNo = 1 }: SelectOneProps) => {
+const SelectOne = ({ question, questionNo = 1, form }: SelectOneProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectOne' });
 
@@ -28,6 +29,7 @@ const SelectOne = ({ question, questionNo = 1 }: SelectOneProps) => {
     setShowFeedback(!showFeedback);
   };
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
+
   return (
     <Box p="md">
       <Group>
@@ -40,7 +42,10 @@ const SelectOne = ({ question, questionNo = 1 }: SelectOneProps) => {
       </Group>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />
-        <Radio.Group mt={'sm'}>
+        <Radio.Group
+          mt={'sm'}
+          onChange={(value) => form?.setFieldValue(`answers.${questionNo - 1}`, Number(value))}
+        >
           {question?.answer?.map((answer, index) => (
             <Radio
               mt="sm"

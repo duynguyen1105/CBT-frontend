@@ -13,6 +13,7 @@ const PageURL = {
   MAKE_TEST_SPEAKING: '/classes/make-test/:test_id/speaking-test',
   QUESTIONS: '/questions',
   QUESTIONS_DETAIL: '/questions/:question_id',
+  TESTS_DETAIL: '/tests/:test_id',
 };
 
 export default PageURL;

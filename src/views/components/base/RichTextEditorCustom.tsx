@@ -1,11 +1,10 @@
 import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
 import { Editor } from '@tiptap/react';
 // import ImageResize from 'tiptap-imagresize';
-import { ActionIcon, Box, createStyles } from '@mantine/core';
+import { ActionIcon, Box, createStyles, Text } from '@mantine/core';
 import { IconPhoto, IconTag } from '@tabler/icons-react';
 import { useCallback } from 'react';
 import { QUESTION_TYPE } from 'types/question';
-import Text from './Text';
 
 interface RichTextEditorCustomProps {
   editor: Editor | null;

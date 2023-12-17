@@ -1,28 +1,26 @@
 import {
-  BackgroundImage,
   Box,
   Center,
   createStyles,
   Flex,
-  Grid,
   Image,
   PasswordInput,
+  Text,
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 import { PATHS } from 'api/paths';
 import { callApiWithBasicAuth, getApiPath } from 'api/utils';
+import { COOKIE_AUTH_TOKEN } from 'apps/constants';
+import PageURL from 'apps/PageURL';
 import theme from 'apps/theme';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router';
 import { LayoutComponent } from 'types/layout';
 import Button from 'views/components/base/Button';
-import Text from 'views/components/base/Text';
 import Fluid from 'views/layout/Fluid';
 import logo from '../../../assets/images/logo/cbtlogo.png';
-import Cookies from 'js-cookie';
-import { COOKIE_AUTH_TOKEN } from 'apps/constants';
-import { useNavigate } from 'react-router';
-import PageURL from 'apps/PageURL';
-import { notifications } from '@mantine/notifications';
 
 const useStyle = createStyles<string, {}>(() => ({
   row: {
@@ -118,13 +116,7 @@ const Login: LayoutComponent = () => {
         <Image src={logo} style={{ width: '120px', padding: 22 }} />
         <Box className={classes.rightCol}>
           <Flex align="center" direction="column" m="xl">
-            <Text
-              textTransform="capitalize"
-              fz={32}
-              fw={600}
-              c={theme.layout.color.text.hex}
-              align="center"
-            >
+            <Text fz={32} fw={600} c={theme.layout.color.text.hex} align="center">
               Log in
             </Text>
           </Flex>

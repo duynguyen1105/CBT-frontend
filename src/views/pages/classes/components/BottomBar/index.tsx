@@ -1,4 +1,4 @@
-import {ActionIcon, Box} from '@mantine/core';
+import { ActionIcon, Box, Text } from '@mantine/core';
 import {
   IconAlarm,
   IconChevronUp,
@@ -7,14 +7,13 @@ import {
   IconMap,
   IconSend,
 } from '@tabler/icons-react';
-import {FC, useState} from 'react';
+import { FC, useState } from 'react';
 import Button from 'views/components/base/Button';
-import Text from 'views/components/base/Text';
 import useStyle from './style';
 import DialogSubmit from '../base/DialogSubmit';
 
 const BottomBar: FC = () => {
-  const {classes} = useStyle({}, {name: 'BottomBar'});
+  const { classes } = useStyle({}, { name: 'BottomBar' });
   const [open, setOpen] = useState<boolean>(false);
   return (
     <Box className={classes.root}>
@@ -32,7 +31,7 @@ const BottomBar: FC = () => {
         </Text>
       </Box>
       <Box className={classes.right}>
-        <Box pl={12} sx={{display: 'flex', gap: 12}}>
+        <Box pl={12} sx={{ display: 'flex', gap: 12 }}>
           <Button className={classes.btn} rightIcon={<IconEye />}>
             Review
           </Button>
@@ -42,7 +41,7 @@ const BottomBar: FC = () => {
           <Button className={classes.btn} rightIcon={<IconMap />}>
             Solution
           </Button>
-          <ActionIcon variant="transparent" sx={{display: 'grid', placeItems: 'center'}}>
+          <ActionIcon variant="transparent" sx={{ display: 'grid', placeItems: 'center' }}>
             <IconChevronUp color="#fff" size={32} />
           </ActionIcon>
         </Box>
