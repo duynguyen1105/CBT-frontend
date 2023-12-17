@@ -1,12 +1,12 @@
-import {Box} from '@mantine/core';
+import { Box } from '@mantine/core';
 
 import defaultTheme from 'apps/theme';
-import {LayoutComponent} from 'types/layout';
+import { LayoutComponent } from 'types/layout';
 
 import TestForm from 'views/components/base/form/FormTest';
 import Shell from 'views/layout/Shell';
 
-const {padding} = defaultTheme.layout;
+const { padding } = defaultTheme.layout;
 
 const Test: LayoutComponent = () => {
   return (

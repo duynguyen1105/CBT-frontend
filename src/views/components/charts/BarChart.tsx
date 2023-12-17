@@ -6,13 +6,13 @@ import { useCommonChartStyle } from './common';
 
 /**
  * Bar chart
- * 
+ *
  * Example:
- * 
+ *
  * ```tsx
  * import defaultTheme from 'apps/theme';
  * import BarChart from 'views/components/charts/BarChart'
- * 
+ *
  * <BarChart
  *    categories={[ '2021', '2022', '2023' ]}
  *    collection={[ 'Matcha Latte', 'Milk Tea', 'Cheese Cocoa', 'Walnut Brownie' ]}
@@ -32,26 +32,16 @@ import { useCommonChartStyle } from './common';
  *    radius
  *    className="barchart"
  * />
- * 
+ *
  * ```
  */
-const BarChart  = forwardRef<Chart, BarChartProps>(
-  function BarChart(props, ref) {
-
-    const { className } = props;
-    const { classes, cx } = useCommonChartStyle();
-    const { getOption } = useChart(props);
-    const option = getOption('bar');
-console.log(option)
-    return (
-      <Chart
-        ref={ref}
-        className={cx(classes.root, className)}
-        option={option}
-      />
-    );
-  }
-);
+const BarChart = forwardRef<Chart, BarChartProps>(function BarChart(props, ref) {
+  const { className } = props;
+  const { classes, cx } = useCommonChartStyle();
+  const { getOption } = useChart(props);
+  const option = getOption('bar');
+  return <Chart ref={ref} className={cx(classes.root, className)} option={option} />;
+});
 
 BarChart.displayName = 'Chart.Bar';
 export default BarChart;

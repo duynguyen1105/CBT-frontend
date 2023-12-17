@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useSelector } from 'store';
 import { LayoutComponent } from 'types/layout';
-import { IQuestionAPI, QuestionType } from 'types/question';
+import { QuestionType } from 'types/question';
 import QuestionForm from 'views/components/base/form/Question/FormQuestion';
 import Shell from 'views/layout/Shell';
 
@@ -12,7 +12,7 @@ const QuestionDetail: LayoutComponent = () => {
   const { workspace } = useSelector((state) => state.app.userInfo);
   const params = useParams();
   const questionId = params.question_id;
-  const [questionDetail, setQuestionDetail] = useState<IQuestionAPI | undefined>();
+  const [questionDetail, setQuestionDetail] = useState<QuestionType | undefined>();
 
   useEffect(() => {
     if (questionId !== '-') {
@@ -21,17 +21,26 @@ const QuestionDetail: LayoutComponent = () => {
   }, [questionId]);
 
   const handleSaveQuestion = async (question: QuestionType) => {
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.QUESTIONS.CREATE, { workspaceName: workspace }),
-      'POST',
-      {
-        data: question,
-      }
-    );
+    if (questionId && questionId !== '-') {
+      await callApiWithAuth(
+        getApiPath(PATHS.QUESTIONS.UPDATE, { workspaceName: workspace, questionId: questionId }),
+        'PUT',
+        {
+          data: question,
+        }
+      );
+    } else {
+      const res = await callApiWithAuth(
+        getApiPath(PATHS.QUESTIONS.CREATE, { workspaceName: workspace }),
+        'POST',
+        {
+          data: question,
+        }
+      );
 
-    if (res) {
-      // const newQuestion = {...res.data};
-      setQuestionDetail(res.data);
+      if (res) {
+        setQuestionDetail(res.data);
+      }
     }
   };
 

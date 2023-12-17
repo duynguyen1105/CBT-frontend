@@ -22,6 +22,15 @@ const QUESTIONS = {
   DELETE: 'questions/{workspaceName}/{questionId}',
 };
 
+const TESTS = {
+  GET_LIST: 'tests/{workspaceName}?search={search}&page={page}&sort={sort}',
+  DELETE_MANY: 'tests/{workspaceName}/delete',
+  CREATE: 'tests/{workspaceName}/createTest',
+  GET_INFO: 'tests/{workspaceName}/{questionId}',
+  UPDATE: 'tests/{workspaceName}/{questionId}',
+  DELETE: 'tests/{workspaceName}/{questionId}',
+};
+
 const CATEGORIES = {
   GET_LIST: 'categories/{workspaceName}',
   CREATE: 'categories/{workspaceName}/create',
@@ -40,4 +49,5 @@ export const PATHS = {
   QUESTIONS,
   CATEGORIES,
   LABELS,
+  TESTS,
 };

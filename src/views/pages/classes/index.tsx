@@ -25,7 +25,6 @@ const Classes: FC = () => {
   });
 
   const handleSortStatusChange = (status: DataTableSortStatus) => {
-    console.log(status);
     setPage(1);
     setSortStatus(status);
   };

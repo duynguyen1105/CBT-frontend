@@ -18,6 +18,14 @@ export const QUESTION_ELEMENT = {
   BLANK_ANSWER: 'blank_answer',
 };
 
+export const ROLE = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN_WORKSPACE: 'ADMIN_WORKSPACE',
+  USER: 'USER',
+};
+
+export type RoleType = (typeof ROLE)[keyof typeof ROLE];
+
 export const QUESTION_ELEMENT_BY_TYPE = {
   [QUESTION_TYPE.SelectOne]: [
     QUESTION_ELEMENT.TITLE,

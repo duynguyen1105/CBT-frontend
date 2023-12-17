@@ -1,11 +1,11 @@
-import {Button, Flex, Group, Modal, TextInput} from '@mantine/core';
-import {DateInput} from '@mantine/dates';
-import {useForm} from '@mantine/form';
-import {IconCalendar} from '@tabler/icons-react';
+import { Button, Flex, Group, Modal, TextInput } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
+import { useForm } from '@mantine/form';
+import { IconCalendar } from '@tabler/icons-react';
 import PageURL from 'apps/PageURL';
-import {DATE_FORMAT} from 'apps/constants';
+import { DATE_FORMAT } from 'apps/constants';
 import dayjs from 'dayjs';
-import {useNavigate} from 'react-router';
+import { useNavigate } from 'react-router';
 
 type Props = {
   opened: boolean;
@@ -18,7 +18,7 @@ type ClassValues = {
   date_end: string;
 };
 
-export const CreateClassModal = ({opened, onClose}: Props) => {
+export const CreateClassModal = ({ opened, onClose }: Props) => {
   const navigate = useNavigate();
 
   const form = useForm<ClassValues>({
@@ -30,7 +30,6 @@ export const CreateClassModal = ({opened, onClose}: Props) => {
   });
 
   const handleSubmit = async (values: ClassValues) => {
-    console.log(values);
     navigate(PageURL.CREATE_CLASSES);
   };
 

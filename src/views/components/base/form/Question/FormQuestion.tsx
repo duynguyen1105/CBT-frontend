@@ -17,7 +17,6 @@ import {
 import {
   IconBrandTelegram,
   IconCirclePlus,
-  IconDeviceFloppy,
   IconEye,
   IconForms,
   IconMicrophone,
@@ -33,7 +32,7 @@ import Text from 'views/components/base/Text';
 import Button from '../../Button';
 
 import defaultTheme from 'apps/theme';
-import { IQuestionAPI, QUESTION_TYPE, QuestionType } from 'types/question';
+import { QUESTION_TYPE, QuestionType } from 'types/question';
 
 import { isNotEmpty } from '@mantine/form';
 import { QUESTION_ELEMENT, QUESTION_ELEMENT_BY_TYPE } from 'apps/constants';
@@ -56,16 +55,17 @@ const useStyle = createStyles<string, {}>(() => ({
 }));
 
 interface QuestionFormProps {
-  content?: IQuestionAPI;
+  content?: QuestionType;
   onSaveQuestion: (question: QuestionType) => Promise<void>;
 }
 const QuestionForm = (props: QuestionFormProps) => {
   const { content, onSaveQuestion } = props;
-
   const { classes } = useStyle({}, { name: 'QuestionForm' });
   const [type, setType] = useState<QUESTION_TYPE | undefined>();
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [numberOfBlanks, setNumberOfBlanks] = useState(0);
+
+  console.log(content);
 
   const form = useQuestionForm({
     initialValues: {
@@ -129,7 +129,7 @@ const QuestionForm = (props: QuestionFormProps) => {
     form.insertListItem('answer', {
       content: '',
       isCorrect: false,
-      order: 0,
+      order: form.values.answer.length as number,
       scorePercent: 0,
       penaltyScore: 0,
       feedback: '',
@@ -140,7 +140,7 @@ const QuestionForm = (props: QuestionFormProps) => {
     form.insertListItem(`blankAnswer.${index}`, {
       content: '',
       isCorrect: false,
-      order: 0,
+      order: form.values.blankAnswer?.[index].length as number,
       scorePercent: 0,
       penaltyScore: 0,
       feedback: '',
@@ -204,8 +204,6 @@ const QuestionForm = (props: QuestionFormProps) => {
   };
 
   const handleSubmitQuestion = (values: QuestionType) => {
-    console.log('dzoi');
-
     onSaveQuestion(values);
   };
 
@@ -558,13 +556,6 @@ const QuestionForm = (props: QuestionFormProps) => {
                 onClick={() => setIsPreviewModalOpen(true)}
               >
                 Preview
-              </Button>
-              <Button
-                color="yellow"
-                rightIcon={<IconDeviceFloppy strokeWidth={1.5} />}
-                type="submit"
-              >
-                Save As Draft
               </Button>
               <Button type="submit" rightIcon={<IconBrandTelegram strokeWidth={1.5} />}>
                 Publish

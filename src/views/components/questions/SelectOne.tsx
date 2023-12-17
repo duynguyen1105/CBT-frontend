@@ -19,8 +19,6 @@ interface SelectOneProps {
   questionNo?: number;
 }
 const SelectOne = ({ question, questionNo = 1 }: SelectOneProps) => {
-  console.log({ question });
-
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectOne' });
 

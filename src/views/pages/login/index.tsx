@@ -3,47 +3,40 @@ import {
   Box,
   Center,
   createStyles,
+  Flex,
   Grid,
   Image,
   PasswordInput,
   TextInput,
 } from '@mantine/core';
-import {useForm} from '@mantine/form';
-import {PATHS} from 'api/paths';
-import {callApiWithBasicAuth, getApiPath} from 'api/utils';
+import { useForm } from '@mantine/form';
+import { PATHS } from 'api/paths';
+import { callApiWithBasicAuth, getApiPath } from 'api/utils';
 import theme from 'apps/theme';
-import {LayoutComponent} from 'types/layout';
+import { LayoutComponent } from 'types/layout';
 import Button from 'views/components/base/Button';
 import Text from 'views/components/base/Text';
 import Fluid from 'views/layout/Fluid';
 import logo from '../../../assets/images/logo/cbtlogo.png';
-import bg from '../../../assets/images/logo/signin_bg.png';
 import Cookies from 'js-cookie';
-import {COOKIE_AUTH_TOKEN} from 'apps/constants';
-import {useNavigate} from 'react-router';
+import { COOKIE_AUTH_TOKEN } from 'apps/constants';
+import { useNavigate } from 'react-router';
 import PageURL from 'apps/PageURL';
-import {notifications} from '@mantine/notifications';
+import { notifications } from '@mantine/notifications';
 
 const useStyle = createStyles<string, {}>(() => ({
   row: {
-    margin: 0,
-    height: '100%',
-    padding: -8,
-    background: '#60CFC2',
-  },
-  leftCol: {
+    background: 'linear-gradient(60deg, #8ae9de,#70b7af)',
     height: '100vh',
-    padding: '0',
-    width: '100%',
   },
   rightCol: {
+    width: '25%',
     height: '100vh',
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
   },
   boxSignin: {
-    width: '80%',
     height: '20%',
     display: 'flex',
     justifyContent: 'center',
@@ -52,7 +45,6 @@ const useStyle = createStyles<string, {}>(() => ({
   },
   boxLogin: {
     height: '20%',
-    width: '80%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -84,7 +76,7 @@ type UserLoginInfo = {
 };
 
 const Login: LayoutComponent = () => {
-  const {classes} = useStyle({}, {name: 'PageLogin'});
+  const { classes } = useStyle({}, { name: 'PageLogin' });
   const navigate = useNavigate();
 
   const form = useForm<UserLoginInfo>({
@@ -100,7 +92,6 @@ const Login: LayoutComponent = () => {
       user.username,
       user.password
     );
-    console.log(res);
 
     if (res?.data) {
       Cookies.set(COOKIE_AUTH_TOKEN, res?.data?.token, {
@@ -123,23 +114,22 @@ const Login: LayoutComponent = () => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Grid className={classes.row}>
-        <Grid.Col span={6} className={classes.leftCol}>
-          <BackgroundImage src={bg} style={{width: '60%', height: '100%', objectFit: 'cover'}}>
-            <Image src={logo} style={{width: '50%', padding: 22}} />
-          </BackgroundImage>
-        </Grid.Col>
-        <Grid.Col span={6} className={classes.rightCol}>
-          <Box className={classes.boxSignin}>
-            <Text textTransform="capitalize" fz={32} fw={600} c={theme.layout.color.text.hex}>
-              Sign in
+      <Flex className={classes.row} direction="column" align="center" justify="center">
+        <Image src={logo} style={{ width: '120px', padding: 22 }} />
+        <Box className={classes.rightCol}>
+          <Flex align="center" direction="column" m="xl">
+            <Text
+              textTransform="capitalize"
+              fz={32}
+              fw={600}
+              c={theme.layout.color.text.hex}
+              align="center"
+            >
+              Log in
             </Text>
-            <Text mt={12} c={theme.layout.color.text.hex}>
-              Welcome back! Sign in with the data you entered in your registration
-            </Text>
-          </Box>
+          </Flex>
 
-          <Box w="60%">
+          <Box>
             <TextInput
               size="md"
               label="User Name"
@@ -154,29 +144,25 @@ const Login: LayoutComponent = () => {
               label="Password"
               {...form.getInputProps('password')}
             />
-            {/* 
-            <Center mt={22}>
-              <Text c={theme.layout.color.primary.hex}>Forgot your password?</Text>
-            </Center> */}
           </Box>
 
-          <Box className={classes.boxLogin} w="60%">
+          <Box className={classes.boxLogin}>
             <Button
               bg={theme.layout.color.primary.hex}
               c={theme.layout.color.text.hex}
               h="30%"
               type="submit"
             >
-              Sign in
+              Log in
             </Button>
 
             <Center>
               <Text>Don't have an account yet?</Text>
-              <Text style={{color: theme.layout.color.primary.hex, marginLeft: 8}}>Sign up</Text>
+              <Text style={{ color: theme.layout.color.primary.hex, marginLeft: 8 }}>Register</Text>
             </Center>
           </Box>
-        </Grid.Col>
-      </Grid>
+        </Box>
+      </Flex>
     </form>
   );
 };

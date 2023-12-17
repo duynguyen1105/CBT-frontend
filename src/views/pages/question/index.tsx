@@ -1,25 +1,17 @@
 import { ActionIcon, Box, Center, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconCheck, IconEdit, IconEye, IconTrash, IconX } from '@tabler/icons-react';
+import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import PageURL from 'apps/PageURL';
 import defaultTheme from 'apps/theme';
-import { t } from 'i18next';
-import { set } from 'lodash';
 import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'store';
 import { LayoutComponent } from 'types/layout';
-import {
-  QuestionType,
-  IQuestionListItem,
-  QUESTION_TYPE_LABEL,
-  QUESTION_TYPE,
-} from 'types/question';
+import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
 import { DataTable, TableType } from 'views/components/base/dataTable';
-import { DataTableQuestions } from 'views/components/base/dataTable/DataTableQuestions';
 import { PreviewQuestionModal } from 'views/components/modal/previewQuestion';
 import Shell from 'views/layout/Shell';
 
@@ -67,7 +59,10 @@ const Questions: LayoutComponent = () => {
             <IconEye size={16} />
           </ActionIcon>
           <ActionIcon color="blue">
-            <IconEdit size={16} />
+            <IconEdit
+              size={16}
+              onClick={() => navigate(PageURL.QUESTIONS_DETAIL.replace(':question_id', record._id))}
+            />
           </ActionIcon>
           <ActionIcon color="red">
             <IconTrash size={16} />

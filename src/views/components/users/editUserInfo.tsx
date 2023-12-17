@@ -49,9 +49,7 @@ export const EditUserInfo = () => {
     },
   });
 
-  const handleSubmit = (values: UserValues) => {
-    console.log(values);
-  };
+  const handleSubmit = (values: UserValues) => {};
 
   return (
     <Modal opened={true} onClose={() => null} title="User Information" centered size="xl">

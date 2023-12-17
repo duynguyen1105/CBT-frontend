@@ -1,9 +1,9 @@
-import React, {Suspense} from 'react';
-import {Provider} from 'react-redux';
-import {I18nextProvider} from 'react-i18next';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { Provider } from 'react-redux';
+import { I18nextProvider } from 'react-i18next';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import {privateRoutes, publicRoutes} from 'apps/router';
+import { privateRoutes, publicRoutes } from 'apps/router';
 import PageURL from 'apps/PageURL';
 import i18n from 'apps/i18n';
 import store from 'store';
@@ -12,6 +12,7 @@ import ThemeContainer from './container/ThemeContainer';
 import AuthContainer from './container/AuthContainer';
 import GuardContainer from './container/GuardContainer';
 import LayoutContainer from './container/LayoutContainer';
+import { ExamPage } from './pages/exam';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
                       element={<LayoutContainer component={route.element} />}
                     />
                   ))}
+                  <Route path="/exam" element={<ExamPage />} />
                 </Routes>
               </AuthContainer>
             </BrowserRouter>

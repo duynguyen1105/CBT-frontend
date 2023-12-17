@@ -1,21 +1,12 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import { Accordion, ActionIcon, Box, Flex, createStyles, rem } from '@mantine/core';
-import { useListState } from '@mantine/hooks';
+import { UseListStateHandlers } from '@mantine/hooks';
 import { IconGripVertical, IconX } from '@tabler/icons-react';
-import {
-  QuestionType,
-  QUESTION_TYPE,
-  fakeDropdownSelect,
-  fakeFillInGap,
-  fakeSelectMany,
-  fakeSelectOne,
-} from 'types/question';
-import { IDescription, ISection } from 'types/test';
+import { QUESTION_TYPE, QuestionType } from 'types/question';
 import DropdownSelect from 'views/components/questions/DropdownSelect';
 import FillInGap from 'views/components/questions/FillInGap';
 import SelectMany from 'views/components/questions/SelectMany';
 import SelectOne from 'views/components/questions/SelectOne';
-import Description from 'views/components/test/Description';
 import ModalAddTestContent from '../ModalAddTestContent';
 
 const useStyles = createStyles((theme) => ({
@@ -54,79 +45,32 @@ const useStyles = createStyles((theme) => ({
     paddingRight: theme.spacing.xs,
   },
 }));
-enum ContentType {
-  DescriptionType = 'Description',
-  QuestionType = 'Question',
-  SectionType = 'Section',
-}
+
 interface DndListHandleProps {
-  data?: Content[];
-}
-interface Content {
-  id: string;
-  type: ContentType;
-  content: IDescription | QuestionType | ISection;
+  questions: QuestionType[];
+  handlers: UseListStateHandlers<QuestionType>;
 }
 
-let fakedata = [
-  {
-    id: '1',
-    type: ContentType.DescriptionType,
-    content: { description: '123' },
-  },
-  {
-    id: '2',
-    type: ContentType.QuestionType,
-    content: fakeDropdownSelect,
-  },
-  {
-    id: '3',
-    type: ContentType.QuestionType,
-    content: fakeFillInGap,
-  },
-  {
-    id: '4',
-    type: ContentType.QuestionType,
-    content: fakeSelectMany,
-  },
-  {
-    id: '5',
-    type: ContentType.QuestionType,
-    content: fakeSelectOne,
-  },
-];
-
-export default function FormAddContentTestPage({ data = fakedata }: DndListHandleProps) {
+export default function FormAddContentTestPage({ questions, handlers }: DndListHandleProps) {
   const { classes, cx } = useStyles();
-  const [state, handlers] = useListState(data);
 
-  const getComponent = (item: Content) => {
+  const getComponent = (item: QuestionType, index: number) => {
     switch (item.type) {
-      case ContentType.DescriptionType:
-        return <Description />;
-
-      case ContentType.QuestionType:
-        switch ((item.content as QuestionType).type) {
-          case QUESTION_TYPE.DropdownSelect:
-            return <DropdownSelect question={item.content as QuestionType} />;
-          case QUESTION_TYPE.FillInGap:
-            return <FillInGap question={item.content as QuestionType} />;
-          case QUESTION_TYPE.SelectMany:
-            return <SelectMany question={item.content as QuestionType} />;
-          case QUESTION_TYPE.SelectOne:
-            return <SelectOne question={item.content as QuestionType} />;
-          default:
-            break;
-        }
-        break;
-
+      case QUESTION_TYPE.DropdownSelect:
+        return <DropdownSelect question={item} questionNo={index + 1} />;
+      case QUESTION_TYPE.FillInGap:
+        return <FillInGap question={item} questionNo={index + 1} />;
+      case QUESTION_TYPE.SelectMany:
+        return <SelectMany question={item} questionNo={index + 1} />;
+      case QUESTION_TYPE.SelectOne:
+        return <SelectOne question={item} questionNo={index + 1} />;
       default:
         break;
     }
   };
 
-  const items = state.map((item, index) => (
-    <Draggable key={item.id} index={index} draggableId={item.id}>
+  const items = questions.map((item, index) => (
+    <Draggable key={item._id} index={index} draggableId={item._id as string}>
       {(provided, snapshot) => (
         <div
           className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
@@ -141,22 +85,7 @@ export default function FormAddContentTestPage({ data = fakedata }: DndListHandl
               <IconGripVertical size="1.05rem" stroke={1.5} />
             </div>
           </Flex>
-          <div>
-            {getComponent(item)}
-            {/* <Accordion defaultValue="customization" miw={'100%'} variant="filled">
-              <Accordion.Item value="customization">
-                <Accordion.Control>{item.type}</Accordion.Control>
-                <Accordion.Panel>
-                  <Textarea placeholder="Your description" />
-                  <SelectOne />
-                  <SelectMany />
-                  <Matching />
-                  <DropdownSelect />
-                  <FillInGap />
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion> */}
-          </div>
+          <div>{getComponent(item, index)}</div>
         </div>
       )}
     </Draggable>
@@ -180,40 +109,9 @@ export default function FormAddContentTestPage({ data = fakedata }: DndListHandl
           </Droppable>
         </DragDropContext>
         <Flex justify="flex-end">
-          <ModalAddTestContent />
+          <ModalAddTestContent onConfirm={(data) => handlers.setState(data)} />
         </Flex>
       </Accordion>
     </Box>
   );
 }
-
-// câu hỏi ở database
-// {
-//   question: {
-//     content: 'What does the man @dropdown:1 when he says "Have @dropdown:2 seen the interview questions we use?';
-//     answer: [
-//       {
-//         id: 1,
-//         content: 'apple',
-//       },
-//       {
-//         id: 2,
-//         content: 'banana',
-//       },
-//     ];
-//   }
-// }
-
-// học sinh trả lời
-// {
-//   answer: [
-//     {
-//       id: 1,
-//       content: 'apple',
-//     }
-//     {
-//       id: 2,
-//       content: 'apple',
-//     },
-//   ];
-// }

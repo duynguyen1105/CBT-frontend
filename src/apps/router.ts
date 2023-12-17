@@ -1,4 +1,4 @@
-import {LayoutComponent} from 'types/layout';
+import { LayoutComponent } from 'types/layout';
 import Classes from 'views/pages/classes';
 import Dashboard from 'views/pages/dashboard';
 import Login from 'views/pages/login';
@@ -13,6 +13,7 @@ import ReadingTest from 'views/pages/classes/MakeTest/ReadingTest';
 import WritingTest from 'views/pages/classes/MakeTest/WritingTest';
 import SpeakingTest from 'views/pages/classes/MakeTest/SpeakingTest';
 import QuestionDetail from 'views/pages/question/QuestionDetail';
+import { ExamPage } from 'views/pages/exam';
 
 export interface RouteItem {
   path: string;
@@ -69,13 +70,17 @@ export const publicRoutes: RouteItem[] = [
     element: SpeakingTest,
   },
   {
-    path: '/users',
+    path: PageURL.USERS,
     element: Users,
   },
   {
-    path: '/test',
+    path: PageURL.TESTS,
     element: Test,
   },
+  // {
+  //   path: '/exam',
+  //   element: ExamPage,
+  // },
 ];
 
 export const privateRoutes: RouteItem[] = [];

@@ -1,7 +1,7 @@
-import { Box, Button, Menu } from '@mantine/core';
+import { Box, Button } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import { IconCirclePlus, IconInfoCircle, IconQuestionMark, IconStack2 } from '@tabler/icons-react';
+import { IconCirclePlus } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import defaultTheme from 'apps/theme';
@@ -9,12 +9,15 @@ import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'store';
 import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
-import { PreviewQuestionModal } from '../modal/previewQuestion';
 import { DataTable, TableType } from './dataTable';
 
 const { padding } = defaultTheme.layout;
 
-function ModalAddTestContent() {
+type ModalAddTestContentProps = {
+  onConfirm?: (data: QuestionType[]) => void;
+};
+
+function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
   const columns: DataTableColumn<TableType>[] = [
     { accessor: '_id', sortable: true, title: 'ID' },
     { accessor: 'title', sortable: true },
@@ -39,9 +42,7 @@ function ModalAddTestContent() {
   const [search, setSearch] = useState('');
   const [totalRecord, setTotalRecord] = useState(1);
   const [sort, setSort] = useState('');
-  const [clickedQuestion, setClickedQuestion] = useState<QuestionType | null>(null);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [isPreviewModalOpened, setIsPreviewModalOpened] = useState(false);
 
   const deleteSelectedRecords = (records: TableType[]) => {
     deleteQuestions(records.map((user) => user._id));
@@ -87,52 +88,84 @@ function ModalAddTestContent() {
   }, [search, page, sort]);
 
   return (
-    <Menu shadow="md" width={200}>
-      <Menu.Target>
-        <Button variant="outline" color="green" rightIcon={<IconCirclePlus strokeWidth={1.5} />}>
-          Add More
-        </Button>
-      </Menu.Target>
+    <Button
+      variant="outline"
+      color="green"
+      rightIcon={<IconCirclePlus size={20} />}
+      onClick={() =>
+        modals.open({
+          size: 'xl',
+          title: 'Add question',
+          children: (
+            <Box pb={padding}>
+              <DataTable
+                records={questions}
+                columns={columns}
+                page={page}
+                setPage={setPage}
+                totalRecord={totalRecord}
+                query={search}
+                isAdding
+                handleAddRecord={(records) => {
+                  onConfirm?.(records as QuestionType[]);
+                  modals.closeAll();
+                }}
+                setQuery={setSearch}
+                handleCreateNewRecord={() => null}
+                handleDeleteSelectedRecords={deleteSelectedRecords}
+                handleSortStatusChange={sortStatusChange}
+              />
+            </Box>
+          ),
+        })
+      }
+    >
+      Add More Question
+    </Button>
+    // <Menu shadow="md" width={200}>
+    //   <Menu.Target>
 
-      <Menu.Dropdown>
-        <Menu.Label>Add new content</Menu.Label>
-        <Menu.Item icon={<IconInfoCircle size={20} />}>Description</Menu.Item>
-        <Menu.Item
-          icon={<IconQuestionMark size={20} />}
-          onClick={() =>
-            modals.open({
-              size: 'xl',
-              title: 'Add question',
-              children: (
-                <Box pb={padding}>
-                  <DataTable
-                    records={questions}
-                    columns={columns}
-                    page={page}
-                    setPage={setPage}
-                    totalRecord={totalRecord}
-                    query={search}
-                    isAdding
-                    handleAddRecord={(records) => {
-                      console.log(records);
-                      modals.closeAll();
-                    }}
-                    setQuery={setSearch}
-                    handleCreateNewRecord={() => null}
-                    handleDeleteSelectedRecords={deleteSelectedRecords}
-                    handleSortStatusChange={sortStatusChange}
-                  />
-                </Box>
-              ),
-              // onConfirm: () => console.log('Add question'),
-            })
-          }
-        >
-          Question
-        </Menu.Item>
-        <Menu.Item icon={<IconStack2 size={20} />}>Section</Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    //   </Menu.Target>
+
+    //   <Menu.Dropdown>
+    //     <Menu.Label>Add new content</Menu.Label>
+    //     <Menu.Item icon={<IconInfoCircle size={20} />}>Description</Menu.Item>
+    //     <Menu.Item
+    //       icon={<IconQuestionMark size={20} />}
+    //       onClick={() =>
+    //         modals.open({
+    //           size: 'xl',
+    //           title: 'Add question',
+    //           children: (
+    //             <Box pb={padding}>
+    //               <DataTable
+    //                 records={questions}
+    //                 columns={columns}
+    //                 page={page}
+    //                 setPage={setPage}
+    //                 totalRecord={totalRecord}
+    //                 query={search}
+    //                 isAdding
+    //                 handleAddRecord={(records) => {
+    //                   console.log(records);
+    //                   modals.closeAll();
+    //                 }}
+    //                 setQuery={setSearch}
+    //                 handleCreateNewRecord={() => null}
+    //                 handleDeleteSelectedRecords={deleteSelectedRecords}
+    //                 handleSortStatusChange={sortStatusChange}
+    //               />
+    //             </Box>
+    //           ),
+    //           // onConfirm: () => console.log('Add question'),
+    //         })
+    //       }
+    //     >
+    //       Question
+    //     </Menu.Item>
+    //     <Menu.Item icon={<IconStack2 size={20} />}>Section</Menu.Item>
+    //   </Menu.Dropdown>
+    // </Menu>
   );
 }
 

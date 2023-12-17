@@ -1,3 +1,4 @@
+import { Box, createStyles, Text } from '@mantine/core';
 import { Link } from '@mantine/tiptap';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
@@ -7,9 +8,6 @@ import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-// import ImageResize from 'tiptap-imagresize';
-import { Box, createStyles, Text } from '@mantine/core';
-import { useCallback } from 'react';
 import { QUESTION_TYPE } from 'types/question';
 import RichTextEditorCustom from '../../RichTextEditorCustom';
 import { useQuestionFormContext } from './form-question-context';
@@ -34,7 +32,7 @@ const QuestionContentInput = ({
   numberOfBlanks,
   setNumberOfBlanks,
 }: QuestionContentInputProps) => {
-  const { classes, cx } = useStyle({}, { name: 'QuestionContentInput' });
+  const { classes } = useStyle({}, { name: 'QuestionContentInput' });
   const form = useQuestionFormContext();
 
   const editor = useEditor({
@@ -64,17 +62,6 @@ const QuestionContentInput = ({
       preserveWhitespace: false,
     },
   });
-  const addImage = useCallback(() => {
-    const url = window.prompt('Enter Image URL');
-
-    if (url) {
-      editor?.chain().focus().setImage({ src: url }).run();
-    }
-  }, [editor]);
-
-  if (!editor) {
-    return null;
-  }
 
   return (
     <Box className={classes.wrapper}>

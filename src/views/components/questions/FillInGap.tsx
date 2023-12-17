@@ -35,7 +35,6 @@ const FillInGap = ({ question, questionNo = 1 }: DropdownSelectProps) => {
       selectAnswer
     );
   }
-  console.log({ newQuestionContent, question });
 
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
   return (

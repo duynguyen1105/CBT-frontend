@@ -28,6 +28,31 @@ export type IQuestionListItem = {
   score: string;
 };
 
+export type TestType = {
+  _id?: string;
+  title: string;
+  description: string;
+  timeSetting?: {
+    startTime?: Date;
+    finishTime?: Date;
+    duration?: number;
+  };
+  password?: string;
+  displayOptions?: {
+    afterSubmit?: {
+      showScore?: boolean;
+      showAnswer?: boolean;
+      showFeedback?: boolean;
+    };
+    afterDeadline?: {
+      showScore?: boolean;
+      showAnswer?: boolean;
+      showFeedback?: boolean;
+    };
+  };
+  questions: QuestionType[];
+};
+
 export interface QuestionType {
   _id?: string;
   title: string;
@@ -50,18 +75,7 @@ export interface AnswerType {
   penaltyScore: number;
   feedback: string;
 }
-export interface IQuestionAPI {
-  id?: string;
-  title: string;
-  content: string;
-  type: QUESTION_TYPE;
-  active: string;
-  level?: string;
-  score?: number;
-  category_id: string;
-  audio?: File | null;
-  answer: IAnswerAPI[];
-}
+
 export interface IAnswerAPI {
   id?: string;
   content: string;
@@ -176,69 +190,123 @@ export const fakeSelectMany: QuestionType = {
 };
 
 export const fakeDropdownSelect: QuestionType = {
-  title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
-  content:
-    'What does the @dropdown:answer imply when he says "Have you @dropdown:answer the interview questions we use?"',
-  type: QUESTION_TYPE.DropdownSelect,
-  active: 'Y',
-  level: 'normal',
+  title: 'Titlte',
   category_id: '1',
+  active: 'Y',
+  content: '<p>eqweqw @dropdown:answer:1 @dropdown:answer:2</p>',
+  type: QUESTION_TYPE.DropdownSelect,
   answer: [
     {
-      content: 'He is postponing an appointment',
-      isCorrect: true,
+      content: '',
+      penaltyScore: 0,
       order: 0,
       scorePercent: 100,
-      penaltyScore: 0,
-      feedback: 'This is right answer',
-    },
-    {
-      content: 'He needs a record of the report',
-      isCorrect: false,
-      order: 1,
-      scorePercent: 0,
-      penaltyScore: 0,
-      feedback: 'This is wrong answer',
-    },
-    {
-      content: 'He wants her to help him with the questions',
       isCorrect: true,
-      order: 2,
-      scorePercent: 0,
-      penaltyScore: 0,
-      feedback: 'This is wrong answer',
-    },
-    {
-      content: 'He will recruit some accountants',
-      isCorrect: false,
-      order: 3,
-      scorePercent: 0,
-      penaltyScore: 0,
-      feedback: 'This is wrong answer',
-    },
-    {
-      content: 'He wants her to help him with the questions',
-      isCorrect: true,
-      order: 4,
-      scorePercent: 0,
-      penaltyScore: 0,
-      feedback: 'This is wrong answer',
-    },
-    {
-      content: 'He will recruit some accountants',
-      isCorrect: false,
-      order: 5,
-      scorePercent: 0,
-      penaltyScore: 0,
-      feedback: 'This is wrong answer',
+      feedback: '',
     },
   ],
+  blankAnswer: [
+    [
+      {
+        content: 'eqewqw',
+        penaltyScore: 0,
+        order: 0,
+        scorePercent: 100,
+        isCorrect: true,
+        feedback: ' eqweqweqw',
+      },
+      {
+        content: 'ẻquheoriuh',
+        penaltyScore: 0,
+        order: 0,
+        scorePercent: 0,
+        isCorrect: false,
+        feedback: 'ỉugiq8oey7grfkjhvwekj',
+      },
+    ],
+    [
+      {
+        content: '21765386',
+        penaltyScore: 0,
+        order: 0,
+        scorePercent: 0,
+        isCorrect: false,
+        feedback: 'ùadjhgaj',
+      },
+      {
+        content: 'eqwe',
+        penaltyScore: 0,
+        order: 0,
+        scorePercent: 100,
+        isCorrect: true,
+        feedback: '12312312',
+      },
+    ],
+  ],
 };
+// export const fakeDropdownSelect: QuestionType = {
+//   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
+//   content:
+//     'What does the @dropdown:answer imply when he says "Have you @dropdown:answer the interview questions we use?"',
+//   type: QUESTION_TYPE.DropdownSelect,
+//   active: 'Y',
+//   level: 'normal',
+//   category_id: '1',
+//   answer: [
+//     {
+//       content: 'He is postponing an appointment',
+//       isCorrect: true,
+//       order: 0,
+//       scorePercent: 100,
+//       penaltyScore: 0,
+//       feedback: 'This is right answer',
+//     },
+//     {
+//       content: 'He needs a record of the report',
+//       isCorrect: false,
+//       order: 1,
+//       scorePercent: 0,
+//       penaltyScore: 0,
+//       feedback: 'This is wrong answer',
+//     },
+//     {
+//       content: 'He wants her to help him with the questions',
+//       isCorrect: true,
+//       order: 2,
+//       scorePercent: 0,
+//       penaltyScore: 0,
+//       feedback: 'This is wrong answer',
+//     },
+//     {
+//       content: 'He will recruit some accountants',
+//       isCorrect: false,
+//       order: 3,
+//       scorePercent: 0,
+//       penaltyScore: 0,
+//       feedback: 'This is wrong answer',
+//     },
+//     {
+//       content: 'He wants her to help him with the questions',
+//       isCorrect: true,
+//       order: 4,
+//       scorePercent: 0,
+//       penaltyScore: 0,
+//       feedback: 'This is wrong answer',
+//     },
+//     {
+//       content: 'He will recruit some accountants',
+//       isCorrect: false,
+//       order: 5,
+//       scorePercent: 0,
+//       penaltyScore: 0,
+//       feedback: 'This is wrong answer',
+//     },
+//   ],
+// };
 
 export const fakeFillInGap: QuestionType = {
   title: 'What does the man imply when he says "Have you seen the interview questions we use?"',
-  content:
-    'What does the @dropdown:answer imply when he says "Have you @dropdown:answer the interview questions we use?"',
+  content: '<p>eqweqw @dropdown:answer:1 @dropdown:answer:2</p>',
   type: QUESTION_TYPE.FillInGap,
   active: 'Y',
   level: 'normal',
