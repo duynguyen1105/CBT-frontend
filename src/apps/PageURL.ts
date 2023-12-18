@@ -3,6 +3,7 @@ const PageURL = {
   ACCOUNT_SETTING: '/setting',
   LOGOUT: '/logout',
   CLASSES: '/classes',
+  CLASS_DETAIL: '/classes/:class_id',
   USERS: '/users',
   TESTS: '/tests',
   CREATE_CLASSES: '/classes/create',
@@ -14,6 +15,7 @@ const PageURL = {
   QUESTIONS: '/questions',
   QUESTIONS_DETAIL: '/questions/:question_id',
   TESTS_DETAIL: '/tests/:test_id',
+  MY_TESTS: '/my-tests',
 };
 
 export default PageURL;

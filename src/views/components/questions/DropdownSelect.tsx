@@ -15,8 +15,9 @@ const useStyle = createStyles<string, {}>(() => ({
 interface DropdownSelectProps {
   question: QuestionType;
   questionNo?: number;
+  isShowFeedback?: boolean;
 }
-const DropdownSelect = ({ question, questionNo = 1 }: DropdownSelectProps) => {
+const DropdownSelect = ({ question, questionNo = 1, isShowFeedback }: DropdownSelectProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'DropdownSelect' });
   const handleFeedback = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,14 +40,17 @@ const DropdownSelect = ({ question, questionNo = 1 }: DropdownSelectProps) => {
 
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
   return (
-    <Box p="md">
+    <Box p="md" id={`question-${questionNo}`}>
       <Group>
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
-        <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
-          <IconBulb size="1.125rem" />
-        </ActionIcon>
+
+        {isShowFeedback && (
+          <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
+            <IconBulb size="1.125rem" />
+          </ActionIcon>
+        )}
       </Group>
 
       <Box my="md" classNames={classes.root}>

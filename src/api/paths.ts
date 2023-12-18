@@ -8,6 +8,11 @@ const USERS = {
   UPDATE: 'users/{workspaceName}/{userId}',
 };
 
+const CLASSES = {
+  GET_LIST: 'class/{workspaceName}?search={search}&page={page}&sort={sort}',
+  GET_INFO: 'class/{workspaceName}/{classId}',
+};
+
 const WORKSPACES = {
   GET_LIST_CLASSES: 'workspaces/{workspace_id}/classes',
   CREATE_CLASS: 'workspaces/{workspace_id}/classes',
@@ -50,4 +55,5 @@ export const PATHS = {
   CATEGORIES,
   LABELS,
   TESTS,
+  CLASSES,
 };

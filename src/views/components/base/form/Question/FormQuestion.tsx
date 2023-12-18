@@ -65,8 +65,6 @@ const QuestionForm = (props: QuestionFormProps) => {
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [numberOfBlanks, setNumberOfBlanks] = useState(0);
 
-  console.log(content);
-
   const form = useQuestionForm({
     initialValues: {
       title: '',
@@ -192,6 +190,7 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   const handleChangeType = (value: QUESTION_TYPE) => {
     setType(value);
+    form.setFieldValue('type', value);
   };
 
   const handleAcceptChangeType = () => {
@@ -438,7 +437,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                   .map((_, index) => (
                     <Grid.Col span={12}>
                       <Text size="sm">{`Answers ${
-                        type === QUESTION_TYPE.DropdownSelect ? 'dropdown' : 'blank'
+                        form.values.type === QUESTION_TYPE.DropdownSelect ? 'dropdown' : 'blank'
                       }  ${index + 1}`}</Text>
                       <Table withBorder withColumnBorders className={classes.answerTable}>
                         <thead>
@@ -450,7 +449,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                             </th>
                             <th>Feedback</th>
 
-                            {type === QUESTION_TYPE.DropdownSelect && (
+                            {form.values.type === QUESTION_TYPE.DropdownSelect && (
                               <>
                                 <th style={{ width: 100 }}>
                                   Score<span style={{ marginLeft: 5, color: 'red' }}>*</span> (%)
@@ -478,7 +477,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                                 />
                               </td>
 
-                              {type === QUESTION_TYPE.DropdownSelect && (
+                              {form.values.type === QUESTION_TYPE.DropdownSelect && (
                                 <>
                                   <td>
                                     <NumberInput
@@ -486,7 +485,6 @@ const QuestionForm = (props: QuestionFormProps) => {
                                       max={100}
                                       maw={80}
                                       maxLength={3}
-                                      readOnly={form.values.type === QUESTION_TYPE.SelectOne}
                                       {...form.getInputProps(
                                         `blankAnswer.${index}.${idx}.scorePercent`
                                       )}
@@ -534,7 +532,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                           ))}
                         </tbody>
                       </Table>
-                      {type === QUESTION_TYPE.DropdownSelect && (
+                      {form.values.type === QUESTION_TYPE.DropdownSelect && (
                         <Button
                           variant="outline"
                           mt={10}

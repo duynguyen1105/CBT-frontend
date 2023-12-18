@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Center, Group } from '@mantine/core';
+import { ActionIcon, Box, Center, Divider, Flex, Group, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
@@ -14,11 +14,12 @@ import { QuestionType } from 'types/question';
 import { DataTable, TableType } from 'views/components/base/dataTable';
 import { PreviewQuestionModal } from 'views/components/modal/previewQuestion';
 import Shell from 'views/layout/Shell';
-import { TestType } from '../../../types/test';
+import { TestCard } from './TestCard';
+import { TEST_STATUS, TestType } from '../../../types/test';
 
 const { padding } = defaultTheme.layout;
 
-const Tests: LayoutComponent = () => {
+const MyTest: LayoutComponent = () => {
   const columns: DataTableColumn<TableType>[] = [
     { accessor: '_id', sortable: true, title: 'ID' },
     { accessor: 'title', sortable: true },
@@ -194,34 +195,61 @@ const Tests: LayoutComponent = () => {
   useEffect(() => {
     fetchListTests();
   }, [search, page, sort]);
+  console.log(tests);
 
   return (
     <Box pb={padding}>
-      <DataTable
-        records={tests}
-        columns={columns}
-        page={page}
-        setPage={setPage}
-        totalRecord={totalRecord}
-        query={search}
-        setQuery={setSearch}
-        handleCreateNewRecord={handleCreateTest}
-        handleDeleteSelectedRecords={deleteSelectedRecords}
-        handleSortStatusChange={sortStatusChange}
-      />
-      <PreviewQuestionModal
-        data={clickedQuestion}
-        opened={isPreviewModalOpened}
-        onClose={() => {
-          setIsPreviewModalOpened(false);
-          setClickedQuestion(null);
-        }}
-      />
+      <Box>
+        <Text size="25px" color="cyan" my="md">
+          On Going
+        </Text>
+        <Flex align="center" wrap="wrap" gap="lg">
+          {tests
+            .filter(
+              (test) =>
+                new Date(test.timeSetting.startTime) < new Date() &&
+                new Date(test.timeSetting.finishTime) > new Date()
+            )
+            .map((test) => (
+              <TestCard test={test} status={TEST_STATUS.ONGOING} />
+            ))}
+        </Flex>
+      </Box>
+
+      <Divider m={20} />
+
+      <Box>
+        <Text size="25px" my="md" color="teal">
+          Upcoming
+        </Text>
+        <Flex align="center" wrap="wrap" gap="lg">
+          {tests
+            .filter((test) => new Date(test.timeSetting.startTime) > new Date())
+            .map((test) => (
+              <TestCard test={test} status={TEST_STATUS.UPCOMING} />
+            ))}
+        </Flex>
+      </Box>
+
+      <Divider m={20} />
+
+      <Box>
+        <Text size="25px" my="md" color="orange">
+          Finished
+        </Text>
+        <Flex align="center" wrap="wrap" gap="lg">
+          {tests
+            .filter((test) => new Date(test.timeSetting.finishTime) < new Date())
+            .map((test) => (
+              <TestCard test={test} status={TEST_STATUS.FINISHED} />
+            ))}
+        </Flex>
+      </Box>
     </Box>
   );
 };
 
-Tests.layout = Shell;
-Tests.displayName = 'Page.Tests';
+MyTest.layout = Shell;
+MyTest.displayName = 'Page.MyTest';
 
-export default Tests;
+export default MyTest;

@@ -20,7 +20,7 @@ import { LayoutComponent } from 'types/layout';
 import { DateTimePicker } from '@mantine/dates';
 import { IconArrowRight, IconArticle, IconSettings } from '@tabler/icons-react';
 import { useState } from 'react';
-import { QuestionType, TestType } from 'types/question';
+import { QuestionType } from 'types/question';
 import Shell from 'views/layout/Shell';
 import FormAddContentTestPage from './FormAddContentTestPage';
 import { TestFormProvider, useTestForm } from './Question/form-question-context';
@@ -28,6 +28,7 @@ import { useListState } from '@mantine/hooks';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import { PATHS } from 'api/paths';
 import { useSelector } from 'store';
+import { TestType } from '../../../../types/test';
 
 const { padding } = defaultTheme.layout;
 
@@ -52,6 +53,8 @@ const FormTest: LayoutComponent = () => {
       title: '',
       description: '',
       timeSetting: {
+        startTime: new Date(),
+        finishTime: new Date(),
         duration: 60,
       },
 
@@ -70,7 +73,7 @@ const FormTest: LayoutComponent = () => {
       password: '',
       questions: [],
     },
-    validate: (values) => {
+    validate: (values: any) => {
       const errors: any = {};
 
       if (!values.title) {
@@ -246,8 +249,15 @@ const FormTest: LayoutComponent = () => {
             <Button variant="default" onClick={prevStep}>
               Back
             </Button>
-            <Button onClick={nextStep}>{active === 1 ? 'Finish' : 'Next'}</Button>
-            <Button type="submit">submit</Button>
+            {active === 1 ? (
+              <Button type="submit" variant="blue">
+                Finish
+              </Button>
+            ) : (
+              <Button onClick={nextStep} type="button" variant="blue">
+                Next
+              </Button>
+            )}
           </Group>
         </form>
       </TestFormProvider>

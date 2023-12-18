@@ -1,3 +1,5 @@
+import { UserType } from './user';
+
 export enum QUESTION_TYPE {
   SelectOne = 'SELECT_ONE',
   SelectMany = 'SELECT_MANY',
@@ -26,31 +28,6 @@ export type IQuestionListItem = {
   active: string;
   level: string;
   score: string;
-};
-
-export type TestType = {
-  _id?: string;
-  title: string;
-  description: string;
-  timeSetting?: {
-    startTime?: Date;
-    finishTime?: Date;
-    duration?: number;
-  };
-  password?: string;
-  displayOptions?: {
-    afterSubmit?: {
-      showScore?: boolean;
-      showAnswer?: boolean;
-      showFeedback?: boolean;
-    };
-    afterDeadline?: {
-      showScore?: boolean;
-      showAnswer?: boolean;
-      showFeedback?: boolean;
-    };
-  };
-  questions: QuestionType[];
 };
 
 export type ExamType = {

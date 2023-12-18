@@ -7,7 +7,7 @@ import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import { useState } from 'react';
 import { useSelector } from 'store';
-import { ExamResultType, ExamType, QUESTION_TYPE, QuestionType, TestType } from 'types/question';
+import { ExamResultType, ExamType, QUESTION_TYPE, QuestionType } from 'types/question';
 import DropdownSelect from 'views/components/questions/DropdownSelect';
 import FillInGap from 'views/components/questions/FillInGap';
 import SelectMany from 'views/components/questions/SelectMany';
@@ -68,10 +68,12 @@ const FormExam = ({ exam }: { exam: ExamType }) => {
     const { answers } = data;
     const result = answers.map((answer, index) => {
       const question = exam.questions[index];
-      console.log(index, checkCorrectByType(question, answer));
+      // console.log(index, checkCorrectByType(question, answer));
 
       return checkCorrectByType(question, answer);
     });
+    console.log(result[1]);
+
     return result;
   };
 

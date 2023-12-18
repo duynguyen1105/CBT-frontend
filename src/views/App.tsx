@@ -11,6 +11,8 @@ import GuardContainer from './container/GuardContainer';
 import LayoutContainer from './container/LayoutContainer';
 import ThemeContainer from './container/ThemeContainer';
 import { ExamPage } from './pages/exam';
+import Home from './pages/home';
+import Register from './pages/register';
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
                   />
                 ))}
                 <Route path="/exam" element={<ExamPage />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/" element={<Home />} />
               </Routes>
             </AuthContainer>
           </BrowserRouter>

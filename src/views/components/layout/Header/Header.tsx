@@ -42,7 +42,7 @@ const useStyle = createStyles<string, {}>((theme) => {
     },
     logo: {
       img: {
-        height: `${header.height - 36}px!important`,
+        height: `${header.height - 20}px!important`,
         width: 'auto!important',
       },
     },

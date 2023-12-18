@@ -18,8 +18,9 @@ interface SelectManyProps {
   question: QuestionType;
   questionNo?: number;
   form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
+  isShowFeedback?: boolean;
 }
-const SelectMany = ({ question, questionNo = 1, form }: SelectManyProps) => {
+const SelectMany = ({ question, questionNo = 1, form, isShowFeedback }: SelectManyProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectMany' });
 
@@ -30,14 +31,16 @@ const SelectMany = ({ question, questionNo = 1, form }: SelectManyProps) => {
   };
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
   return (
-    <Box p="md">
+    <Box p="md" id={`question-${questionNo}`}>
       <Group>
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
-        <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
-          <IconBulb size="1.125rem" />
-        </ActionIcon>
+        {isShowFeedback && (
+          <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
+            <IconBulb size="1.125rem" />
+          </ActionIcon>
+        )}
       </Group>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />

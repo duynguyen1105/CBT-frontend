@@ -6,7 +6,7 @@ export const Countdown = () => {
   const { time } = useCountdown();
 
   return (
-    <Flex pos="fixed" right="20px" top="20px">
+    <Flex>
       <IconHourglassHigh />
       <Text>{time}</Text>
     </Flex>

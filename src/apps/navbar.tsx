@@ -50,6 +50,13 @@ export const primaryNavbar: NavItem[] = [
     roles: [ROLE.ADMIN_WORKSPACE],
   },
   {
+    url: PageURL.MY_TESTS,
+    pattern: PageURL.MY_TESTS,
+    label: 'My Tests',
+    icon: <IconStack2 size={20} strokeWidth={1} />,
+    roles: [ROLE.USER],
+  },
+  {
     url: PageURL.CLASSES,
     pattern: PageURL.CLASSES,
     label: 'Classes',

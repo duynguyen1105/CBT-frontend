@@ -59,3 +59,36 @@ export interface ISection {
 export interface ISectionPart {
   partContent: (IDescription | QuestionType | ISection)[];
 }
+
+export type TestType = {
+  _id?: string;
+  title: string;
+  description: string;
+  timeSetting: {
+    startTime: Date;
+    finishTime: Date;
+    duration: number;
+  };
+  password?: string;
+  displayOptions?: {
+    afterSubmit?: {
+      showScore?: boolean;
+      showAnswer?: boolean;
+      showFeedback?: boolean;
+    };
+    afterDeadline?: {
+      showScore?: boolean;
+      showAnswer?: boolean;
+      showFeedback?: boolean;
+    };
+  };
+  questions: QuestionType[];
+};
+
+export const TEST_STATUS = {
+  UPCOMING: 'UPCOMING',
+  ONGOING: 'ONGOING',
+  FINISHED: 'FINISHED',
+};
+
+export type TestStatus = (typeof TEST_STATUS)[keyof typeof TEST_STATUS];

@@ -5,6 +5,7 @@ import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import PageURL from 'apps/PageURL';
 import defaultTheme from 'apps/theme';
+import DOMPurify from 'dompurify';
 import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -21,7 +22,13 @@ const Questions: LayoutComponent = () => {
   const columns: DataTableColumn<TableType>[] = [
     { accessor: '_id', sortable: true, title: 'ID' },
     { accessor: 'title', sortable: true },
-    // { accessor: 'content', width: '30%', sortable: true },
+    {
+      accessor: 'content',
+      sortable: true,
+      render: (data) => (
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }} />
+      ),
+    },
     {
       accessor: 'type',
       width: '10%',
@@ -35,14 +42,6 @@ const Questions: LayoutComponent = () => {
       sortable: true,
       render: (data) => data.label?.join(', '),
     },
-    // { accessor: 'score', width: '10%', sortable: true },
-    // {
-    //   accessor: 'active',
-    //   title: <Center>Active</Center>,
-    //   render: ({ active }) => (
-    //     <Center>{active === 'Y' ? <IconCheck color="green" /> : <IconX color="red" />}</Center>
-    //   ),
-    // },
     {
       accessor: 'actions',
       title: <Center>Actions</Center>,

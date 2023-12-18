@@ -1,9 +1,9 @@
 import { ActionIcon, Box, Group, Radio, Text, createStyles } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
 import { IconBulb } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
-import { ExamResultType, ExamType, QuestionType } from 'types/question';
-import { UseFormReturnType } from '@mantine/form';
+import { ExamResultType, QuestionType } from 'types/question';
 
 const useStyle = createStyles<string, {}>(() => ({
   description: {
@@ -18,8 +18,9 @@ interface SelectOneProps {
   question: QuestionType;
   questionNo?: number;
   form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
+  isShowFeedback?: boolean;
 }
-const SelectOne = ({ question, questionNo = 1, form }: SelectOneProps) => {
+const SelectOne = ({ question, questionNo = 1, form, isShowFeedback }: SelectOneProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectOne' });
 
@@ -31,14 +32,16 @@ const SelectOne = ({ question, questionNo = 1, form }: SelectOneProps) => {
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
 
   return (
-    <Box p="md">
+    <Box p="md" id={`question-${questionNo}`}>
       <Group>
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
-        <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
-          <IconBulb size="1.125rem" />
-        </ActionIcon>
+        {isShowFeedback && (
+          <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
+            <IconBulb size="1.125rem" />
+          </ActionIcon>
+        )}
       </Group>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />

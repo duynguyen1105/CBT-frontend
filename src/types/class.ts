@@ -1,7 +1,10 @@
-export type Class = {
-  title: string;
+import { UserType } from './user';
+
+export type ClassType = {
+  _id?: string;
+  name: string;
   description: string;
-  date_start: string;
-  date_end: string;
-  workspace_id: string;
+  // tests: TestType[];
+  // exams: ExamType[];
+  users: UserType[];
 };

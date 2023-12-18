@@ -113,7 +113,7 @@ const Login: LayoutComponent = () => {
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
       <Flex className={classes.row} direction="column" align="center" justify="center">
-        <Image src={logo} style={{ width: '120px', padding: 22 }} />
+        <Image src={logo} style={{ width: '150px', marginTop: '50px' }} />
         <Box className={classes.rightCol}>
           <Flex align="center" direction="column" m="xl">
             <Text fz={32} fw={600} c={theme.layout.color.text.hex} align="center">
