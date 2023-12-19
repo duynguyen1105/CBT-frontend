@@ -11,7 +11,7 @@ import {
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { PATHS } from 'api/paths';
-import { callApiWithBasicAuth, getApiPath } from 'api/utils';
+import { callApi, getApiPath } from 'api/utils';
 import { COOKIE_AUTH_TOKEN } from 'apps/constants';
 import PageURL from 'apps/PageURL';
 import theme from 'apps/theme';
@@ -21,6 +21,10 @@ import { LayoutComponent } from 'types/layout';
 import Button from 'views/components/base/Button';
 import Fluid from 'views/layout/Fluid';
 import logo from '../../../assets/images/logo/cbtlogo.png';
+import { decodeToken } from "react-jwt";
+import { useDispatch } from 'store';
+import { slice } from 'slices/app';
+import { UserType } from 'types/user';
 
 const useStyle = createStyles<string, {}>(() => ({
   row: {
@@ -69,32 +73,51 @@ const useStyle = createStyles<string, {}>(() => ({
 }));
 
 type UserLoginInfo = {
-  username: string;
+  email: string;
   password: string;
 };
 
 const Login: LayoutComponent = () => {
   const { classes } = useStyle({}, { name: 'PageLogin' });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const form = useForm<UserLoginInfo>({
     initialValues: {
-      username: '',
+      email: '',
       password: '',
     },
   });
 
-  const handleSubmit = async (user: UserLoginInfo) => {
-    const res = await callApiWithBasicAuth(
+  const handleSubmit = async ({ email, password }: UserLoginInfo) => {
+    const res = await callApi(
       getApiPath(PATHS.USERS.LOGIN),
-      user.username,
-      user.password
+      'POST',
+      {
+        data: {
+          email,
+          password
+        }
+      }
     );
 
     if (res?.data) {
-      Cookies.set(COOKIE_AUTH_TOKEN, res?.data?.token, {
+      const { token } = res.data
+      Cookies.set(COOKIE_AUTH_TOKEN, token, {
         path: '/',
       });
+
+      const decodedToken = decodeToken(token) as { [key: string]: string };
+      const { name, id, role } = decodedToken
+      const userInfo = {
+        _id: id,
+        name,
+        email,
+        password,
+        role: [role],
+      } as UserType
+      dispatch(slice.actions.setUserInfo(userInfo))
+
       notifications.show({
         message: 'Login successfully',
         color: 'green',
@@ -124,9 +147,9 @@ const Login: LayoutComponent = () => {
           <Box>
             <TextInput
               size="md"
-              label="User Name"
-              placeholder="User Name"
-              {...form.getInputProps('username')}
+              label="Email"
+              placeholder="Email"
+              {...form.getInputProps('email')}
             />
 
             <PasswordInput

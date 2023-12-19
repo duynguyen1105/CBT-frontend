@@ -311,7 +311,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               {QUESTION_ELEMENT_BY_TYPE[form.values.type].includes(QUESTION_ELEMENT.AUDIO) && (
                 <Grid.Col span={12}>
                   <FileInput
-                    placeholder="Upload file "
+                    // placeholder="Upload file "
                     accept=".mp3"
                     label="Audio file (.mp3)"
                     clearable
