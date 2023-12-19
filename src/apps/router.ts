@@ -1,7 +1,6 @@
 import { LayoutComponent } from 'types/layout';
 import TestForm from 'views/components/base/form/FormTest';
 import Dashboard from 'views/pages/dashboard';
-import Login from 'views/pages/login';
 import Question from 'views/pages/question';
 import QuestionDetail from 'views/pages/question/QuestionDetail';
 import Test from 'views/pages/test';
@@ -16,11 +15,11 @@ export interface RouteItem {
   element: LayoutComponent;
 }
 
-export const publicRoutes: RouteItem[] = [
-  {
-    path: '/login',
-    element: Login,
-  },
+export const userRoute: RouteItem[] = [
+  // {
+  //   path: '/login',
+  //   element: Login,
+  // },
   {
     path: '/dashboard',
     element: Dashboard,
@@ -41,10 +40,10 @@ export const publicRoutes: RouteItem[] = [
     path: PageURL.CLASS_DETAIL,
     element: ClassDetail,
   },
-  {
-    path: PageURL.USERS,
-    element: Users,
-  },
+  // {
+  //   path: PageURL.USERS,
+  //   element: Users,
+  // },
   {
     path: PageURL.TESTS,
     element: Test,
@@ -63,4 +62,11 @@ export const publicRoutes: RouteItem[] = [
   // },
 ];
 
-export const privateRoutes: RouteItem[] = [];
+export const adminRoutes: RouteItem[] = [
+  {
+    path: PageURL.USERS,
+    element: Users,
+  },
+];
+
+export const superAdminRoutes: RouteItem[] = [];

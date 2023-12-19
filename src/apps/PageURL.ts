@@ -16,6 +16,8 @@ const PageURL = {
   QUESTIONS_DETAIL: '/questions/:question_id',
   TESTS_DETAIL: '/tests/:test_id',
   MY_TESTS: '/my-tests',
+  ERROR_404: '/error/404',
+  ERROR_403: '/error/403',
 };
 
 export default PageURL;

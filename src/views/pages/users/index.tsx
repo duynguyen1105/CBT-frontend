@@ -162,7 +162,7 @@ const Users: LayoutComponent = () => {
       'GET'
     );
 
-    if (res.ok) {
+    if (res?.ok) {
       setUsers(res.data);
       setTotalRecords(res.total);
     }

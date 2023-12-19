@@ -12,7 +12,7 @@ import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { PATHS } from 'api/paths';
 import { callApi, getApiPath } from 'api/utils';
-import { COOKIE_AUTH_TOKEN } from 'apps/constants';
+import { COOKIE_AUTH_TOKEN, STORAGE_USER_INFO } from 'apps/constants';
 import PageURL from 'apps/PageURL';
 import theme from 'apps/theme';
 import Cookies from 'js-cookie';
@@ -22,9 +22,8 @@ import Button from 'views/components/base/Button';
 import Fluid from 'views/layout/Fluid';
 import logo from '../../../assets/images/logo/cbtlogo.png';
 import { decodeToken } from "react-jwt";
-import { useDispatch } from 'store';
-import { slice } from 'slices/app';
 import { UserType } from 'types/user';
+import { useEffect } from 'react';
 
 const useStyle = createStyles<string, {}>(() => ({
   row: {
@@ -80,7 +79,13 @@ type UserLoginInfo = {
 const Login: LayoutComponent = () => {
   const { classes } = useStyle({}, { name: 'PageLogin' });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const token = Cookies.get(COOKIE_AUTH_TOKEN);
+
+  useEffect(() => {
+    if (token) {
+      navigate('/')
+    }
+  }, [])
 
   const form = useForm<UserLoginInfo>({
     initialValues: {
@@ -108,15 +113,15 @@ const Login: LayoutComponent = () => {
       });
 
       const decodedToken = decodeToken(token) as { [key: string]: string };
-      const { name, id, role } = decodedToken
-      const userInfo = {
-        _id: id,
-        name,
+      const { userName, userId, userRole } = decodedToken
+      const user = {
+        _id: userId,
+        name: userName,
         email,
-        password,
-        role: [role],
+        role: [userRole],
+        workspace: 'ws1'
       } as UserType
-      dispatch(slice.actions.setUserInfo(userInfo))
+      localStorage.setItem(STORAGE_USER_INFO, JSON.stringify(user));
 
       notifications.show({
         message: 'Login successfully',

@@ -6,6 +6,8 @@ export const IS_PROD = process.env.NODE_ENV === 'production';
 
 export const COOKIE_AUTH_TOKEN = 'cbt_user_token';
 
+export const STORAGE_USER_INFO = 'cbt_user_info';
+
 export const DATE_FORMAT = 'DD/MM/YYYY';
 
 export const QUESTION_ELEMENT = {
