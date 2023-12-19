@@ -1,5 +1,9 @@
 import { Text, Card, RingProgress, Group, useMantineTheme, Flex, Box, Button } from '@mantine/core';
 import { TEST_STATUS, TestStatus, TestType } from '../../../types/test';
+import { useNavigate } from 'react-router';
+import PageURL from '../../../apps/PageURL';
+import { modals } from '@mantine/modals';
+import FormExam from '../../components/base/form/FormExam';
 
 const stats = [
   { value: 447, label: 'Remaining' },
@@ -9,10 +13,12 @@ const stats = [
 type Props = {
   test: TestType;
   status: TestStatus;
+  userAnswer?: any;
 };
 
-export const TestCard = ({ test, status }: Props) => {
+export const TestCard = ({ test, status, userAnswer }: Props) => {
   const { title, timeSetting, description } = test;
+  const navigate = useNavigate();
 
   const theme = useMantineTheme();
   const completed = 1887;
@@ -61,9 +67,44 @@ export const TestCard = ({ test, status }: Props) => {
 
         <Flex direction="column" justify="space-between">
           <Text fz="md">{description}</Text>
-          <Button variant="light" color="cyan" w={200}>
-            Start
-          </Button>
+          {status === TEST_STATUS.ONGOING && (
+            <Button
+              variant="light"
+              color="cyan"
+              w={200}
+              onClick={() => navigate(PageURL.EXAM.replace(':test_id', test._id as string))}
+            >
+              Start
+            </Button>
+          )}
+          {status === TEST_STATUS.UPCOMING && (
+            <Button variant="light" color="teal" w={200}>
+              Join
+            </Button>
+          )}
+          {status === TEST_STATUS.FINISHED && (
+            <Button
+              variant="light"
+              color="orange"
+              w={200}
+              onClick={() =>
+                modals.open({
+                  size: 'xl',
+                  children: (
+                    <FormExam
+                      exam={{ _id: test?._id as string, questions: test.questions }}
+                      isShowResult
+                      userAnswer={userAnswer}
+                    />
+                    // <h1>haha</h1>
+                  ),
+                  // onConfirm: () => console.log('Add question'),
+                })
+              }
+            >
+              View result
+            </Button>
+          )}
           {/* <div>
             <RingProgress
               roundCaps

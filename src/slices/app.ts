@@ -33,8 +33,7 @@ export const initialState: AppState = {
     name: '',
     password: '',
     email: '',
-    gender: '',
-    role: ['ADMIN_WORKSPACE'],
+    role: 'ADMIN_WORKSPACE',
     workspace: 'ws1',
   },
 };
@@ -53,7 +52,7 @@ export const slice = createSlice({
       state.navbar.show = action.payload;
     },
     setUserInfo(state: AppState, action: PayloadAction<UserType>) {
-      state.userInfo = action.payload;
+      state.userInfo._id = action.payload._id;
     },
   },
 });

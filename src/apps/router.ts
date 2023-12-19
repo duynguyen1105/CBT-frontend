@@ -1,14 +1,14 @@
 import { LayoutComponent } from 'types/layout';
-import TestForm from 'views/components/base/form/FormTest';
 import Dashboard from 'views/pages/dashboard';
 import Question from 'views/pages/question';
 import QuestionDetail from 'views/pages/question/QuestionDetail';
 import Test from 'views/pages/test';
 import Users from 'views/pages/users';
-import PageURL from './PageURL';
 import ClassPage from '../views/pages/class';
 import ClassDetail from '../views/pages/class/ClassDetail';
 import MyTest from '../views/pages/myTests';
+import { TestInfo } from '../views/pages/test/TestInfo';
+import PageURL from './PageURL';
 
 export interface RouteItem {
   path: string;
@@ -50,7 +50,7 @@ export const userRoute: RouteItem[] = [
   },
   {
     path: PageURL.TESTS_DETAIL,
-    element: TestForm,
+    element: TestInfo,
   },
   {
     path: PageURL.MY_TESTS,

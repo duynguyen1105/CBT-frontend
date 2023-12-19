@@ -15,7 +15,7 @@ const defaultValues = {
   email: '',
   gender: '',
   password: '',
-  role: [],
+  role: '',
 };
 
 export const UserInfoModal = ({ opened, userData, onClose, onSubmit }: Props) => {

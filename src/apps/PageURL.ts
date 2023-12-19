@@ -18,6 +18,7 @@ const PageURL = {
   MY_TESTS: '/my-tests',
   ERROR_404: '/error/404',
   ERROR_403: '/error/403',
+  EXAM: '/exam/:test_id',
 };
 
 export default PageURL;

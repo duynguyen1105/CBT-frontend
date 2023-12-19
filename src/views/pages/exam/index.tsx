@@ -1,39 +1,52 @@
 import { Button, Flex } from '@mantine/core';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
-import { useCountdown } from 'hooks/useCountdown';
 import { useEffect, useState } from 'react';
-import { QuestionType } from 'types/question';
+import { useParams } from 'react-router';
 import FormExam from 'views/components/base/form/FormExam';
+import { useSelector } from '../../../store';
+import { TestType } from '../../../types/test';
 import { Countdown } from './Countdown';
 
 export const ExamPage = () => {
-  const { time } = useCountdown();
+  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { test_id } = useParams();
 
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
+  const [testInfo, setTestInfo] = useState<TestType>();
 
-  const fetchListQuestions = async () => {
+  const fetchTestInfo = async () => {
+    if (test_id === undefined) return;
     const res = await callApiWithAuth(
-      getApiPath(PATHS.QUESTIONS.GET_LIST, { workspaceName: 'ws1' }),
+      getApiPath(PATHS.TESTS.GET_INFO, { workspaceName: workspace, testId: test_id }),
       'GET'
     );
 
     if (res.ok) {
-      setQuestions(res.data);
+      setTestInfo(res.data);
     }
   };
 
   useEffect(() => {
-    fetchListQuestions();
+    fetchTestInfo();
   }, []);
+
+  if (!testInfo) return null;
 
   return (
     <Flex p="md" direction="column" align="center" bg="#d5dbd5">
       <h1>The Final exam</h1>
-      <Flex pos="fixed" right="20px" top="20px" direction="column" w="150px" align="center">
+      <Flex
+        pos="fixed"
+        right="20px"
+        top="20px"
+        direction="column"
+        w="150px"
+        align="center"
+        gap="lg"
+      >
         <Countdown />
-        <Flex wrap="wrap" justify="center">
-          {Array.from({ length: questions.length }).map((_, index) => (
+        <Flex wrap="wrap">
+          {Array.from({ length: testInfo.questions.length }).map((_, index) => (
             <Button
               size="xs"
               radius="50%"
@@ -52,7 +65,7 @@ export const ExamPage = () => {
           ))}
         </Flex>
       </Flex>
-      <FormExam exam={{ _id: '1', questions }} />
+      <FormExam exam={{ _id: testInfo?._id as string, questions: testInfo.questions }} />
     </Flex>
   );
 };

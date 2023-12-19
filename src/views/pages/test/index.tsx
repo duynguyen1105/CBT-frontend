@@ -188,7 +188,7 @@ const Tests: LayoutComponent = () => {
   };
 
   const handleCreateTest = () => {
-    navigate(PageURL.TESTS_DETAIL.replace(':question_id', '-'));
+    navigate(PageURL.TESTS_DETAIL.replace(':test_id', 'new'));
   };
 
   useEffect(() => {

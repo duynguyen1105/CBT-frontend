@@ -1,8 +1,10 @@
-import { ActionIcon, Alert, Box, Group, createStyles, Text } from '@mantine/core';
+import { ActionIcon, Alert, Box, Group, Text, createStyles } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
 import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
-import { useState } from 'react';
-import { QuestionType } from 'types/question';
+import { useEffect, useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
+import { ExamResultType, QuestionType } from 'types/question';
 
 const useStyle = createStyles<string, {}>(() => ({
   root: {
@@ -15,9 +17,17 @@ const useStyle = createStyles<string, {}>(() => ({
 interface DropdownSelectProps {
   question: QuestionType;
   questionNo?: number;
+  form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
   isShowFeedback?: boolean;
+  userAnswer?: any;
 }
-const DropdownSelect = ({ question, questionNo = 1, isShowFeedback }: DropdownSelectProps) => {
+const DropdownSelect = ({
+  question,
+  questionNo = 1,
+  form,
+  isShowFeedback,
+  userAnswer,
+}: DropdownSelectProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'DropdownSelect' });
   const handleFeedback = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,15 +38,31 @@ const DropdownSelect = ({ question, questionNo = 1, isShowFeedback }: DropdownSe
   let newQuestionContent = question?.content;
 
   for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
-    const selectAnswer = `<select id="select-${index}">
-    <option value="" class="placeholder">--Choose your answer--</option>
-    ${question.blankAnswer?.[index]
-      .map((answer: any) => `<option value="${answer.order}">${answer.content}</option>`)
-      .join('')}
-  </select>`;
-
-    newQuestionContent = newQuestionContent.replace(`@dropdown:answer:${index + 1}`, selectAnswer);
+    const compAsHtml = ReactDOMServer.renderToStaticMarkup(
+      <select id={`select-${index}`} className={`question-${questionNo}-select`} value={userAnswer}>
+        <option value="">--Choose your answer--</option>
+        {question.blankAnswer?.[index].map((answer: any) => (
+          <option value={answer.order}>{answer.content}</option>
+        ))}
+      </select>
+    );
+    newQuestionContent = newQuestionContent.replace(`@dropdown:answer:${index + 1}`, compAsHtml);
   }
+
+  useEffect(() => {
+    const selectEl = document.getElementsByClassName(`question-${questionNo}-select`);
+    for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
+      const element = selectEl[index] as HTMLSelectElement;
+      element.addEventListener('change', (event) => {
+        const selectedValue = (event.target as HTMLSelectElement).value;
+        form?.setFieldValue(`answers.${questionNo - 1}.${index}`, selectedValue);
+      });
+    }
+  });
+
+  useEffect(() => {
+    form?.setFieldValue(`answers.${questionNo - 1}`, []);
+  }, []);
 
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
   return (

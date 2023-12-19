@@ -31,9 +31,10 @@ const TESTS = {
   GET_LIST: 'tests/{workspaceName}?search={search}&page={page}&sort={sort}',
   DELETE_MANY: 'tests/{workspaceName}/delete',
   CREATE: 'tests/{workspaceName}/createTest',
-  GET_INFO: 'tests/{workspaceName}/{questionId}',
-  UPDATE: 'tests/{workspaceName}/{questionId}',
-  DELETE: 'tests/{workspaceName}/{questionId}',
+  GET_INFO: 'tests/{workspaceName}/{testId}',
+  UPDATE: 'tests/{workspaceName}/{testId}',
+  DELETE: 'tests/{workspaceName}/{testId}',
+  GET_MY_TESTS: 'tests/{workspaceName}/myTests/{userId}',
 };
 
 const CATEGORIES = {

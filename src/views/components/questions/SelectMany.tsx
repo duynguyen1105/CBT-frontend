@@ -19,8 +19,15 @@ interface SelectManyProps {
   questionNo?: number;
   form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
   isShowFeedback?: boolean;
+  userAnswer?: any;
 }
-const SelectMany = ({ question, questionNo = 1, form, isShowFeedback }: SelectManyProps) => {
+const SelectMany = ({
+  question,
+  questionNo = 1,
+  form,
+  isShowFeedback,
+  userAnswer,
+}: SelectManyProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectMany' });
 
@@ -44,7 +51,11 @@ const SelectMany = ({ question, questionNo = 1, form, isShowFeedback }: SelectMa
       </Group>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />
-        <Checkbox.Group mt={'sm'} {...form?.getInputProps(`answers.${questionNo - 1}`)}>
+        <Checkbox.Group
+          mt={'sm'}
+          {...form?.getInputProps(`answers.${questionNo - 1}`)}
+          value={userAnswer}
+        >
           {question?.answer.map((answer, index) => (
             <Checkbox
               mt="sm"

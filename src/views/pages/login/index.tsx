@@ -16,14 +16,14 @@ import { COOKIE_AUTH_TOKEN, STORAGE_USER_INFO } from 'apps/constants';
 import PageURL from 'apps/PageURL';
 import theme from 'apps/theme';
 import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import { decodeToken } from 'react-jwt';
 import { useNavigate } from 'react-router';
 import { LayoutComponent } from 'types/layout';
+import { UserType } from 'types/user';
 import Button from 'views/components/base/Button';
 import Fluid from 'views/layout/Fluid';
 import logo from '../../../assets/images/logo/cbtlogo.png';
-import { decodeToken } from "react-jwt";
-import { UserType } from 'types/user';
-import { useEffect } from 'react';
 
 const useStyle = createStyles<string, {}>(() => ({
   row: {
@@ -83,9 +83,9 @@ const Login: LayoutComponent = () => {
 
   useEffect(() => {
     if (token) {
-      navigate('/')
+      navigate('/');
     }
-  }, [])
+  }, []);
 
   const form = useForm<UserLoginInfo>({
     initialValues: {
@@ -95,32 +95,28 @@ const Login: LayoutComponent = () => {
   });
 
   const handleSubmit = async ({ email, password }: UserLoginInfo) => {
-    const res = await callApi(
-      getApiPath(PATHS.USERS.LOGIN),
-      'POST',
-      {
-        data: {
-          email,
-          password
-        }
-      }
-    );
+    const res = await callApi(getApiPath(PATHS.USERS.LOGIN), 'POST', {
+      data: {
+        email,
+        password,
+      },
+    });
 
     if (res?.data) {
-      const { token } = res.data
+      const { token } = res.data;
       Cookies.set(COOKIE_AUTH_TOKEN, token, {
         path: '/',
       });
 
       const decodedToken = decodeToken(token) as { [key: string]: string };
-      const { userName, userId, userRole } = decodedToken
+      const { userName, userId, userRole } = decodedToken;
       const user = {
         _id: userId,
         name: userName,
         email,
-        role: [userRole],
-        workspace: 'ws1'
-      } as UserType
+        role: userRole,
+        workspace: 'ws1',
+      } as UserType;
       localStorage.setItem(STORAGE_USER_INFO, JSON.stringify(user));
 
       notifications.show({

@@ -11,6 +11,7 @@ type Props<T> = {
   page: number;
   query: string;
   isAdding?: boolean;
+  isNotCreateOrAdd?: boolean;
   setPage: (p: number) => void;
   setQuery: (q: string) => void;
   handleSortStatusChange: (status: DataTableSortStatus) => void;
@@ -30,6 +31,7 @@ export const DataTable = ({
   query,
   totalRecord,
   isAdding,
+  isNotCreateOrAdd,
   handleAddRecord,
   setPage,
   setQuery,
@@ -52,7 +54,7 @@ export const DataTable = ({
 
   return (
     <Flex gap="lg" direction="column">
-      {isAdding && handleAddRecord ? (
+      {isNotCreateOrAdd ? null : isAdding && handleAddRecord ? (
         <Flex gap={16} justify="flex-end">
           <Button
             onClick={() => handleAddRecord(selectedRecords)}

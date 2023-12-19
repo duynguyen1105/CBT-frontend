@@ -83,6 +83,7 @@ export type TestType = {
     };
   };
   questions: QuestionType[];
+  classAssigned?: any;
 };
 
 export const TEST_STATUS = {

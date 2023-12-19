@@ -29,17 +29,18 @@ function App() {
                     key={`super-admin-${index}`}
                     path={route.path}
                     element={
-                      <GuardContainer routeRole='SUPER_ADMIN'>
+                      <GuardContainer routeRole="SUPER_ADMIN">
                         <LayoutContainer component={route.element} />
                       </GuardContainer>
-                    } />
+                    }
+                  />
                 ))}
                 {adminRoutes.map((route, index) => (
                   <Route
                     key={`admin-${index}`}
                     path={route.path}
                     element={
-                      <GuardContainer routeRole='ADMIN_WORKSPACE'>
+                      <GuardContainer routeRole="ADMIN_WORKSPACE">
                         <LayoutContainer component={route.element} />
                       </GuardContainer>
                     }
@@ -52,15 +53,15 @@ function App() {
                     element={<LayoutContainer component={route.element} />}
                   />
                 ))}
-                <Route path="/exam" element={<ExamPage />} />
+                <Route path="/exam/:test_id" element={<ExamPage />} />
               </Route>
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route index element={<Home />} />
 
-              <Route path='/error'>
-                <Route path='403' element={<Error code={403} />} />
+              <Route path="/error">
+                <Route path="403" element={<Error code={403} />} />
               </Route>
 
               <Route path="*" element={<Error code={404} />} />

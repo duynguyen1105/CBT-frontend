@@ -19,8 +19,15 @@ interface SelectOneProps {
   questionNo?: number;
   form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
   isShowFeedback?: boolean;
+  userAnswer?: any;
 }
-const SelectOne = ({ question, questionNo = 1, form, isShowFeedback }: SelectOneProps) => {
+const SelectOne = ({
+  question,
+  questionNo = 1,
+  form,
+  isShowFeedback,
+  userAnswer,
+}: SelectOneProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'SelectOne' });
 
@@ -48,6 +55,7 @@ const SelectOne = ({ question, questionNo = 1, form, isShowFeedback }: SelectOne
         <Radio.Group
           mt={'sm'}
           onChange={(value) => form?.setFieldValue(`answers.${questionNo - 1}`, Number(value))}
+          value={userAnswer.toString()}
         >
           {question?.answer?.map((answer, index) => (
             <Radio

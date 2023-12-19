@@ -15,20 +15,23 @@ import {
 } from '@mantine/core';
 
 import defaultTheme from 'apps/theme';
-import { LayoutComponent } from 'types/layout';
 
 import { DateTimePicker } from '@mantine/dates';
-import { IconArrowRight, IconArticle, IconSettings } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useListState } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import { IconArrowRight, IconArticle, IconSettings, IconStackPush } from '@tabler/icons-react';
+import { PATHS } from 'api/paths';
+import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useSelector } from 'store';
 import { QuestionType } from 'types/question';
-import Shell from 'views/layout/Shell';
+import PageURL from '../../../../apps/PageURL';
+import { ClassType } from '../../../../types/class';
+import { TestType } from '../../../../types/test';
+import { TestAssignment } from '../../../pages/test/TestAssignment';
 import FormAddContentTestPage from './FormAddContentTestPage';
 import { TestFormProvider, useTestForm } from './Question/form-question-context';
-import { useListState } from '@mantine/hooks';
-import { callApiWithAuth, getApiPath } from 'api/utils';
-import { PATHS } from 'api/paths';
-import { useSelector } from 'store';
-import { TestType } from '../../../../types/test';
 
 const { padding } = defaultTheme.layout;
 
@@ -39,12 +42,18 @@ const useStyle = createStyles<string, {}>(() => ({
   },
 }));
 
-const FormTest: LayoutComponent = () => {
+type Props = {
+  testInfo?: TestType;
+};
+
+const FormTest = ({ testInfo }: Props) => {
+  const navigate = useNavigate();
   const { classes } = useStyle({}, { name: 'FormTest' });
   const [active, setActive] = useState(0);
   const [questions, handlers] = useListState<QuestionType>([]);
-  const nextStep = () => setActive((current) => (current < 1 ? current + 1 : current));
-  const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
+  const [selectedClasses, setSelectedClasses] = useState<ClassType[]>([]);
+  const nextStep = () => setActive((current) => current + 1);
+  const prevStep = () => setActive((current) => current - 1);
 
   const { workspace } = useSelector((state) => state.app.userInfo);
 
@@ -88,18 +97,47 @@ const FormTest: LayoutComponent = () => {
     },
   });
 
+  useEffect(() => {
+    if (!!testInfo) {
+      const newTestInfo = {
+        ...testInfo,
+        timeSetting: {
+          startTime: new Date(testInfo.timeSetting.startTime),
+          finishTime: new Date(testInfo.timeSetting.finishTime),
+          duration: testInfo.timeSetting.duration,
+        },
+      };
+
+      form.setValues(newTestInfo);
+      handlers.setState(newTestInfo.questions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testInfo]);
+
   const handleSaveTest = async (test: TestType) => {
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.TESTS.CREATE, { workspaceName: workspace }),
-      'POST',
-      {
-        data: test,
-      }
-    );
+    const isUpdate = !!testInfo;
+    const path = isUpdate
+      ? getApiPath(PATHS.TESTS.UPDATE, {
+          workspaceName: workspace,
+          testId: testInfo._id as string,
+        })
+      : getApiPath(PATHS.TESTS.CREATE, { workspaceName: workspace });
+    const res = await callApiWithAuth(path, isUpdate ? 'PUT' : 'POST', {
+      data: test,
+    });
+    if (res.ok) {
+      notifications.show({
+        message: `${isUpdate ? 'Update' : 'Create'} Test successfully`,
+        color: 'green',
+      });
+      setTimeout(() => {
+        navigate(PageURL.TESTS);
+      }, 1000);
+    }
   };
 
   const handleSubmit = (values: TestType) => {
-    handleSaveTest({ ...values, questions });
+    handleSaveTest({ ...values, questions, classAssigned: selectedClasses });
   };
 
   return (
@@ -242,6 +280,12 @@ const FormTest: LayoutComponent = () => {
                 <Stepper.Step label="Content" icon={<IconArticle size="1.5rem" />}>
                   <FormAddContentTestPage questions={questions} handlers={handlers} />
                 </Stepper.Step>
+                <Stepper.Step label="Test assignment" icon={<IconStackPush size="1.5rem" />}>
+                  <TestAssignment
+                    selectedClasses={selectedClasses}
+                    setSelectedClasses={setSelectedClasses}
+                  />
+                </Stepper.Step>
               </Stepper>
             </Grid.Col>
           </Grid>
@@ -249,23 +293,13 @@ const FormTest: LayoutComponent = () => {
             <Button variant="default" onClick={prevStep}>
               Back
             </Button>
-            {active === 1 ? (
-              <Button type="submit" variant="blue">
-                Finish
-              </Button>
-            ) : (
-              <Button onClick={nextStep} type="button" variant="blue">
-                Next
-              </Button>
-            )}
+            {active !== 2 && <Button onClick={nextStep}>Next</Button>}
+            {active === 2 && <Button type="submit">Finish</Button>}
           </Group>
         </form>
       </TestFormProvider>
     </Box>
   );
 };
-
-FormTest.layout = Shell;
-FormTest.displayName = 'Page.FormTest';
 
 export default FormTest;
