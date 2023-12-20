@@ -98,9 +98,7 @@ const FormExam = ({ exam, isShowResult, userAnswer }: Props) => {
             </Text>
           )}
           {exam.questions.map((question, idx) => (
-            <>
-              <div key={question._id}>{renderQuestion(question, idx + 1, userAnswer?.[idx])}</div>
-            </>
+            <div key={question._id}>{renderQuestion(question, idx + 1, userAnswer?.[idx])}</div>
           ))}
 
           {!isShowResult && <Button type="submit">Submit</Button>}

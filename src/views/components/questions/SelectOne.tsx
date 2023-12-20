@@ -63,6 +63,7 @@ const SelectOne = ({
         >
           {question?.answer?.map((answer, index) => (
             <Radio
+              key={`${answer}-${index}`}
               mt="sm"
               value={`${answer.order}`}
               label={answer.content}

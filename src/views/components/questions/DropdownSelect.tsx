@@ -44,10 +44,13 @@ const DropdownSelect = ({
         id={`select-${index}`}
         className={`question-${questionNo}-select`}
         value={userAnswer ?? undefined}
+        key={index}
       >
         <option value="">--Choose your answer--</option>
-        {question.blankAnswer?.[index].map((answer: any) => (
-          <option value={answer.order}>{answer.content}</option>
+        {question.blankAnswer?.[index].map((answer: any, idx: number) => (
+          <option value={answer.order} key={idx}>
+            {answer.content}
+          </option>
         ))}
       </select>
     );
@@ -87,17 +90,18 @@ const DropdownSelect = ({
         )}
       </Flex>
 
-      <Box my="md" classNames={classes.root}>
+      <Box my="md" className={classes.root}>
         <Box pl="sm" mt="sm">
           <div dangerouslySetInnerHTML={sanitizedData()} />
         </Box>
         {showFeedback &&
           question?.blankAnswer?.map((blnk, index) => (
-            <>
+            <Box key={index}>
               <Text size="sm" color="dark">{`Blank ${index + 1}`}</Text>
               {blnk.map((answer: any) =>
                 answer.isCorrect ? (
                   <Alert
+                    key={answer.order}
                     mt="sm"
                     icon={<IconCircleCheck size="1rem" />}
                     title={answer.content}
@@ -107,6 +111,7 @@ const DropdownSelect = ({
                   </Alert>
                 ) : (
                   <Alert
+                    key={answer.order}
                     mt="sm"
                     icon={<IconAlertCircle size="1rem" />}
                     title={answer.content}
@@ -116,7 +121,7 @@ const DropdownSelect = ({
                   </Alert>
                 )
               )}
-            </>
+            </Box>
           ))}
       </Box>
     </Box>

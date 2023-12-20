@@ -76,6 +76,7 @@ const MyTest: LayoutComponent = () => {
             .filter((test) => new Date(test.test.timeSetting.finishTime) < new Date())
             .map((test) => (
               <TestCard
+                key={test.test._id}
                 test={test.test}
                 status={TEST_STATUS.FINISHED}
                 userAnswer={test.userAnswer}

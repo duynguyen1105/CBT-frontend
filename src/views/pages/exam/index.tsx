@@ -48,6 +48,7 @@ export const ExamPage = () => {
         <Flex wrap="wrap">
           {Array.from({ length: testInfo.questions.length }).map((_, index) => (
             <Button
+              key={index}
               size="xs"
               radius="50%"
               w={30}

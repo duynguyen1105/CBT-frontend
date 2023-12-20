@@ -62,6 +62,7 @@ const SelectMany = ({
           {question?.answer.map((answer, index) => (
             <Checkbox
               mt="sm"
+              key={`${answer}-${index}`}
               value={`${answer.order}`}
               label={answer.content}
               error={showFeedback && !answer.isCorrect ? answer.feedback : null}
