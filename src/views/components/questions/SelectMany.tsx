@@ -1,5 +1,5 @@
 import { ActionIcon, Box, Checkbox, Flex, Group, Text, createStyles } from '@mantine/core';
-import { IconBulb, IconCheckbox } from '@tabler/icons-react';
+import { IconBulb, IconCheck, IconCheckbox, IconX } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
 import { ExamResultType, QuestionType } from 'types/question';
@@ -38,11 +38,11 @@ const SelectMany = ({
     setShowFeedback(!showFeedback);
   };
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
-  const isCorrect = checkCorrectByType(question, userAnswer);
+  const isCorrect = userAnswer !== undefined && checkCorrectByType(question, userAnswer);
   return (
     <Box p="md" id={`question-${questionNo}`}>
-      <Flex>
-        <IconCheckbox />
+      <Flex gap={'sm'}>
+        {isCorrect ? <IconCheck color="green" /> : <IconX color="red" />}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
@@ -57,7 +57,7 @@ const SelectMany = ({
         <Checkbox.Group
           mt={'sm'}
           {...form?.getInputProps(`answers.${questionNo - 1}`)}
-          value={userAnswer}
+          value={userAnswer ? userAnswer : undefined}
         >
           {question?.answer.map((answer, index) => (
             <Checkbox

@@ -1,10 +1,11 @@
-import { ActionIcon, Alert, Box, Group, Text, createStyles } from '@mantine/core';
+import { ActionIcon, Alert, Box, Flex, Text, createStyles } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
-import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
+import { IconAlertCircle, IconBulb, IconCheck, IconCircleCheck, IconX } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { ExamResultType, QuestionType } from 'types/question';
+import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
 
 const useStyle = createStyles<string, {}>(() => ({
   root: {
@@ -39,7 +40,11 @@ const DropdownSelect = ({
 
   for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
     const compAsHtml = ReactDOMServer.renderToStaticMarkup(
-      <select id={`select-${index}`} className={`question-${questionNo}-select`} value={userAnswer}>
+      <select
+        id={`select-${index}`}
+        className={`question-${questionNo}-select`}
+        value={userAnswer ?? undefined}
+      >
         <option value="">--Choose your answer--</option>
         {question.blankAnswer?.[index].map((answer: any) => (
           <option value={answer.order}>{answer.content}</option>
@@ -65,9 +70,12 @@ const DropdownSelect = ({
   }, []);
 
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
+  const isCorrect = userAnswer !== undefined && checkCorrectByType(question, userAnswer);
+
   return (
     <Box p="md" id={`question-${questionNo}`}>
-      <Group>
+      <Flex gap="md">
+        {isCorrect ? <IconCheck color="green" /> : <IconX color="red" />}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
@@ -77,7 +85,7 @@ const DropdownSelect = ({
             <IconBulb size="1.125rem" />
           </ActionIcon>
         )}
-      </Group>
+      </Flex>
 
       <Box my="md" classNames={classes.root}>
         <Box pl="sm" mt="sm">

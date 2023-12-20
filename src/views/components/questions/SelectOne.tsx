@@ -1,9 +1,10 @@
-import { ActionIcon, Box, Group, Radio, Text, createStyles } from '@mantine/core';
+import { ActionIcon, Box, Flex, Group, Radio, Text, createStyles } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
-import { IconBulb } from '@tabler/icons-react';
+import { IconBulb, IconCheck, IconX } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
 import { ExamResultType, QuestionType } from 'types/question';
+import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
 
 const useStyle = createStyles<string, {}>(() => ({
   description: {
@@ -38,9 +39,12 @@ const SelectOne = ({
   };
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
 
+  const isCorrect = userAnswer !== undefined && checkCorrectByType(question, userAnswer);
+
   return (
     <Box p="md" id={`question-${questionNo}`}>
-      <Group>
+      <Flex gap="sm">
+        {isCorrect ? <IconCheck color="green" /> : <IconX color="red" />}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
@@ -49,13 +53,13 @@ const SelectOne = ({
             <IconBulb size="1.125rem" />
           </ActionIcon>
         )}
-      </Group>
+      </Flex>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />
         <Radio.Group
           mt={'sm'}
           onChange={(value) => form?.setFieldValue(`answers.${questionNo - 1}`, Number(value))}
-          value={userAnswer.toString()}
+          value={userAnswer?.toString() ?? undefined}
         >
           {question?.answer?.map((answer, index) => (
             <Radio

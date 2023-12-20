@@ -1,4 +1,4 @@
-import { Box, Button } from '@mantine/core';
+import { Box, Button, Text } from '@mantine/core';
 
 import defaultTheme from 'apps/theme';
 
@@ -88,9 +88,18 @@ const FormExam = ({ exam, isShowResult, userAnswer }: Props) => {
     <Box pb={padding}>
       <ExamResultFormProvider form={form}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
+          {isShowResult && !!userAnswer && (
+            <Text align="center" fz="lg" color="cyan">
+              {`Result: ${
+                exam.questions
+                  .map((q, idx) => checkCorrectByType(q, userAnswer[idx]))
+                  .filter((item) => item).length
+              } / ${exam.questions.length}`}
+            </Text>
+          )}
           {exam.questions.map((question, idx) => (
             <>
-              <div key={question._id}>{renderQuestion(question, idx + 1, userAnswer[idx])}</div>
+              <div key={question._id}>{renderQuestion(question, idx + 1, userAnswer?.[idx])}</div>
             </>
           ))}
 
