@@ -1,9 +1,10 @@
-import { ActionIcon, Box, Checkbox, Group, Text, createStyles } from '@mantine/core';
-import { IconBulb } from '@tabler/icons-react';
+import { ActionIcon, Box, Checkbox, Flex, Group, Text, createStyles } from '@mantine/core';
+import { IconBulb, IconCheckbox } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useState } from 'react';
 import { ExamResultType, QuestionType } from 'types/question';
 import { UseFormReturnType } from '@mantine/form';
+import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
 
 const useStyle = createStyles<string, {}>(() => ({
   description: {
@@ -37,9 +38,11 @@ const SelectMany = ({
     setShowFeedback(!showFeedback);
   };
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
+  const isCorrect = checkCorrectByType(question, userAnswer);
   return (
     <Box p="md" id={`question-${questionNo}`}>
-      <Group>
+      <Flex>
+        <IconCheckbox />
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
@@ -48,7 +51,7 @@ const SelectMany = ({
             <IconBulb size="1.125rem" />
           </ActionIcon>
         )}
-      </Group>
+      </Flex>
       <Box pl="sm" mt="sm">
         <div dangerouslySetInnerHTML={sanitizedData()} />
         <Checkbox.Group

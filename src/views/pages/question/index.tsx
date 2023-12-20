@@ -6,10 +6,10 @@ import { callApiWithAuth, getApiPath } from 'api/utils';
 import PageURL from 'apps/PageURL';
 import defaultTheme from 'apps/theme';
 import DOMPurify from 'dompurify';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useSelector } from 'store';
 import { LayoutComponent } from 'types/layout';
 import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
 import { DataTable, TableType } from 'views/components/base/dataTable';
@@ -72,7 +72,7 @@ const Questions: LayoutComponent = () => {
   ];
 
   const navigate = useNavigate();
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');

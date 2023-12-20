@@ -1,13 +1,13 @@
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useSelector } from 'store';
 import { TestType } from '../../../types/test';
 import FormTest from '../../components/base/form/FormTest';
 
 export const TestInfo = () => {
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
   const { test_id } = useParams();
 
   const [testInfo, setTestInfo] = useState<TestType>();

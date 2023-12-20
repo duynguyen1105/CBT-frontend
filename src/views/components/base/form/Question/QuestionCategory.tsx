@@ -1,11 +1,11 @@
 import { ActionIcon, Flex, Select, Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { forwardRef, useEffect, useState } from 'react';
 import { useQuestionFormContext } from './form-question-context';
-import { useSelector } from 'store';
-import { notifications } from '@mantine/notifications';
 
 interface Option {
   value: string;
@@ -16,7 +16,7 @@ interface Option {
 interface QuestionCategoryProps {}
 
 const QuestionCategory = (props: QuestionCategoryProps) => {
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const [data, setData] = useState<Option[]>([]);
   const form = useQuestionFormContext();

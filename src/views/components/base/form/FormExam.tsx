@@ -8,6 +8,7 @@ import FillInGap from 'views/components/questions/FillInGap';
 import SelectMany from 'views/components/questions/SelectMany';
 import SelectOne from 'views/components/questions/SelectOne';
 import { ExamResultFormProvider, useExamResultForm } from './Question/form-question-context';
+import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
 
 const { padding } = defaultTheme.layout;
 
@@ -18,7 +19,7 @@ type Props = {
 };
 
 const FormExam = ({ exam, isShowResult, userAnswer }: Props) => {
-  // const { workspace } = useSelector((state) => state.app.userInfo);
+  // const { workspace } = useGetUserInfo();
 
   const form = useExamResultForm({
     initialValues: {
@@ -68,30 +69,12 @@ const FormExam = ({ exam, isShowResult, userAnswer }: Props) => {
     }
   };
 
-  const checkCorrectByType = (question: QuestionType, answer: any) => {
-    switch (question.type) {
-      // case QUESTION_TYPE.DropdownSelect:
-      //   return question.answer[0].content === answer;
-      // case QUESTION_TYPE.FillInGap:
-      //   return question.answer[0].content === answer;
-      case QUESTION_TYPE.SelectMany:
-        return answer.every((ans: any) => Boolean(question.answer[ans].isCorrect));
-      case QUESTION_TYPE.SelectOne:
-        return Boolean(question.answer[answer].isCorrect);
-      default:
-        break;
-    }
-  };
-
   const checkResult = (data: ExamResultType) => {
     const { answers } = data;
     const result = answers.map((answer, index) => {
       const question = exam.questions[index];
-      // console.log(index, checkCorrectByType(question, answer));
-
       return checkCorrectByType(question, answer);
     });
-    console.log(result[1]);
 
     return result;
   };

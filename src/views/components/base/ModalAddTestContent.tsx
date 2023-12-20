@@ -5,9 +5,9 @@ import { IconCirclePlus } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import defaultTheme from 'apps/theme';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'store';
 import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
 import { DataTable, TableType } from './dataTable';
 
@@ -36,7 +36,7 @@ function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
     },
   ];
 
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');

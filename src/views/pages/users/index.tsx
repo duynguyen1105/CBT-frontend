@@ -3,18 +3,16 @@ import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
-
 import defaultTheme from 'apps/theme';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { LayoutComponent } from 'types/layout';
 import { UserType } from 'types/user';
-
 import { DataTable, TableType } from 'views/components/base/dataTable';
-import Shell from 'views/layout/Shell';
-import { UserInfoModal } from 'views/components/modal/userInfoModal';
 import { ConfirmModal } from 'views/components/modal/confirmModal';
-import { useSelector } from 'store';
+import { UserInfoModal } from 'views/components/modal/userInfoModal';
+import Shell from 'views/layout/Shell';
 
 const { padding } = defaultTheme.layout;
 
@@ -54,7 +52,7 @@ const Users: LayoutComponent = () => {
     },
   ];
 
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const [page, setPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);

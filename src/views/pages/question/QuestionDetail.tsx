@@ -1,15 +1,15 @@
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useSelector } from 'store';
 import { LayoutComponent } from 'types/layout';
 import { QuestionType } from 'types/question';
 import QuestionForm from 'views/components/base/form/Question/FormQuestion';
 import Shell from 'views/layout/Shell';
 
 const QuestionDetail: LayoutComponent = () => {
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
   const params = useParams();
   const questionId = params.question_id;
   const [questionDetail, setQuestionDetail] = useState<QuestionType | undefined>();

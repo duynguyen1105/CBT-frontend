@@ -1,17 +1,15 @@
 import { ActionIcon, Box, Button, Center, Flex, Group, Text, TextInput } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
+import { DataTable, DataTableColumn } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useSelector } from 'store';
 import { LayoutComponent } from 'types/layout';
 import { QuestionType } from 'types/question';
-import QuestionForm from 'views/components/base/form/Question/FormQuestion';
 import Shell from 'views/layout/Shell';
 import { ClassType } from '../../../types/class';
-import { DataTable, DataTableColumn } from 'mantine-datatable';
-import { IconEdit } from '@tabler/icons-react';
-import { IconTrash } from '@tabler/icons-react';
 import { TableType } from '../../components/base/dataTable';
 
 const ClassDetail: LayoutComponent = () => {
@@ -40,7 +38,7 @@ const ClassDetail: LayoutComponent = () => {
       ),
     },
   ];
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
   const params = useParams();
   const classId = params.class_id;
   const [classDetail, setClassDetail] = useState<ClassType>();

@@ -22,9 +22,9 @@ import { notifications } from '@mantine/notifications';
 import { IconArrowRight, IconArticle, IconSettings, IconStackPush } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useSelector } from 'store';
 import { QuestionType } from 'types/question';
 import PageURL from '../../../../apps/PageURL';
 import { ClassType } from '../../../../types/class';
@@ -55,7 +55,7 @@ const FormTest = ({ testInfo }: Props) => {
   const nextStep = () => setActive((current) => current + 1);
   const prevStep = () => setActive((current) => current - 1);
 
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const form = useTestForm({
     initialValues: {

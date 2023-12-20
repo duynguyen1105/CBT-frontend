@@ -1,6 +1,6 @@
 import { ActionIcon, Box, Center, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
+import { IconEye, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 
@@ -10,11 +10,11 @@ import { useEffect, useState } from 'react';
 import { LayoutComponent } from 'types/layout';
 import { UserType } from 'types/user';
 
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { DataTable, TableType } from 'views/components/base/dataTable';
-import Shell from 'views/layout/Shell';
-import { UserInfoModal } from 'views/components/modal/userInfoModal';
 import { ConfirmModal } from 'views/components/modal/confirmModal';
-import { useSelector } from 'store';
+import { UserInfoModal } from 'views/components/modal/userInfoModal';
+import Shell from 'views/layout/Shell';
 
 const { padding } = defaultTheme.layout;
 
@@ -60,7 +60,7 @@ const ClassPage: LayoutComponent = () => {
     },
   ];
 
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const [page, setPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(1);

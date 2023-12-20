@@ -3,9 +3,9 @@ import { notifications } from '@mantine/notifications';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import defaultTheme from 'apps/theme';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { DataTable, DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'store';
 import { QuestionType } from 'types/question';
 import { ClassType } from '../../../types/class';
 import { TableType } from '../../components/base/dataTable';
@@ -32,7 +32,7 @@ export const TestAssignment = ({ selectedClasses, setSelectedClasses, onConfirm 
     },
   ];
 
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');

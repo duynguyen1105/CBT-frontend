@@ -2,8 +2,8 @@ import { Box, Divider, Flex, Text } from '@mantine/core';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import defaultTheme from 'apps/theme';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'store';
 import { LayoutComponent } from 'types/layout';
 import Shell from 'views/layout/Shell';
 import { TEST_STATUS, TestType } from '../../../types/test';
@@ -12,7 +12,7 @@ import { TestCard } from './TestCard';
 const { padding } = defaultTheme.layout;
 
 const MyTest: LayoutComponent = () => {
-  const { workspace, _id } = useSelector((state) => state.app.userInfo);
+  const { workspace, _id } = useGetUserInfo();
 
   const [tests, setTests] = useState<{ test: TestType; userAnswer: any }[]>([]);
 

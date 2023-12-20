@@ -1,15 +1,15 @@
 import { Button, Flex } from '@mantine/core';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import FormExam from 'views/components/base/form/FormExam';
-import { useSelector } from '../../../store';
 import { TestType } from '../../../types/test';
 import { Countdown } from './Countdown';
 
 export const ExamPage = () => {
-  const { workspace } = useSelector((state) => state.app.userInfo);
+  const { workspace } = useGetUserInfo();
   const { test_id } = useParams();
 
   const [testInfo, setTestInfo] = useState<TestType>();
