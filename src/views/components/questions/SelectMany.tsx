@@ -38,14 +38,13 @@ const SelectMany = ({
     setShowFeedback(!showFeedback);
   };
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(questionContent) });
-  const isCorrect = checkCorrectByType(question, userAnswer);
+  const isCorrect = checkCorrectByType(question, userAnswer ?? []);
   return (
     <Box p="md" id={`question-${questionNo}`}>
       <Flex>
         <IconCheckbox />
-        <Text size="md">{`Question ${questionNo} ${
-          question?.title ? `: ${question?.title}` : ''
-        }`}</Text>
+        <Text size="md">{`Question ${questionNo} ${question?.title ? `: ${question?.title}` : ''
+          }`}</Text>
         {isShowFeedback && (
           <ActionIcon color="blue" variant="light" onClick={handleFeedback}>
             <IconBulb size="1.125rem" />

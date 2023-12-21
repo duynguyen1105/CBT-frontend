@@ -1,17 +1,24 @@
 import { useEffect, useState, useMemo } from 'react';
 
-export const useCountdown = () => {
-  const [countdown, setCountdown] = useState(60 * 60); // 1 hour in seconds
+let timer: ReturnType<typeof setInterval>;
+
+export const useCountdown = (duration: number, expired: boolean) => {
+  const [countdown, setCountdown] = useState(duration * 60); // 1 hour in seconds
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    if (expired || countdown <= 0) {
+      clearInterval(timer);
+      setCountdown(0);
+      return;
+    }
+    timer = setInterval(() => {
       setCountdown((prevCountdown) => prevCountdown - 1);
     }, 1000);
 
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [countdown]);
 
   const formatTime = useMemo(
     () => (time: number) => {
@@ -25,5 +32,6 @@ export const useCountdown = () => {
 
   return {
     time: formatTime(countdown),
+    countdown,
   };
 };

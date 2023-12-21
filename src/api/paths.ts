@@ -35,6 +35,7 @@ const TESTS = {
   UPDATE: 'tests/{workspaceName}/{testId}',
   DELETE: 'tests/{workspaceName}/{testId}',
   GET_MY_TESTS: 'tests/{workspaceName}/myTests/{userId}',
+  SUBMIT_TEST: 'tests/{workspaceName}/doingTest/{userId}/{testId}',
 };
 
 const CATEGORIES = {
