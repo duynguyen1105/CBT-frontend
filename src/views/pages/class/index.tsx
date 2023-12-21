@@ -15,6 +15,7 @@ import { DataTable, TableType } from 'views/components/base/dataTable';
 import { ConfirmModal } from 'views/components/modal/confirmModal';
 import { UserInfoModal } from 'views/components/modal/userInfoModal';
 import Shell from 'views/layout/Shell';
+import { CreateClassModal } from 'views/components/modal/createClassModal';
 
 const { padding } = defaultTheme.layout;
 
@@ -41,7 +42,7 @@ const ClassPage: LayoutComponent = () => {
             color="blue"
             onClick={() => {
               setCreateModalOpened(true);
-              setClickedUser(user as UserType);
+              setClickedClass(user as UserType);
             }}
           >
             <IconEye size={16} />
@@ -50,7 +51,7 @@ const ClassPage: LayoutComponent = () => {
             color="red"
             onClick={() => {
               setDeleteModalOpened(true);
-              setClickedUser(user as UserType);
+              setClickedClass(user as UserType);
             }}
           >
             <IconTrash size={16} />
@@ -68,7 +69,7 @@ const ClassPage: LayoutComponent = () => {
   const [sort, setSort] = useState('');
   const [createModalOpened, setCreateModalOpened] = useState(false);
   const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
-  const [clickedUser, setClickedUser] = useState<UserType | null>(null);
+  const [clickedClass, setClickedClass] = useState<UserType | null>(null);
   const [users, setUsers] = useState<UserType[]>([]);
 
   const deleteSelectedRecords = (records: TableType[]) => {
@@ -192,24 +193,21 @@ const ClassPage: LayoutComponent = () => {
         handleDeleteSelectedRecords={deleteSelectedRecords}
         handleSortStatusChange={sortStatusChange}
       />
-      <UserInfoModal
-        opened={createModalOpened}
-        onClose={() => {
-          setCreateModalOpened(false);
-          setClickedUser(null);
-        }}
-        onSubmit={clickedUser ? editUser : createUser}
-        userData={clickedUser}
-      />
+      <CreateClassModal
+      opened={createModalOpened}
+      onClose={() => {
+        setCreateModalOpened(false);
+        setClickedClass(null);
+      }} />
       <ConfirmModal
         title="Delete user?"
         description="This action can not be undo! Are you sure you want to do this?"
         opened={deleteUserModalOpened}
         onClose={() => {
           setDeleteModalOpened(false);
-          setClickedUser(null);
+          setClickedClass(null);
         }}
-        onConfirm={() => clickedUser?._id && deleteUser(clickedUser._id)}
+        onConfirm={() => clickedClass?._id && deleteUser(clickedClass._id)}
       />
     </Box>
   );

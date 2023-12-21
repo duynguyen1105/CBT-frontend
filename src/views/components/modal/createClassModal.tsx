@@ -30,6 +30,7 @@ export const CreateClassModal = ({ opened, onClose }: Props) => {
   });
 
   const handleSubmit = async (values: ClassValues) => {
+    console.log({ values })
     navigate(PageURL.CREATE_CLASSES);
   };
 
@@ -43,6 +44,7 @@ export const CreateClassModal = ({ opened, onClose }: Props) => {
             valueFormat={DATE_FORMAT}
             label="Date start"
             placeholder="Date start"
+            popoverProps={{ withinPortal: true }}
             {...form.getInputProps('date_start')}
           />
           <DateInput
@@ -51,6 +53,7 @@ export const CreateClassModal = ({ opened, onClose }: Props) => {
             valueFormat={DATE_FORMAT}
             label="Date end"
             placeholder="Date end"
+            popoverProps={{ withinPortal: true }}
             {...form.getInputProps('date_end')}
           />
           <TextInput label="Class name" placeholder="Class name" {...form.getInputProps('name')} />

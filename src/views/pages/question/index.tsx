@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router';
 import { LayoutComponent } from 'types/layout';
 import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
 import { DataTable, TableType } from 'views/components/base/dataTable';
+import { ConfirmModal } from 'views/components/modal/confirmModal';
 import { PreviewQuestionModal } from 'views/components/modal/previewQuestion';
 import Shell from 'views/layout/Shell';
 
@@ -63,7 +64,10 @@ const Questions: LayoutComponent = () => {
               onClick={() => navigate(PageURL.QUESTIONS_DETAIL.replace(':question_id', record._id))}
             />
           </ActionIcon>
-          <ActionIcon color="red">
+          <ActionIcon color="red" onClick={() => {
+            setDeleteModalOpened(true);
+            setClickedQuestion(record as QuestionType)
+          }}>
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
@@ -79,7 +83,7 @@ const Questions: LayoutComponent = () => {
   const [totalRecord, setTotalRecord] = useState(1);
   const [sort, setSort] = useState('');
   const [createModalOpened, setCreateModalOpened] = useState(false);
-  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
+  const [deleteQuestionModalOpened, setDeleteModalOpened] = useState(false);
   const [clickedQuestion, setClickedQuestion] = useState<QuestionType | null>(null);
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [isPreviewModalOpened, setIsPreviewModalOpened] = useState(false);
@@ -217,6 +221,15 @@ const Questions: LayoutComponent = () => {
           setClickedQuestion(null);
         }}
       />
+      <ConfirmModal
+        title='Delete question?'
+        description='Are you sure you want to delete this question?'
+        opened={deleteQuestionModalOpened}
+        onClose={() => {
+          setDeleteModalOpened(false);
+          setClickedQuestion(null);
+        }}
+        onConfirm={() => clickedQuestion?._id && deleteQuestion(clickedQuestion?._id)} />
     </Box>
   );
 };

@@ -24,6 +24,9 @@ import avatar from 'assets/images/avatar.png';
 
 import NotificationContainer from './NotificationContainer';
 import UserCard from '../UserCard';
+import Cookies from 'js-cookie';
+import { COOKIE_AUTH_TOKEN, STORAGE_USER_INFO } from 'apps/constants';
+import { useNavigate } from 'react-router';
 
 const { header, padding, dropdown } = defaultTheme.layout;
 
@@ -58,6 +61,13 @@ const useStyle = createStyles<string, {}>((theme) => {
 
 const Header: FC = () => {
   const { classes } = useStyle({}, { name: 'LayoutHeader' });
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Cookies.remove(COOKIE_AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_USER_INFO)
+    navigate('/login')
+  }
 
   return (
     <MHeader height={header.height} className={classes.root}>
@@ -120,9 +130,9 @@ const Header: FC = () => {
               </Menu.Item>
               <Menu.Item
                 component="a"
-                href={PageURL.LOGOUT}
                 icon={<IconLogout size={20} />}
                 className={classes.menuItem}
+                onClick={handleLogout}
               >
                 <Text h={20}>Logout</Text>
               </Menu.Item>

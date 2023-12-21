@@ -1,8 +1,10 @@
+import { notifications } from '@mantine/notifications';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import PageURL from 'apps/PageURL';
 import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { LayoutComponent } from 'types/layout';
 import { QuestionType } from 'types/question';
 import QuestionForm from 'views/components/base/form/Question/FormQuestion';
@@ -11,6 +13,7 @@ import Shell from 'views/layout/Shell';
 const QuestionDetail: LayoutComponent = () => {
   const { workspace } = useGetUserInfo();
   const params = useParams();
+  const navigate = useNavigate();
   const questionId = params.question_id;
   const [questionDetail, setQuestionDetail] = useState<QuestionType | undefined>();
 
@@ -38,8 +41,18 @@ const QuestionDetail: LayoutComponent = () => {
         }
       );
 
-      if (res) {
+      if (res.data) {
         setQuestionDetail(res.data);
+        notifications.show({
+          message: 'Create question successfully',
+          color: 'green',
+        });
+        navigate(PageURL.QUESTIONS)
+      } else {
+        notifications.show({
+          message: res.message,
+          color: 'red',
+        });
       }
     }
   };
