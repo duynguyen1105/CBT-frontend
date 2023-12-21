@@ -42,7 +42,8 @@ const SelectMany = ({
   return (
     <Box p="md" id={`question-${questionNo}`}>
       <Flex gap={'sm'}>
-        {isCorrect ? <IconCheck color="green" /> : <IconX color="red" />}
+        {userAnswer !== undefined &&
+          (isCorrect ? <IconCheck color="green" /> : <IconX color="red" />)}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>

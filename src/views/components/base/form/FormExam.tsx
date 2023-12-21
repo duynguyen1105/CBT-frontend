@@ -24,10 +24,10 @@ type Props = {
   exam: ExamType;
   isShowResult?: boolean;
   userAnswer?: any;
-  expired?: boolean
+  expired?: boolean;
 };
 
-const FormExam = ({ exam, isShowResult, userAnswer = [], expired }: Props) => {
+const FormExam = ({ exam, isShowResult, userAnswer, expired }: Props) => {
   const { workspace, _id } = useGetUserInfo();
   const { test_id } = useParams();
 
@@ -90,56 +90,75 @@ const FormExam = ({ exam, isShowResult, userAnswer = [], expired }: Props) => {
   };
 
   const handleSubmit = async (values: ExamResultType) => {
-    if (!test_id) return notifications.show({
-      message: 'Something went wrong',
-      color: 'red'
-    });
+    if (!test_id)
+      return notifications.show({
+        message: 'Something went wrong',
+        color: 'red',
+      });
 
     const res = await callApiWithAuth(
-      getApiPath(PATHS.TESTS.SUBMIT_TEST, { workspaceName: workspace, userId: _id, testId: test_id }),
-      'PUT', {
-      data: { values }
-    });
+      getApiPath(PATHS.TESTS.SUBMIT_TEST, {
+        workspaceName: workspace,
+        userId: _id,
+        testId: test_id,
+      }),
+      'PUT',
+      {
+        data: { values },
+      }
+    );
 
     if (res.ok) {
       notifications.show({
         message: 'Submit successfully',
-        color: 'green'
+        color: 'green',
       });
       window.location.assign(PageURL.MY_TESTS);
     } else {
       notifications.show({
         message: 'Submit failed',
-        color: 'red'
+        color: 'red',
       });
     }
-  }
+  };
 
   return (
     <>
-      {<Box pb={padding}>
-        <ExamResultFormProvider form={form}>
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            {exam.questions.map((question, idx) => (
-              <>
-                <div key={question._id}>{renderQuestion(question, idx + 1, userAnswer[idx] ?? '')}</div>
-              </>
-            ))}
+      {
+        <Box pb={padding}>
+          <ExamResultFormProvider form={form}>
+            <form onSubmit={form.onSubmit(handleSubmit)}>
+              {isShowResult && !!userAnswer && (
+                <Text align="center" fz="lg" color="cyan">
+                  {`Result: ${
+                    exam.questions
+                      .map((q, idx) => checkCorrectByType(q, userAnswer[idx]))
+                      .filter((item) => item).length
+                  } / ${exam.questions.length}`}
+                </Text>
+              )}
+              {exam.questions.map((question, idx) => (
+                <div key={question._id}>{renderQuestion(question, idx + 1, userAnswer?.[idx])}</div>
+              ))}
 
-            {!isShowResult && <Button type="submit">Submit</Button>}
-            <Modal
-              opened={expired ?? false}
-              onClose={() => { }}
-              withCloseButton={false}
-              closeOnClickOutside={false}
-              closeOnEscape={false}
-              title='Test is expired'>
-              <Text>This test has been expired!</Text>
-              <Button mt={10} component={Link} to={'/my-tests'}>Back to my tests</Button>
-            </Modal>
-          </form>
-        </ExamResultFormProvider>
-      </Box>}
+              {!isShowResult && <Button type="submit">Submit</Button>}
+              <Modal
+                opened={expired ?? false}
+                onClose={() => {}}
+                withCloseButton={false}
+                closeOnClickOutside={false}
+                closeOnEscape={false}
+                title="Test is expired"
+              >
+                <Text>This test has been expired!</Text>
+                <Button mt={10} component={Link} to={'/my-tests'}>
+                  Back to my tests
+                </Button>
+              </Modal>
+            </form>
+          </ExamResultFormProvider>
+        </Box>
+      }
     </>
   );
 };

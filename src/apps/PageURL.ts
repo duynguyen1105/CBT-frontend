@@ -19,6 +19,7 @@ const PageURL = {
   ERROR_404: '/error/404',
   ERROR_403: '/error/403',
   EXAM: '/exam/:test_id',
+  WORKSPACE: '/workspace',
 };
 
 export default PageURL;

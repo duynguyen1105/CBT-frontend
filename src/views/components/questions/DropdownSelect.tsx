@@ -78,7 +78,8 @@ const DropdownSelect = ({
   return (
     <Box p="md" id={`question-${questionNo}`}>
       <Flex gap="md">
-        {isCorrect ? <IconCheck color="green" /> : <IconX color="red" />}
+        {userAnswer !== undefined &&
+          (isCorrect ? <IconCheck color="green" /> : <IconX color="red" />)}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>

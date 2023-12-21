@@ -4,6 +4,7 @@ import Question from 'views/pages/question';
 import QuestionDetail from 'views/pages/question/QuestionDetail';
 import Test from 'views/pages/test';
 import Users from 'views/pages/users';
+import Workspace from 'views/pages/workspace';
 import ClassPage from '../views/pages/class';
 import ClassDetail from '../views/pages/class/ClassDetail';
 import MyTest from '../views/pages/myTests';
@@ -66,6 +67,10 @@ export const adminRoutes: RouteItem[] = [
   {
     path: PageURL.USERS,
     element: Users,
+  },
+  {
+    path: PageURL.WORKSPACE,
+    element: Workspace,
   },
 ];
 

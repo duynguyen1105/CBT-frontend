@@ -16,6 +16,7 @@ const CLASSES = {
 const WORKSPACES = {
   GET_LIST_CLASSES: 'workspaces/{workspace_id}/classes',
   CREATE_CLASS: 'workspaces/{workspace_id}/classes',
+  GET_DETAIL: 'workspaces/{workspaceName}',
 };
 
 const QUESTIONS = {
