@@ -1,10 +1,11 @@
-import { ActionIcon, Alert, Box, Group, Text, createStyles } from '@mantine/core';
+import { ActionIcon, Alert, Box, Flex, Text, createStyles } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
-import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
+import { IconAlertCircle, IconBulb, IconCheck, IconCircleCheck, IconX } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
 import { useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { ExamResultType, QuestionType } from 'types/question';
+import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
 
 const useStyle = createStyles<string, {}>(() => ({
   root: {
@@ -39,10 +40,17 @@ const DropdownSelect = ({
 
   for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
     const compAsHtml = ReactDOMServer.renderToStaticMarkup(
-      <select id={`select-${index}`} className={`question-${questionNo}-select`} value={userAnswer}>
+      <select
+        id={`select-${index}`}
+        className={`question-${questionNo}-select`}
+        value={userAnswer ?? undefined}
+        key={index}
+      >
         <option value="">--Choose your answer--</option>
-        {question.blankAnswer?.[index].map((answer: any) => (
-          <option value={answer.order}>{answer.content}</option>
+        {question.blankAnswer?.[index].map((answer: any, idx: number) => (
+          <option value={answer.order} key={idx}>
+            {answer.content}
+          </option>
         ))}
       </select>
     );
@@ -65,9 +73,12 @@ const DropdownSelect = ({
   }, []);
 
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
+  const isCorrect = userAnswer !== undefined && checkCorrectByType(question, userAnswer);
+
   return (
     <Box p="md" id={`question-${questionNo}`}>
-      <Group>
+      <Flex gap="md">
+        {isCorrect ? <IconCheck color="green" /> : <IconX color="red" />}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>
@@ -77,19 +88,20 @@ const DropdownSelect = ({
             <IconBulb size="1.125rem" />
           </ActionIcon>
         )}
-      </Group>
+      </Flex>
 
-      <Box my="md" classNames={classes.root}>
+      <Box my="md" className={classes.root}>
         <Box pl="sm" mt="sm">
           <div dangerouslySetInnerHTML={sanitizedData()} />
         </Box>
         {showFeedback &&
           question?.blankAnswer?.map((blnk, index) => (
-            <>
+            <Box key={index}>
               <Text size="sm" color="dark">{`Blank ${index + 1}`}</Text>
               {blnk.map((answer: any) =>
                 answer.isCorrect ? (
                   <Alert
+                    key={answer.order}
                     mt="sm"
                     icon={<IconCircleCheck size="1rem" />}
                     title={answer.content}
@@ -99,6 +111,7 @@ const DropdownSelect = ({
                   </Alert>
                 ) : (
                   <Alert
+                    key={answer.order}
                     mt="sm"
                     icon={<IconAlertCircle size="1rem" />}
                     title={answer.content}
@@ -108,7 +121,7 @@ const DropdownSelect = ({
                   </Alert>
                 )
               )}
-            </>
+            </Box>
           ))}
       </Box>
     </Box>

@@ -51,7 +51,7 @@ const FillInGap = ({ question, questionNo = 1, isShowFeedback }: DropdownSelectP
         )}
       </Group>
 
-      <Box my="md" classNames={classes.root}>
+      <Box my="md" className={classes.root}>
         <Box pl="sm" mt="sm">
           <div dangerouslySetInnerHTML={sanitizedData()} />
         </Box>
