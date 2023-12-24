@@ -10,6 +10,7 @@ import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
 import { DataTable, TableType } from './dataTable';
+import { AddQuestionsToTestModal } from '../modal/addQuestionsToTest';
 
 const { padding } = defaultTheme.layout;
 
@@ -43,6 +44,7 @@ function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
   const [totalRecord, setTotalRecord] = useState(1);
   const [sort, setSort] = useState('');
   const [questions, setQuestions] = useState<QuestionType[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const deleteSelectedRecords = (records: TableType[]) => {
     deleteQuestions(records.map((user) => user._id));
@@ -88,84 +90,31 @@ function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
   }, [search, page, sort]);
 
   return (
-    <Button
-      variant="outline"
-      color="green"
-      rightIcon={<IconCirclePlus size={20} />}
-      onClick={() =>
-        modals.open({
-          size: 'xl',
-          title: 'Add question',
-          children: (
-            <Box pb={padding}>
-              <DataTable
-                records={questions}
-                columns={columns}
-                page={page}
-                setPage={setPage}
-                totalRecord={totalRecord}
-                query={search}
-                isAdding
-                handleAddRecord={(records) => {
-                  onConfirm?.(records as QuestionType[]);
-                  modals.closeAll();
-                }}
-                setQuery={setSearch}
-                handleCreateNewRecord={() => null}
-                handleDeleteSelectedRecords={deleteSelectedRecords}
-                handleSortStatusChange={sortStatusChange}
-              />
-            </Box>
-          ),
-        })
-      }
-    >
-      Add More Question
-    </Button>
-    // <Menu shadow="md" width={200}>
-    //   <Menu.Target>
-
-    //   </Menu.Target>
-
-    //   <Menu.Dropdown>
-    //     <Menu.Label>Add new content</Menu.Label>
-    //     <Menu.Item icon={<IconInfoCircle size={20} />}>Description</Menu.Item>
-    //     <Menu.Item
-    //       icon={<IconQuestionMark size={20} />}
-    //       onClick={() =>
-    //         modals.open({
-    //           size: 'xl',
-    //           title: 'Add question',
-    //           children: (
-    //             <Box pb={padding}>
-    //               <DataTable
-    //                 records={questions}
-    //                 columns={columns}
-    //                 page={page}
-    //                 setPage={setPage}
-    //                 totalRecord={totalRecord}
-    //                 query={search}
-    //                 isAdding
-    //                 handleAddRecord={(records) => {
-    //                   console.log(records);
-    //                   modals.closeAll();
-    //                 }}
-    //                 setQuery={setSearch}
-    //                 handleCreateNewRecord={() => null}
-    //                 handleDeleteSelectedRecords={deleteSelectedRecords}
-    //                 handleSortStatusChange={sortStatusChange}
-    //               />
-    //             </Box>
-    //           ),
-    //           // onConfirm: () => console.log('Add question'),
-    //         })
-    //       }
-    //     >
-    //       Question
-    //     </Menu.Item>
-    //     <Menu.Item icon={<IconStack2 size={20} />}>Section</Menu.Item>
-    //   </Menu.Dropdown>
-    // </Menu>
+    <Box>
+      <Button
+        variant="outline"
+        color="green"
+        rightIcon={<IconCirclePlus size={20} />}
+        onClick={() => setIsOpenModal(true)}
+      >
+        Add More Question
+      </Button>
+      <AddQuestionsToTestModal
+        opened={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        onConfirm={(records) => {
+          onConfirm?.(records as QuestionType[]);
+        }}
+        questions={questions}
+        columns={columns}
+        page={page}
+        setPage={setPage}
+        search={search}
+        setSearch={setSearch}
+        totalRecord={totalRecord}
+        sortStatusChange={sortStatusChange}
+      />
+    </Box>
   );
 }
 

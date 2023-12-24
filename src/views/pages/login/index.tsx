@@ -124,7 +124,7 @@ const Login: LayoutComponent = () => {
         color: 'green',
       });
       setTimeout(() => {
-        navigate(PageURL.USERS);
+        navigate(userRole === 'USER' ? PageURL.MY_TESTS : PageURL.USERS);
       }, 2000);
     } else {
       notifications.show({

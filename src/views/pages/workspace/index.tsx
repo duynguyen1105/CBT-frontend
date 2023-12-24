@@ -75,21 +75,21 @@ const Workspace: LayoutComponent = () => {
     {
       label: 'Total users',
       stats: workspaceInfo.totalUsers,
-      progress: workspaceInfo.totalUsers / LIMIT.USERS,
+      progress: (workspaceInfo.totalUsers / LIMIT.USERS) * 100,
       color: 'teal',
       icon: IconUser,
     },
     {
       label: 'Total tests',
       stats: workspaceInfo.totalTests,
-      progress: workspaceInfo.totalTests / LIMIT.TESTS,
+      progress: (workspaceInfo.totalTests / LIMIT.TESTS) * 100,
       color: 'blue',
       icon: IconFileDescription,
     },
     {
       label: 'Total questions',
       stats: workspaceInfo.totalQuestions,
-      progress: workspaceInfo.totalQuestions / LIMIT.QUESTIONS,
+      progress: (workspaceInfo.totalQuestions / LIMIT.QUESTIONS) * 100,
       color: 'red',
       icon: IconStack2,
     },
@@ -227,14 +227,15 @@ const Workspace: LayoutComponent = () => {
       <Box my="sm">
         <Title order={3}>Overview</Title>
         <Box px={padding}>
+          <Text fz="lg" mt="md">
+            Total
+          </Text>
           <SimpleGrid cols={3} spacing="xl" mt="sm">
             {stats}
           </SimpleGrid>
-        </Box>
-      </Box>
-      <Box my="sm">
-        <Title order={3}>This month</Title>
-        <Box px={padding}>
+          <Text fz="lg" mt="md">
+            This month
+          </Text>
           <SimpleGrid cols={3} spacing="xl" mt="sm">
             {thisMonthStats}
           </SimpleGrid>

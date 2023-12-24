@@ -43,7 +43,11 @@ const DropdownSelect = ({
       <select
         id={`select-${index}`}
         className={`question-${questionNo}-select`}
-        value={userAnswer ?? undefined}
+        value={
+          userAnswer !== undefined
+            ? question.blankAnswer?.[index][Number(userAnswer[index])].order
+            : undefined
+        }
         key={index}
       >
         <option value="">--Choose your answer--</option>

@@ -55,7 +55,14 @@ export const DataTable = ({
   return (
     <Flex gap="lg" direction="column">
       {isNotCreateOrAdd ? null : isAdding && handleAddRecord ? (
-        <Flex gap={16} justify="flex-end">
+        <Flex gap={16} justify="space-between">
+          <TextInput
+            sx={{ flexBasis: '60%' }}
+            placeholder="Search here..."
+            icon={<IconSearch size={16} />}
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+          />
           <Button
             onClick={() => handleAddRecord(selectedRecords)}
             w="max-content"

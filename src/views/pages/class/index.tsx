@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Center, Group } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconEye, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
@@ -181,6 +181,9 @@ const ClassPage: LayoutComponent = () => {
 
   return (
     <Box pb={padding}>
+      <Text fw="bolder" mb="lg" fz="xl">
+        Classes
+      </Text>
       <DataTable
         records={users}
         columns={columns}

@@ -1,8 +1,11 @@
-import { ActionIcon, Alert, Box, Group, createStyles, Text } from '@mantine/core';
-import { IconAlertCircle, IconBulb, IconCircleCheck } from '@tabler/icons-react';
+import { ActionIcon, Alert, Box, Group, Text, createStyles } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
+import { IconAlertCircle, IconBulb, IconCheck, IconCircleCheck, IconX } from '@tabler/icons-react';
 import DOMPurify from 'dompurify';
-import { useState } from 'react';
-import { QuestionType } from 'types/question';
+import { useEffect, useState } from 'react';
+import { ExamResultType, QuestionType } from 'types/question';
+import ReactDOMServer from 'react-dom/server';
+import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
 
 const useStyle = createStyles<string, {}>(() => ({
   root: {
@@ -15,9 +18,17 @@ const useStyle = createStyles<string, {}>(() => ({
 interface DropdownSelectProps {
   question: QuestionType;
   questionNo?: number;
+  form?: UseFormReturnType<ExamResultType, (values: ExamResultType) => ExamResultType>;
   isShowFeedback?: boolean;
+  userAnswer?: any;
 }
-const FillInGap = ({ question, questionNo = 1, isShowFeedback }: DropdownSelectProps) => {
+const FillInGap = ({
+  question,
+  questionNo = 1,
+  form,
+  isShowFeedback,
+  userAnswer,
+}: DropdownSelectProps) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const { classes } = useStyle({}, { name: 'FillInGap' });
   const handleFeedback = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,20 +37,45 @@ const FillInGap = ({ question, questionNo = 1, isShowFeedback }: DropdownSelectP
   };
 
   let newQuestionContent = question?.content;
+  console.log(question.blankAnswer, userAnswer);
 
   for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
-    const selectAnswer = `<input id="input-${index}" name="input-${index}" />`;
-
-    newQuestionContent = newQuestionContent.replace(
-      `@fill-in-gap:answer:${index + 1}`,
-      selectAnswer
+    const compAsHtml = ReactDOMServer.renderToStaticMarkup(
+      <input
+        id={`input-${index}`}
+        name={`input-${index}`}
+        className={`question-${questionNo}-fillingap`}
+        value={userAnswer !== undefined ? userAnswer[index] : undefined}
+      />
     );
+    newQuestionContent = newQuestionContent.replace(`@fill-in-gap:answer:${index + 1}`, compAsHtml);
   }
 
+  useEffect(() => {
+    const selectEl = document.getElementsByClassName(`question-${questionNo}-fillingap`);
+
+    for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
+      const element = selectEl[index] as HTMLInputElement;
+
+      element.addEventListener('change', (event) => {
+        const selectedValue = (event.target as HTMLInputElement).value;
+        form?.setFieldValue(`answers.${questionNo - 1}.${index}`, selectedValue);
+      });
+    }
+  });
+
+  useEffect(() => {
+    form?.setFieldValue(`answers.${questionNo - 1}`, []);
+  }, []);
+
   const sanitizedData = () => ({ __html: DOMPurify.sanitize(newQuestionContent) });
+  const isCorrect = userAnswer !== undefined && checkCorrectByType(question, userAnswer);
+
   return (
     <Box p="md" id={`question-${questionNo}`}>
       <Group>
+        {userAnswer !== undefined &&
+          (isCorrect ? <IconCheck color="green" /> : <IconX color="red" />)}
         <Text size="md">{`Question ${questionNo} ${
           question?.title ? `: ${question?.title}` : ''
         }`}</Text>

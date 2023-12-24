@@ -1,5 +1,6 @@
 import { Button, Group, Modal, MultiSelect, PasswordInput, Select, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { ROLE } from 'apps/constants';
 import { useEffect } from 'react';
 import { UserType } from 'types/user';
 
@@ -59,7 +60,6 @@ export const UserInfoModal = ({ opened, userData, onClose, onSubmit }: Props) =>
           <PasswordInput
             placeholder="Password"
             label="Password"
-            // description="Password must include at least one letter, number and special character"
             withAsterisk
             {...form.getInputProps('password')}
           />
@@ -73,10 +73,10 @@ export const UserInfoModal = ({ opened, userData, onClose, onSubmit }: Props) =>
           placeholder="Gender"
           {...form.getInputProps('gender')}
         />
-        <MultiSelect
+        <Select
           data={[
-            { value: 'MALE', label: 'Male' },
-            { value: 'FEMALE', label: 'Female' },
+            { value: ROLE.ADMIN_WORKSPACE, label: 'Admin Workspace' },
+            { value: ROLE.USER, label: 'User' },
           ]}
           label="Role"
           placeholder="Role"

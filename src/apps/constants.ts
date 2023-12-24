@@ -83,6 +83,6 @@ export const QUESTION_ELEMENT_BY_TYPE = {
 
 export const LIMIT = {
   USERS: 100,
-  QUESTIONS: 500,
-  TESTS: 200,
+  QUESTIONS: 100,
+  TESTS: 50,
 };

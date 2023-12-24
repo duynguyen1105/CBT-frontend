@@ -1,4 +1,5 @@
-import { ActionIcon, Box, Center, Group } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Text } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
@@ -105,7 +106,7 @@ const Users: LayoutComponent = () => {
   };
 
   const createUser = async (userData: UserType) => {
-    const res = await callApiWithAuth(
+    const createUserRes = await callApiWithAuth(
       getApiPath(PATHS.USERS.REGISTER, { workspaceName: workspace }),
       'POST',
       {
@@ -113,18 +114,28 @@ const Users: LayoutComponent = () => {
       }
     );
 
-    if (res.ok) {
-      await fetchListUsers();
-      notifications.show({
-        message: 'Create user successfully',
-        color: 'green',
-      });
-      setCreateModalOpened(false);
-    } else {
-      notifications.show({
-        message: 'Create user failed',
-        color: 'red',
-      });
+    if (createUserRes.ok) {
+      const addUserRes = await callApiWithAuth(
+        getApiPath(PATHS.USERS.ADD_TO_WORKSPACE, { workspaceName: workspace }),
+        'POST',
+        {
+          data: { email: userData.email },
+        }
+      );
+
+      if (addUserRes.ok) {
+        await fetchListUsers();
+        notifications.show({
+          message: 'Create user successfully',
+          color: 'green',
+        });
+        setCreateModalOpened(false);
+      } else {
+        notifications.show({
+          message: 'Create user failed',
+          color: 'red',
+        });
+      }
     }
   };
 
@@ -172,6 +183,9 @@ const Users: LayoutComponent = () => {
 
   return (
     <Box pb={padding}>
+      <Text fw="bolder" mb="lg" fz="xl">
+        Users
+      </Text>
       <DataTable
         records={users}
         columns={columns}
@@ -183,6 +197,8 @@ const Users: LayoutComponent = () => {
         handleCreateNewRecord={() => setCreateModalOpened(true)}
         handleDeleteSelectedRecords={deleteSelectedRecords}
         handleSortStatusChange={sortStatusChange}
+        handleAddRecord={() => null}
+        isAdding
       />
       <UserInfoModal
         opened={createModalOpened}

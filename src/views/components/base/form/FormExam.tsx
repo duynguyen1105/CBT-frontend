@@ -2,21 +2,20 @@ import { Box, Button, Modal, Text } from '@mantine/core';
 
 import defaultTheme from 'apps/theme';
 
+import { notifications } from '@mantine/notifications';
+import { PATHS } from 'api/paths';
+import { callApiWithAuth, getApiPath } from 'api/utils';
+import PageURL from 'apps/PageURL';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { ExamResultType, ExamType, QUESTION_TYPE, QuestionType } from 'types/question';
 import DropdownSelect from 'views/components/questions/DropdownSelect';
 import FillInGap from 'views/components/questions/FillInGap';
 import SelectMany from 'views/components/questions/SelectMany';
 import SelectOne from 'views/components/questions/SelectOne';
-import { ExamResultFormProvider, useExamResultForm } from './Question/form-question-context';
 import { checkCorrectByType } from 'views/pages/myTests/checkCorrect';
-import { useGetUserInfo } from 'hooks/useGetUserInfo';
-import { useParams } from 'react-router';
-import { notifications } from '@mantine/notifications';
-import { callApiWithAuth, getApiPath } from 'api/utils';
-import { PATHS } from 'api/paths';
-import PageURL from 'apps/PageURL';
-import { useDisclosure } from '@mantine/hooks';
-import { Link } from 'react-router-dom';
+import { ExamResultFormProvider, useExamResultForm } from './Question/form-question-context';
 
 const { padding } = defaultTheme.layout;
 
@@ -52,7 +51,13 @@ const FormExam = ({ exam, isShowResult, userAnswer, expired }: Props) => {
         );
       case QUESTION_TYPE.FillInGap:
         return (
-          <FillInGap question={question} questionNo={questionNo} isShowFeedback={isShowResult} />
+          <FillInGap
+            question={question}
+            questionNo={questionNo}
+            form={form}
+            isShowFeedback={isShowResult}
+            userAnswer={userAnswer}
+          />
         );
       case QUESTION_TYPE.SelectMany:
         return (
@@ -104,7 +109,7 @@ const FormExam = ({ exam, isShowResult, userAnswer, expired }: Props) => {
       }),
       'PUT',
       {
-        data: { values },
+        data: values.answers,
       }
     );
 
@@ -113,7 +118,9 @@ const FormExam = ({ exam, isShowResult, userAnswer, expired }: Props) => {
         message: 'Submit successfully',
         color: 'green',
       });
-      window.location.assign(PageURL.MY_TESTS);
+      setTimeout(() => {
+        window.location.assign(PageURL.MY_TESTS);
+      }, 2000);
     } else {
       notifications.show({
         message: 'Submit failed',

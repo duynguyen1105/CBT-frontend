@@ -13,11 +13,11 @@ export interface NavItem {
   url: string;
   pattern?: RegExp | string;
   label: string;
+  roles: RoleType[];
   icon?: ReactNode;
   description?: string;
   rightIcon?: ReactNode;
   children?: NavItem[];
-  roles?: RoleType[];
 }
 
 export const primaryNavbar: NavItem[] = [
@@ -26,7 +26,7 @@ export const primaryNavbar: NavItem[] = [
     pattern: '/workspace',
     label: 'Workspace',
     icon: <IconHome size={20} strokeWidth={1} />,
-    roles: [ROLE.SUPER_ADMIN],
+    roles: [ROLE.SUPER_ADMIN, ROLE.ADMIN_WORKSPACE],
   },
   {
     url: '/users',
@@ -54,7 +54,7 @@ export const primaryNavbar: NavItem[] = [
     pattern: PageURL.MY_TESTS,
     label: 'My Tests',
     icon: <IconStack2 size={20} strokeWidth={1} />,
-    roles: [ROLE.USER],
+    roles: [ROLE.USER, ROLE.ADMIN_WORKSPACE],
   },
   {
     url: PageURL.CLASSES,
@@ -62,11 +62,5 @@ export const primaryNavbar: NavItem[] = [
     label: 'Classes',
     icon: <IconBrandWindows size={20} strokeWidth={1} />,
     roles: [ROLE.ADMIN_WORKSPACE],
-  },
-  {
-    url: '/exam',
-    pattern: '/exam',
-    label: 'Exam',
-    icon: <IconBrandWindows size={20} strokeWidth={1} />,
   },
 ];

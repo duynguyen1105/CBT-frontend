@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Center, Group } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
@@ -197,6 +197,9 @@ const Tests: LayoutComponent = () => {
 
   return (
     <Box pb={padding}>
+      <Text fw="bolder" mb="lg" fz="xl">
+        Tests
+      </Text>
       <DataTable
         records={tests}
         columns={columns}
