@@ -1,9 +1,8 @@
 import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
 import { Editor } from '@tiptap/react';
 // import ImageResize from 'tiptap-imagresize';
-import { ActionIcon, Box, createStyles, Text } from '@mantine/core';
-import { IconPhoto, IconTag } from '@tabler/icons-react';
-import { useCallback } from 'react';
+import { Box, createStyles, FileInput, Text } from '@mantine/core';
+import { IconMusic, IconPhoto, IconTag } from '@tabler/icons-react';
 import { QUESTION_TYPE } from 'types/question';
 
 interface RichTextEditorCustomProps {
@@ -17,6 +16,13 @@ const useStyle = createStyles<string, {}>((theme) => ({
   wrapper: {
     '.tiptap-image': {
       maxWidth: 400,
+    },
+  },
+  imageStyle: {
+    '.mantine-FileInput-input': {
+      border: 'none',
+      padding: 0,
+      width: '2.25rem',
     },
   },
 }));
@@ -60,13 +66,43 @@ const RichTextEditorCustom = (props: RichTextEditorCustomProps) => {
 
   const { editor, label, type, numberOfBlanks, setNumberOfBlanks } = props;
 
-  const addImage = useCallback(() => {
-    const url = window.prompt('Enter Image URL');
-
-    if (url) {
-      editor?.chain().focus().setImage({ src: url }).run();
+  const addImage = async (image: File) => {
+    const data = new FormData();
+    data.append('file', image);
+    data.append('upload_preset', 'ml_default');
+    try {
+      const response = await fetch('https://api.cloudinary.com/v1_1/dmeih1fl4/image/upload', {
+        method: 'POST',
+        body: data,
+      });
+      if (response.ok) {
+        const { url } = await response.json();
+        editor?.commands.insertContent(`<img src="${url}" />`);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, [editor]);
+  };
+
+  const addAudio = async (audio: File) => {
+    const data = new FormData();
+    data.append('file', audio);
+    data.append('upload_preset', 'ml_default');
+    try {
+      const response = await fetch('https://api.cloudinary.com/v1_1/dmeih1fl4/video/upload', {
+        method: 'POST',
+        body: data,
+      });
+      if (response.ok) {
+        const { url } = await response.json();
+        editor?.commands.insertContent(
+          `<audio controls><source src="${url}" type="audio/mpeg" /></audio>`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box className={classes.wrapper}>
@@ -116,9 +152,19 @@ const RichTextEditorCustom = (props: RichTextEditorCustomProps) => {
             <RichTextEditor.AlignRight />
           </RichTextEditor.ControlsGroup>
           <RichTextEditor.ControlsGroup>
-            <ActionIcon onClick={addImage}>
-              <IconPhoto size="2rem" strokeWidth={1.5} />
-            </ActionIcon>
+            <FileInput
+              className={classes.imageStyle}
+              icon={<IconPhoto size="26px" strokeWidth={1.5} />}
+              accept="image/*"
+              onChange={addImage}
+            />
+            <FileInput
+              className={classes.imageStyle}
+              icon={<IconMusic size="26px" strokeWidth={1.5} />}
+              accept="audio/mpeg3"
+              onChange={addAudio}
+              value={null}
+            />
           </RichTextEditor.ControlsGroup>
           {(type === QUESTION_TYPE.FillInGap || type === QUESTION_TYPE.DropdownSelect) && (
             <InsertAnswerControl

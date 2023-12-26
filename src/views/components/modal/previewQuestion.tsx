@@ -1,9 +1,9 @@
-import { Modal } from '@mantine/core';
+import { Modal, createStyles } from '@mantine/core';
 import { QUESTION_TYPE, QuestionType } from 'types/question';
 import DropdownSelect from '../questions/DropdownSelect';
-import SelectOne from '../questions/SelectOne';
-import SelectMany from '../questions/SelectMany';
 import FillInGap from '../questions/FillInGap';
+import SelectMany from '../questions/SelectMany';
+import SelectOne from '../questions/SelectOne';
 
 type Props = {
   opened: boolean;
@@ -11,10 +11,20 @@ type Props = {
   onClose: () => void;
 };
 
+const useStyle = createStyles<string, {}>(() => ({
+  wrapper: {
+    img: {
+      maxWidth: 550,
+    },
+  },
+}));
+
 export const PreviewQuestionModal = ({ opened, data, onClose }: Props) => {
+  const { classes } = useStyle({}, { name: 'PreviewQuestion' });
+
   if (!data) return null;
 
-  const { type, title, answer, content } = data;
+  const { type } = data;
 
   const getComponent = () => {
     switch (type) {
@@ -32,29 +42,7 @@ export const PreviewQuestionModal = ({ opened, data, onClose }: Props) => {
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} centered size="lg">
-      {/* <Title>{title}</Title>
-      <TypographyStylesProvider>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
-      </TypographyStylesProvider>
-      {type === QUESTION_TYPE.SelectOne && (
-        <Radio.Group>
-          <Group>
-            {answer.map(({ content }) => (
-              <Radio label={content} value={content} />
-            ))}
-          </Group>
-        </Radio.Group>
-      )}
-      {type === QUESTION_TYPE.SelectMany && (
-        <Checkbox.Group>
-          <Group>
-            {answer.map(({ content }) => (
-              <Checkbox label={content} value={content} />
-            ))}
-          </Group>
-        </Checkbox.Group>
-      )} */}
+    <Modal opened={opened} onClose={onClose} centered size="lg" className={classes.wrapper}>
       {getComponent()}
     </Modal>
   );
