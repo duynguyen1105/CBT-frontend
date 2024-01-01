@@ -1,0 +1,42 @@
+[
+  {
+    "id": "be15d9bcejp1",
+    "title": "English Grammar Mastery",
+    "watched": 1234,
+    "spent": 15,
+    "rating": 4.8,
+    "avgRating": 4.75
+  },
+  {
+    "id": "be15d9bcejp2",
+    "title": "Business English Communication",
+    "watched": 987,
+    "spent": 20,
+    "rating": 4.5,
+    "avgRating": 4.6
+  },
+  {
+    "id": "be15d9bcejp3",
+    "title": "IELTS Exam Preparation",
+    "watched": 567,
+    "spent": 30,
+    "rating": 4.2,
+    "avgRating": 4.8
+  },
+  {
+    "id": "be15d9bcejp4",
+    "title": "English Vocabulary Expansion",
+    "watched": 789,
+    "spent": 25,
+    "rating": 4.6,
+    "avgRating": 4.7
+  },
+  {
+    "id": "be15d9bcejp5",
+    "title": "English Writing Skills",
+    "watched": 456,
+    "spent": 18,
+    "rating": 4.4,
+    "avgRating": 4.5
+  }
+]

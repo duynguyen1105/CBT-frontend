@@ -1,35 +1,58 @@
+import {
+  Box,
+  Center,
+  Flex,
+  Grid,
+  Group,
+  Paper,
+  RingProgress,
+  SimpleGrid,
+  Text,
+  TextInput,
+  ThemeIcon,
+  Title,
+  rem,
+} from '@mantine/core';
+import { useForm } from '@mantine/form';
+import {
+  IconArrowDownRight,
+  IconArrowUpRight,
+  IconCoin,
+  IconDiscount2,
+  IconFileDescription,
+  IconReceipt2,
+  IconStack2,
+  IconUser,
+  IconUserPlus,
+} from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
+import { LIMIT } from 'apps/constants';
 import defaultTheme from 'apps/theme';
 import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { useEffect, useState } from 'react';
 import { LayoutComponent } from 'types/layout';
 import { WorkspaceType } from 'types/workspace';
 import Shell from 'views/layout/Shell';
-import {
-  Box,
-  Title,
-  RingProgress,
-  Text,
-  SimpleGrid,
-  Paper,
-  Center,
-  Group,
-  rem,
-  Flex,
-  ThemeIcon,
-  TextInput,
-} from '@mantine/core';
-import {
-  IconArrowUpRight,
-  IconArrowDownRight,
-  IconUser,
-  IconFileDescription,
-  IconStack2,
-} from '@tabler/icons-react';
-import { LIMIT } from 'apps/constants';
-import { useForm } from '@mantine/form';
+import { BarChart } from './components/Barchart';
+import { DoughnutChart } from './components/DoughnutChart';
+import { MultilineChart } from './components/MultilineChart';
+import StatsGrid from './components/StatsGrid';
+import { DataTable } from 'mantine-datatable';
+import fakeDataTable from './fakeDataTable.json';
+import ChoroplethMap from './components/MapChart';
+
 const { padding } = defaultTheme.layout;
+
+const icons = {
+  up: IconArrowUpRight,
+  down: IconArrowDownRight,
+};
+
+const isCreatedThisMonth = (date: Date) => {
+  const now = new Date();
+  return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+};
 
 const Workspace: LayoutComponent = () => {
   const { workspace } = useGetUserInfo();
@@ -156,6 +179,13 @@ const Workspace: LayoutComponent = () => {
     );
   });
 
+  const statsGridData = [
+    { title: 'Total Students', icon: IconReceipt2, value: '13,456', diff: 34 },
+    { title: 'Total Courses', icon: IconUserPlus, value: '188', diff: -30 },
+    { title: 'Engaged in at least one course', icon: IconCoin, value: '4,145', diff: -13 },
+    { title: 'Attempted at least one exam', icon: IconDiscount2, value: '745', diff: 18 },
+  ];
+
   return (
     <Box pb={padding}>
       <Box>
@@ -228,6 +258,68 @@ const Workspace: LayoutComponent = () => {
           <SimpleGrid cols={3} spacing="xl" mt="sm">
             {thisMonthStats}
           </SimpleGrid>
+        </Box>
+      </Box>
+
+      {/* News Dashboard */}
+      <Box px={padding}>
+        <StatsGrid data={statsGridData} />
+        <SimpleGrid
+          breakpoints={[
+            { maxWidth: 'sm', cols: 1, spacing: 'sm' },
+            { cols: 2, spacing: 'lg' },
+          ]}
+          spacing="xl"
+          mt="sm"
+        >
+          <Box p={10} sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
+            <Title pb={10} order={6}>
+              Student Engagement in Each Continent
+            </Title>
+            <BarChart />
+          </Box>
+          <Box p={10} sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
+            <Title pb={10} order={6}>
+              Student Registration Vs Engagement Vs Content Watched
+            </Title>
+            <MultilineChart />
+          </Box>
+        </SimpleGrid>
+        <Grid gutter="xl" mt="sm">
+          <Grid.Col md={3}>
+            <Box
+              p={10}
+              sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem', height: '100%' }}
+            >
+              <Title pb={10} order={6}>
+                Utilisation %
+              </Title>
+              <DoughnutChart />
+            </Box>
+          </Grid.Col>
+          <Grid.Col md={9}>
+            <Box p={10} sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
+              <Title pb={10} order={6}>
+                Courses
+              </Title>
+              <DataTable
+                columns={[
+                  { accessor: 'title' },
+                  { accessor: 'watched' },
+                  { accessor: 'spent' },
+                  { accessor: 'rating' },
+                  { accessor: 'avgRating' },
+                ]}
+                records={fakeDataTable}
+              />
+            </Box>
+          </Grid.Col>
+        </Grid>
+        <Box p={10} mt="xl" sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
+          <Title pb={10} order={6}>
+            Country Wise Details
+          </Title>
+          <ChoroplethMap />
         </Box>
       </Box>
     </Box>
