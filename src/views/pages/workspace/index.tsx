@@ -31,35 +31,24 @@ import { LIMIT } from 'apps/constants';
 import { useForm } from '@mantine/form';
 const { padding } = defaultTheme.layout;
 
-const icons = {
-  up: IconArrowUpRight,
-  down: IconArrowDownRight,
-};
-
-const isCreatedThisMonth = (date: Date) => {
-  const now = new Date();
-  return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-};
-
 const Workspace: LayoutComponent = () => {
   const { workspace } = useGetUserInfo();
 
   const [workspaceInfo, setWorkspaceInfo] = useState<WorkspaceType>();
 
-  const fetchWorkspaceDetail = async () => {
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.WORKSPACES.GET_DETAIL, { workspaceName: workspace }),
-      'GET'
-    );
-
-    if (res?.ok) {
-      setWorkspaceInfo(res.data);
-    }
-  };
-
   useEffect(() => {
+    const fetchWorkspaceDetail = async () => {
+      const res = await callApiWithAuth(
+        getApiPath(PATHS.WORKSPACES.GET_DETAIL, { workspaceName: workspace }),
+        'GET'
+      );
+
+      if (res?.ok) {
+        setWorkspaceInfo(res.data);
+      }
+    };
     fetchWorkspaceDetail();
-  }, []);
+  }, [workspace]);
 
   const form = useForm<WorkspaceType>();
 

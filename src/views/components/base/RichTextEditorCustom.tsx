@@ -80,7 +80,7 @@ const RichTextEditorCustom = (props: RichTextEditorCustomProps) => {
         editor?.commands.insertContent(`<img src="${url}" />`);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -100,7 +100,7 @@ const RichTextEditorCustom = (props: RichTextEditorCustomProps) => {
         );
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

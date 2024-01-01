@@ -37,7 +37,6 @@ const FillInGap = ({
   };
 
   let newQuestionContent = question?.content;
-  console.log(question.blankAnswer, userAnswer);
 
   for (let index = 0; index < (question.blankAnswer?.length as number); index++) {
     const compAsHtml = ReactDOMServer.renderToStaticMarkup(

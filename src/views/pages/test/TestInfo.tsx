@@ -20,8 +20,6 @@ export const TestInfo = () => {
     );
 
     if (res.ok) {
-      console.log(res.data);
-
       setTestInfo(res.data);
     }
   };

@@ -26,6 +26,8 @@ const QUESTIONS = {
   GET_INFO: 'questions/{workspaceName}/{questionId}',
   UPDATE: 'questions/{workspaceName}/{questionId}',
   DELETE: 'questions/{workspaceName}/{questionId}',
+  RECOMMEND_QUESTIONS:
+    'questions/{workspaceName}/recommendQuestions?category={category}&label={label}&size={size}',
 };
 
 const TESTS = {

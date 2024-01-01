@@ -1,18 +1,14 @@
-import { Box, Button } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { notifications } from '@mantine/notifications';
+import { Box, Button, Menu } from '@mantine/core';
 import { IconCirclePlus } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
-import defaultTheme from 'apps/theme';
 import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { QUESTION_TYPE, QUESTION_TYPE_LABEL, QuestionType } from 'types/question';
-import { DataTable, TableType } from './dataTable';
 import { AddQuestionsToTestModal } from '../modal/addQuestionsToTest';
-
-const { padding } = defaultTheme.layout;
+import { TableType } from './dataTable';
+import { AutoAddQuestionsTest } from '../modal/autoAddQuestionsTest';
 
 type ModalAddTestContentProps = {
   onConfirm?: (data: QuestionType[]) => void;
@@ -44,64 +40,48 @@ function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
   const [totalRecord, setTotalRecord] = useState(1);
   const [sort, setSort] = useState('');
   const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const deleteSelectedRecords = (records: TableType[]) => {
-    deleteQuestions(records.map((user) => user._id));
-  };
+  const [isOpenAddManualModal, setIsOpenAddManualModal] = useState(false);
+  const [isOpenAutoAddModal, setIsOpenAutoAddModal] = useState(false);
 
   const sortStatusChange = (status: DataTableSortStatus) => {
     setSort(Object.values(status).join(','));
     setPage(1);
   };
 
-  const deleteQuestions = async (ids: string[]) => {
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.QUESTIONS.DELETE_MANY, { workspaceName: workspace }),
-      'DELETE',
-      {
-        data: {
-          ids,
-        },
-      }
-    );
-    if (res.ok) {
-      notifications.show({
-        message: 'Delete questions successfully',
-        color: 'green',
-      });
-    }
-  };
-
-  const fetchListQuestions = async () => {
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.QUESTIONS.GET_LIST, { workspaceName: workspace, search, page, sort }),
-      'GET'
-    );
-
-    if (res.ok) {
-      setQuestions(res.data);
-      setTotalRecord(res.total);
-    }
-  };
-
   useEffect(() => {
+    const fetchListQuestions = async () => {
+      const res = await callApiWithAuth(
+        getApiPath(PATHS.QUESTIONS.GET_LIST, { workspaceName: workspace, search, page, sort }),
+        'GET'
+      );
+
+      if (res.ok) {
+        setQuestions(res.data);
+        setTotalRecord(res.total);
+      }
+    };
     fetchListQuestions();
-  }, [search, page, sort]);
+  }, [search, page, sort, workspace]);
 
   return (
     <Box>
-      <Button
-        variant="outline"
-        color="green"
-        rightIcon={<IconCirclePlus size={20} />}
-        onClick={() => setIsOpenModal(true)}
-      >
-        Add More Question
-      </Button>
+      <Menu shadow="md" width={200}>
+        <Menu.Target>
+          <Button variant="outline" color="green" rightIcon={<IconCirclePlus strokeWidth={1.5} />}>
+            Add More Questions
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item onClick={() => setIsOpenAddManualModal(true)}>
+            Add questions manually
+          </Menu.Item>
+          <Menu.Item onClick={() => setIsOpenAutoAddModal(true)}>Auto generate questions</Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+
       <AddQuestionsToTestModal
-        opened={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+        opened={isOpenAddManualModal}
+        onClose={() => setIsOpenAddManualModal(false)}
         onConfirm={(records) => {
           onConfirm?.(records as QuestionType[]);
         }}
@@ -113,6 +93,14 @@ function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
         setSearch={setSearch}
         totalRecord={totalRecord}
         sortStatusChange={sortStatusChange}
+      />
+
+      <AutoAddQuestionsTest
+        opened={isOpenAutoAddModal}
+        onClose={() => setIsOpenAutoAddModal(false)}
+        onConfirm={(records) => {
+          onConfirm?.(records as QuestionType[]);
+        }}
       />
     </Box>
   );

@@ -30,7 +30,6 @@ export const CreateClassModal = ({ opened, onClose }: Props) => {
   });
 
   const handleSubmit = async (values: ClassValues) => {
-    console.log({ values })
     navigate(PageURL.CREATE_CLASSES);
   };
 

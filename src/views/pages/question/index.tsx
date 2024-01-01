@@ -64,10 +64,13 @@ const Questions: LayoutComponent = () => {
               onClick={() => navigate(PageURL.QUESTIONS_DETAIL.replace(':question_id', record._id))}
             />
           </ActionIcon>
-          <ActionIcon color="red" onClick={() => {
-            setDeleteModalOpened(true);
-            setClickedQuestion(record as QuestionType)
-          }}>
+          <ActionIcon
+            color="red"
+            onClick={() => {
+              setDeleteModalOpened(true);
+              setClickedQuestion(record as QuestionType);
+            }}
+          >
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
@@ -225,14 +228,15 @@ const Questions: LayoutComponent = () => {
         }}
       />
       <ConfirmModal
-        title='Delete question?'
-        description='Are you sure you want to delete this question?'
+        title="Delete question?"
+        description="Are you sure you want to delete this question?"
         opened={deleteQuestionModalOpened}
         onClose={() => {
           setDeleteModalOpened(false);
           setClickedQuestion(null);
         }}
-        onConfirm={() => clickedQuestion?._id && deleteQuestion(clickedQuestion?._id)} />
+        onConfirm={() => clickedQuestion?._id && deleteQuestion(clickedQuestion?._id)}
+      />
     </Box>
   );
 };

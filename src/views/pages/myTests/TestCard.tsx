@@ -98,7 +98,6 @@ export const TestCard = ({ test, status, userAnswer }: Props) => {
                     />
                     // <h1>haha</h1>
                   ),
-                  // onConfirm: () => console.log('Add question'),
                 })
               }
             >

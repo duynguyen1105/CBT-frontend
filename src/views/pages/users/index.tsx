@@ -1,5 +1,4 @@
 import { ActionIcon, Box, Center, Group, Text } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';

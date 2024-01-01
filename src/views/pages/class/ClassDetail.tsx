@@ -74,8 +74,6 @@ const ClassDetail: LayoutComponent = () => {
     );
 
     if (res) {
-      console.log(res.data);
-
       setClassDetail(res.data);
     }
   };
