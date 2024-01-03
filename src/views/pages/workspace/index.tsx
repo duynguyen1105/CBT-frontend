@@ -1,21 +1,16 @@
-import { Box, Button, Flex, Grid, SimpleGrid, TextInput, Title } from '@mantine/core';
+import { Box, Button, Flex, SimpleGrid, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
-import { IconBook, IconFileDescription, IconStack2, IconUser } from '@tabler/icons-react';
 import { PATHS } from 'api/paths';
 import { callApiWithAuth, getApiPath } from 'api/utils';
 import defaultTheme from 'apps/theme';
 import { useGetUserInfo } from 'hooks/useGetUserInfo';
-import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { LayoutComponent } from 'types/layout';
 import { WorkspaceType } from 'types/workspace';
 import Shell from 'views/layout/Shell';
 import { BarChart } from './components/Barchart';
-import { DoughnutChart } from './components/DoughnutChart';
 import { MultilineChart } from './components/MultilineChart';
-import StatsGrid from './components/StatsGrid';
-import fakeDataTable from './fakeDataTable.json';
 
 const { padding } = defaultTheme.layout;
 
@@ -71,13 +66,6 @@ const Workspace: LayoutComponent = () => {
 
   if (!workspaceInfo) return null;
 
-  const statsGridData = [
-    { title: 'Total Students', icon: IconUser, value: '13,456', diff: 34 },
-    { title: 'Total Courses', icon: IconFileDescription, value: '188', diff: -30 },
-    { title: 'Engaged in at least one course', icon: IconStack2, value: '4,145', diff: -13 },
-    { title: 'Attempted at least one exam', icon: IconBook, value: '745', diff: 18 },
-  ];
-
   return (
     <Box pb={padding}>
       <Box mb="lg">
@@ -120,7 +108,6 @@ const Workspace: LayoutComponent = () => {
       <Title order={3}>Workspace Overview</Title>
 
       <Box px={padding} mt="sm">
-        <StatsGrid data={statsGridData} />
         <SimpleGrid
           breakpoints={[
             { maxWidth: 'sm', cols: 1, spacing: 'sm' },

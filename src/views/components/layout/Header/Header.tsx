@@ -110,7 +110,7 @@ const Header: FC = () => {
                 <UserCard
                   image={avatar}
                   name={userInfo.name}
-                  secondary={userInfo.email}
+                  secondary={userInfo.role}
                   avatarProps={{
                     radius: 'xl',
                     size: 45,

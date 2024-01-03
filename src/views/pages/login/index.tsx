@@ -129,7 +129,7 @@ const Login: LayoutComponent = () => {
             ? PageURL.OVERVIEW
             : userRole === 'USER'
             ? PageURL.MY_TESTS
-            : PageURL.USERS
+            : PageURL.WORKSPACE
         );
       }, 2000);
     } else {
