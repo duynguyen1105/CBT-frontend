@@ -5,6 +5,9 @@ import {
   IconUsers,
   IconStack2,
   IconBrandWindows,
+  IconBook,
+  IconScanEye,
+  IconWorldWww,
 } from '@tabler/icons-react';
 import PageURL from './PageURL';
 import { ROLE, RoleType } from './constants';
@@ -22,11 +25,25 @@ export interface NavItem {
 
 export const primaryNavbar: NavItem[] = [
   {
+    url: PageURL.OVERVIEW,
+    pattern: PageURL.OVERVIEW,
+    label: 'Overview',
+    icon: <IconScanEye size={20} strokeWidth={1} />,
+    roles: [ROLE.SUPER_ADMIN],
+  },
+  {
+    url: PageURL.WORKSPACES,
+    pattern: PageURL.WORKSPACES,
+    label: 'Workspaces',
+    icon: <IconWorldWww size={20} strokeWidth={1} />,
+    roles: [ROLE.SUPER_ADMIN],
+  },
+  {
     url: '/workspace',
     pattern: '/workspace',
     label: 'Workspace',
     icon: <IconHome size={20} strokeWidth={1} />,
-    roles: [ROLE.SUPER_ADMIN, ROLE.ADMIN_WORKSPACE],
+    roles: [ROLE.ADMIN_WORKSPACE],
   },
   {
     url: '/users',
@@ -62,5 +79,12 @@ export const primaryNavbar: NavItem[] = [
     label: 'Classes',
     icon: <IconBrandWindows size={20} strokeWidth={1} />,
     roles: [ROLE.ADMIN_WORKSPACE],
+  },
+  {
+    url: PageURL.LESSONS,
+    pattern: PageURL.LESSONS,
+    label: 'Lessons',
+    icon: <IconBook size={20} strokeWidth={1} />,
+    roles: [ROLE.ADMIN_WORKSPACE, ROLE.USER],
   },
 ];

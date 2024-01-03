@@ -11,6 +11,8 @@ import { LayoutComponent } from 'types/layout';
 import Button from 'views/components/base/Button';
 import Fluid from 'views/layout/Fluid';
 import logo from '../../../assets/images/logo/cbtlogo.png';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
+import { useEffect } from 'react';
 
 const useStyle = createStyles<string, {}>(() => ({
   row: {
@@ -27,6 +29,11 @@ type UserLoginInfo = {
 const Home: LayoutComponent = () => {
   const { classes } = useStyle({}, { name: 'PageLogin' });
   const navigate = useNavigate();
+  const userInfo = useGetUserInfo();
+
+  useEffect(() => {
+    if (userInfo?.role === 'ADMIN_WORKSPACE') navigate(PageURL.USERS);
+  }, []);
 
   const form = useForm<UserLoginInfo>({
     initialValues: {
@@ -63,8 +70,17 @@ const Home: LayoutComponent = () => {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
-      <Flex className={classes.row} direction="column" align="center" justify="center">
-        <Image src={logo} style={{ width: '200px', margin: '50px' }} />
+      <Flex
+        className={classes.row}
+        direction="column"
+        align="center"
+        justify="center"
+        pos="relative"
+      >
+        <Image src={logo} style={{ width: '200px', margin: '50px' }} alt="logo" />
+        <Button pos="absolute" top="0" right="20px" mt="20px" onClick={() => navigate('/login')}>
+          Login
+        </Button>
         <Box w="50%">
           <Text fz="50px" color="#f5f6e4" lh="50px">
             Computer Based Test for Quicker and Cost-Effective Examination Management
@@ -74,7 +90,7 @@ const Home: LayoutComponent = () => {
             kept simple, and loved by millions of happy users.
           </Text>
           <Flex mt="30px" justify="center">
-            <Button color="orange" size="lg" mt="20px">
+            <Button color="#124267" size="lg" mt="20px" onClick={() => navigate('/register')}>
               Start Now
             </Button>
           </Flex>

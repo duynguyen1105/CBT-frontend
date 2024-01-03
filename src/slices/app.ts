@@ -1,8 +1,7 @@
 import { ColorScheme } from '@mantine/core';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { primaryNavbar, NavItem } from 'apps/navbar';
+import { NavItem, primaryNavbar } from 'apps/navbar';
 import theme from 'apps/theme';
-import { useGetUserInfo } from 'hooks/useGetUserInfo';
 import { UserType } from 'types/user';
 
 export interface AppNavbarVariant {
@@ -48,6 +47,9 @@ export const slice = createSlice({
     },
     toggleNavbar(state: AppState): void {
       state.navbar.collapsed = !state.navbar.collapsed;
+    },
+    changeNavbar(state: AppState, action: PayloadAction<AppNavbarVariant['primary']>): void {
+      state.navbar.primary = action.payload;
     },
     switchNavbar(state: AppState, action: PayloadAction<keyof AppNavbarVariant>) {
       state.navbar.show = action.payload;

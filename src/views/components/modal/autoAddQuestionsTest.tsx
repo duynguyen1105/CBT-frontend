@@ -40,7 +40,7 @@ type AutoGenOption = {
 const defaultAutoGenOption: AutoGenOption = {
   categories: [],
   labels: [],
-  number: 5,
+  number: 1,
 };
 
 export const AutoAddQuestionsTest = ({ opened, onClose, onConfirm }: Props) => {
@@ -132,7 +132,6 @@ export const AutoAddQuestionsTest = ({ opened, onClose, onConfirm }: Props) => {
               onChange={(value) => {
                 const newData = [...autoGenOptions];
                 newData[index].categories = value;
-                console.log(newData);
                 setAutoGenOptions(newData);
               }}
               value={item.categories}
@@ -147,8 +146,6 @@ export const AutoAddQuestionsTest = ({ opened, onClose, onConfirm }: Props) => {
               onChange={(value) => {
                 const newData = [...autoGenOptions];
                 newData[index].labels = value;
-                console.log(newData);
-
                 setAutoGenOptions(newData);
               }}
               value={item.labels}

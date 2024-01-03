@@ -15,24 +15,6 @@ type ModalAddTestContentProps = {
 };
 
 function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
-  const columns: DataTableColumn<TableType>[] = [
-    { accessor: '_id', sortable: true, title: 'ID' },
-    { accessor: 'title', sortable: true },
-    {
-      accessor: 'type',
-      width: '10%',
-      sortable: true,
-      render: (data) => QUESTION_TYPE_LABEL[data.type as QUESTION_TYPE],
-    },
-    { accessor: 'category', width: '10%', sortable: true, title: 'Category' },
-    {
-      accessor: 'label',
-      width: '10%',
-      sortable: true,
-      render: (data) => data.label?.join(', '),
-    },
-  ];
-
   const { workspace } = useGetUserInfo();
 
   const [page, setPage] = useState(1);
@@ -86,7 +68,6 @@ function ModalAddTestContent({ onConfirm }: ModalAddTestContentProps) {
           onConfirm?.(records as QuestionType[]);
         }}
         questions={questions}
-        columns={columns}
         page={page}
         setPage={setPage}
         search={search}

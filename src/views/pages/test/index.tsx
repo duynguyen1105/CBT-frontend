@@ -10,9 +10,8 @@ import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { LayoutComponent } from 'types/layout';
-import { QuestionType } from 'types/question';
 import { DataTable, TableType } from 'views/components/base/dataTable';
-import { PreviewQuestionModal } from 'views/components/modal/previewQuestion';
+import { ConfirmModal } from 'views/components/modal/confirmModal';
 import Shell from 'views/layout/Shell';
 import { TestType } from '../../../types/test';
 
@@ -63,7 +62,13 @@ const Tests: LayoutComponent = () => {
               onClick={() => navigate(PageURL.TESTS_DETAIL.replace(':test_id', record._id))}
             />
           </ActionIcon>
-          <ActionIcon color="red">
+          <ActionIcon
+            color="red"
+            onClick={() => {
+              setDeleteModalOpened(true);
+              setClickedTest(record as TestType);
+            }}
+          >
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
@@ -78,14 +83,12 @@ const Tests: LayoutComponent = () => {
   const [search, setSearch] = useState('');
   const [totalRecord, setTotalRecord] = useState(1);
   const [sort, setSort] = useState('');
-  const [createModalOpened, setCreateModalOpened] = useState(false);
-  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
-  const [clickedQuestion, setClickedQuestion] = useState<QuestionType | null>(null);
+  const [clickedTest, setClickedTest] = useState<TestType | null>(null);
   const [tests, setTests] = useState<TestType[]>([]);
-  const [isPreviewModalOpened, setIsPreviewModalOpened] = useState(false);
+  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
 
   const deleteSelectedRecords = (records: TableType[]) => {
-    deleteQuestions(records.map((user) => user._id));
+    deleteTests(records.map((user) => user._id));
   };
 
   const sortStatusChange = (status: DataTableSortStatus) => {
@@ -95,7 +98,7 @@ const Tests: LayoutComponent = () => {
 
   const deleteTest = async (id: string) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.TESTS.DELETE, { workspaceName: workspace, questionId: id }),
+      getApiPath(PATHS.TESTS.DELETE, { workspaceName: workspace, testId: id }),
       'DELETE'
     );
     if (res.ok) {
@@ -104,12 +107,13 @@ const Tests: LayoutComponent = () => {
         message: 'Delete test successfully',
         color: 'green',
       });
+      setDeleteModalOpened(false);
     }
   };
 
-  const deleteQuestions = async (ids: string[]) => {
+  const deleteTests = async (ids: string[]) => {
     const res = await callApiWithAuth(
-      getApiPath(PATHS.QUESTIONS.DELETE_MANY, { workspaceName: workspace }),
+      getApiPath(PATHS.TESTS.DELETE_MANY, { workspaceName: workspace }),
       'DELETE',
       {
         data: {
@@ -122,56 +126,8 @@ const Tests: LayoutComponent = () => {
         message: 'Delete questions successfully',
         color: 'green',
       });
-    }
-  };
-
-  const createQuestion = async (question: QuestionType) => {
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.QUESTIONS.CREATE, { workspaceName: workspace }),
-      'POST',
-      {
-        data: question,
-      }
-    );
-
-    if (res.ok) {
+      setDeleteModalOpened(false);
       await fetchListTests();
-      notifications.show({
-        message: 'Create user successfully',
-        color: 'green',
-      });
-      setCreateModalOpened(false);
-    } else {
-      notifications.show({
-        message: 'Create user failed',
-        color: 'red',
-      });
-    }
-  };
-
-  const editQuestion = async (questionData: QuestionType) => {
-    if (!questionData?._id) return;
-
-    const res = await callApiWithAuth(
-      getApiPath(PATHS.USERS.UPDATE, { workspaceName: workspace, questionId: questionData._id }),
-      'PUT',
-      {
-        data: questionData,
-      }
-    );
-
-    if (res.ok) {
-      await fetchListTests();
-      notifications.show({
-        message: 'Create user successfully',
-        color: 'green',
-      });
-      setCreateModalOpened(false);
-    } else {
-      notifications.show({
-        message: 'Create user failed',
-        color: 'red',
-      });
     }
   };
 
@@ -212,13 +168,23 @@ const Tests: LayoutComponent = () => {
         handleDeleteSelectedRecords={deleteSelectedRecords}
         handleSortStatusChange={sortStatusChange}
       />
-      <PreviewQuestionModal
-        data={clickedQuestion}
+      {/* <PreviewQuestionModal
+        data={clickedTest}
         opened={isPreviewModalOpened}
         onClose={() => {
           setIsPreviewModalOpened(false);
-          setClickedQuestion(null);
+          setClickedTest(null);
         }}
+      /> */}
+      <ConfirmModal
+        title="Delete test?"
+        description="This action can not be undo! Are you sure you want to do this?"
+        opened={deleteUserModalOpened}
+        onClose={() => {
+          setDeleteModalOpened(false);
+          setClickedTest(null);
+        }}
+        onConfirm={() => clickedTest?._id && deleteTest(clickedTest._id)}
       />
     </Box>
   );

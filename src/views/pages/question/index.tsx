@@ -112,6 +112,8 @@ const Questions: LayoutComponent = () => {
         color: 'green',
       });
     }
+    setDeleteModalOpened(false);
+    setClickedQuestion(null);
   };
 
   const deleteQuestions = async (ids: string[]) => {

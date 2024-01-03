@@ -11,6 +11,8 @@ import StarterKit from '@tiptap/starter-kit';
 import { QUESTION_TYPE } from 'types/question';
 import RichTextEditorCustom from '../../RichTextEditorCustom';
 import { useQuestionFormContext } from './form-question-context';
+import { SourceNode, AudioNode } from './audio-extension';
+import { useEffect } from 'react';
 
 interface QuestionContentInputProps {
   label: string;
@@ -44,6 +46,8 @@ const QuestionContentInput = ({
       SubScript,
       Highlight,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      SourceNode,
+      AudioNode,
       Image.configure({
         inline: true,
         HTMLAttributes: {
@@ -59,9 +63,14 @@ const QuestionContentInput = ({
     },
     content: form.values.content,
     parseOptions: {
-      preserveWhitespace: false,
+      preserveWhitespace: 'full',
     },
   });
+
+  useEffect(() => {
+    editor?.commands.setContent(form.values.content, false, { preserveWhitespace: 'full' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.values.content]);
 
   return (
     <Box className={classes.wrapper}>

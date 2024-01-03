@@ -14,6 +14,7 @@ const CLASSES = {
 };
 
 const WORKSPACES = {
+  GET_ALL_WORKSPACES: 'workspaces?search={search}&page={page}&sort={sort}',
   GET_LIST_CLASSES: 'workspaces/{workspace_id}/classes',
   CREATE_CLASS: 'workspaces/{workspace_id}/classes',
   GET_DETAIL: 'workspaces/{workspaceName}',
@@ -53,6 +54,14 @@ const LABELS = {
   DELETE: 'labels/{workspaceName}/{id}',
 };
 
+const LESSONS = {
+  GET_LIST: 'lessons/{workspaceName}',
+  CREATE: 'lessons/{workspaceName}/createLesson',
+  DELETE: 'lessons/{workspaceName}/{lessonId}',
+  GET_INFO: 'lessons/{workspaceName}/{lessonId}',
+  UPDATE: 'lessons/{workspaceName}/{lessonId}',
+};
+
 export const PATHS = {
   USERS,
   WORKSPACES,
@@ -61,4 +70,5 @@ export const PATHS = {
   LABELS,
   TESTS,
   CLASSES,
+  LESSONS,
 };

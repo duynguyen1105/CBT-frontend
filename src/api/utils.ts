@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig, Method } from 'axios';
 import Cookies from 'js-cookie';
 import _formatString from 'string-format';
 
+// const BASE_API_URL = 'https://cbt-backend-jsoaw4arha-as.a.run.app/';
 const BASE_API_URL = 'http://localhost:5555/';
 
 const formatString = (...params: Parameters<typeof _formatString>) => {

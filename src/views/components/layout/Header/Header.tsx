@@ -11,7 +11,7 @@ import {
   Text,
 } from '@mantine/core';
 
-import { IconBell, IconLogout, IconSettings } from '@tabler/icons-react';
+import { IconBell, IconLogout, IconSettings, IconUser } from '@tabler/icons-react';
 
 import Image from 'views/components/base/Image';
 import Button from 'views/components/base/Button';
@@ -27,6 +27,7 @@ import UserCard from '../UserCard';
 import Cookies from 'js-cookie';
 import { COOKIE_AUTH_TOKEN, STORAGE_USER_INFO } from 'apps/constants';
 import { useNavigate } from 'react-router';
+import { useGetUserInfo } from 'hooks/useGetUserInfo';
 
 const { header, padding, dropdown } = defaultTheme.layout;
 
@@ -62,12 +63,13 @@ const useStyle = createStyles<string, {}>((theme) => {
 const Header: FC = () => {
   const { classes } = useStyle({}, { name: 'LayoutHeader' });
   const navigate = useNavigate();
+  const userInfo = useGetUserInfo();
 
   const handleLogout = () => {
     Cookies.remove(COOKIE_AUTH_TOKEN);
-    localStorage.removeItem(STORAGE_USER_INFO)
-    navigate('/login')
-  }
+    localStorage.removeItem(STORAGE_USER_INFO);
+    navigate('/login');
+  };
 
   return (
     <MHeader height={header.height} className={classes.root}>
@@ -107,8 +109,8 @@ const Header: FC = () => {
               <Menu.Item disabled>
                 <UserCard
                   image={avatar}
-                  name="Ken Nguyen"
-                  secondary="CBT Team"
+                  name={userInfo.name}
+                  secondary={userInfo.email}
                   avatarProps={{
                     radius: 'xl',
                     size: 45,
@@ -117,8 +119,8 @@ const Header: FC = () => {
               </Menu.Item>
               <Menu.Item
                 component="a"
-                href={PageURL.ACCOUNT_SETTING}
-                icon={<IconSettings size={20} />}
+                href={PageURL.PROFILE}
+                icon={<IconUser size={20} />}
                 className={classes.menuItem}
                 styles={{
                   icon: {
@@ -126,7 +128,7 @@ const Header: FC = () => {
                   },
                 }}
               >
-                <Text h={20}>Settings</Text>
+                <Text h={20}>Information</Text>
               </Menu.Item>
               <Menu.Item
                 component="a"

@@ -1,18 +1,19 @@
-import React from 'react';
+import { faker } from '@faker-js/faker';
+import { PATHS } from 'api/paths';
+import { callApiWithAuth } from 'api/utils';
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
+  LineOptions,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend,
-  LineOptions,
 } from 'chart.js';
+import { useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
-import { Box } from '@mantine/core';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -28,30 +29,54 @@ export const options = {
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+function getNearestMonths() {
+  const currentMonth = new Date().getMonth();
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const nearestMonths = [];
+  for (let i = 1; i <= 5; i++) {
+    const prevMonth = (currentMonth - i + 12) % 12;
+    nearestMonths.unshift(months[prevMonth]); // Unshift to add to the beginning of the array
+  }
+
+  return nearestMonths;
+}
 
 export const data = {
-  labels,
+  labels: getNearestMonths(),
   datasets: [
     {
-      label: 'Total Students',
-      data: labels.map(() => faker.number.int({ min: 0, max: 100 })),
+      label: 'Users',
+      data: getNearestMonths().map(() => faker.number.int({ min: 0, max: 10 })),
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
       cubicInterpolationMode: 'monotone' as LineOptions['cubicInterpolationMode'],
       tension: 0.4,
     },
     {
-      label: 'Total Students Engagement',
-      data: labels.map(() => faker.number.int({ min: 0, max: 100 })),
+      label: 'Questions',
+      data: getNearestMonths().map(() => faker.number.int({ min: 0, max: 10 })),
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       cubicInterpolationMode: 'monotone' as LineOptions['cubicInterpolationMode'],
       tension: 0.4,
     },
     {
-      label: 'Total Content Watched',
-      data: labels.map(() => faker.number.int({ min: 0, max: 100 })),
+      label: 'Tests',
+      data: getNearestMonths().map(() => faker.number.int({ min: 0, max: 10 })),
       borderColor: 'rgb(53, 162, 22)',
       backgroundColor: 'rgba(53, 162, 22, 0.5)',
       cubicInterpolationMode: 'monotone' as LineOptions['cubicInterpolationMode'],
@@ -61,5 +86,11 @@ export const data = {
 };
 
 export function MultilineChart() {
+  // useEffect(() => {
+  //   const getUsers = async () => {
+  //     const res = await callApiWithAuth(PATHS.)
+  //   }
+  // }, []);
+
   return <Line options={options} data={data} />;
 }

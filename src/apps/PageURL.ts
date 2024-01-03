@@ -1,6 +1,6 @@
 const PageURL = {
   BASE: '/',
-  ACCOUNT_SETTING: '/setting',
+  PROFILE: '/profile',
   LOGOUT: '/logout',
   CLASSES: '/classes',
   CLASS_DETAIL: '/classes/:class_id',
@@ -20,6 +20,10 @@ const PageURL = {
   ERROR_403: '/error/403',
   EXAM: '/exam/:test_id',
   WORKSPACE: '/workspace',
+  OVERVIEW: '/overview',
+  WORKSPACES: '/workspaces',
+  LESSONS: '/lessons',
+  LESSONS_DETAIL: '/lessons/:lesson_id',
 };
 
 export default PageURL;

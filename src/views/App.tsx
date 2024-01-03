@@ -3,18 +3,18 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import PageURL from 'apps/PageURL';
-import { adminRoutes, superAdminRoutes, userRoute } from 'apps/router';
+import { adminRoutes, superAdminRoutes, userRoutes } from 'apps/router';
 import store from 'store';
 
 import AuthContainer from './container/AuthContainer';
 import GuardContainer from './container/GuardContainer';
 import LayoutContainer from './container/LayoutContainer';
 import ThemeContainer from './container/ThemeContainer';
+import Error from './pages/error';
 import { ExamPage } from './pages/exam';
 import Home from './pages/home';
-import Register from './pages/register';
 import Login from './pages/login';
-import Error from './pages/error';
+import Register from './pages/register';
 
 function App() {
   return (
@@ -24,12 +24,19 @@ function App() {
           <BrowserRouter basename={PageURL.BASE}>
             <Routes>
               <Route element={<AuthContainer />}>
+                {userRoutes.map((route, index) => (
+                  <Route
+                    key={`user-${index}`}
+                    path={route.path}
+                    element={<LayoutContainer component={route.element} />}
+                  />
+                ))}
                 {superAdminRoutes.map((route, index) => (
                   <Route
                     key={`super-admin-${index}`}
                     path={route.path}
                     element={
-                      <GuardContainer routeRole="SUPER_ADMIN">
+                      <GuardContainer routeRole={['SUPER_ADMIN']}>
                         <LayoutContainer component={route.element} />
                       </GuardContainer>
                     }
@@ -40,17 +47,10 @@ function App() {
                     key={`admin-${index}`}
                     path={route.path}
                     element={
-                      <GuardContainer routeRole="ADMIN_WORKSPACE">
+                      <GuardContainer routeRole={['ADMIN_WORKSPACE']}>
                         <LayoutContainer component={route.element} />
                       </GuardContainer>
                     }
-                  />
-                ))}
-                {userRoute.map((route, index) => (
-                  <Route
-                    key={`user-${index}`}
-                    path={route.path}
-                    element={<LayoutContainer component={route.element} />}
                   />
                 ))}
                 <Route path="/exam/:test_id" element={<ExamPage />} />

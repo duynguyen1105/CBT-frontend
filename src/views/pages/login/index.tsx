@@ -124,7 +124,13 @@ const Login: LayoutComponent = () => {
         color: 'green',
       });
       setTimeout(() => {
-        navigate(userRole === 'USER' ? PageURL.MY_TESTS : PageURL.USERS);
+        navigate(
+          userRole === 'SUPER_ADMIN'
+            ? PageURL.OVERVIEW
+            : userRole === 'USER'
+            ? PageURL.MY_TESTS
+            : PageURL.USERS
+        );
       }, 2000);
     } else {
       notifications.show({

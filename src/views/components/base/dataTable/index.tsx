@@ -12,6 +12,7 @@ type Props<T> = {
   query: string;
   isAdding?: boolean;
   isNotCreateOrAdd?: boolean;
+  isNotCreateAndDelete?: boolean;
   setPage: (p: number) => void;
   setQuery: (q: string) => void;
   handleSortStatusChange: (status: DataTableSortStatus) => void;
@@ -32,6 +33,7 @@ export const DataTable = ({
   totalRecord,
   isAdding,
   isNotCreateOrAdd,
+  isNotCreateAndDelete,
   handleAddRecord,
   setPage,
   setQuery,
@@ -81,32 +83,36 @@ export const DataTable = ({
               value={query}
               onChange={(e) => setQuery(e.currentTarget.value)}
             />
-            <Button
-              w="max-content"
-              variant="outline"
-              leftIcon={<IconTrash size={16} />}
-              color="red"
-              disabled={!selectedRecords.length}
-              onClick={() => handleDeleteSelectedRecords(selectedRecords)}
-            >
-              <Text weight={400}>
-                {selectedRecords.length
-                  ? `Delete ${
-                      selectedRecords.length === 1
-                        ? 'one selected record'
-                        : `${selectedRecords.length} selected records`
-                    }`
-                  : 'Select records to delete'}
-              </Text>
-            </Button>
+            {!isNotCreateAndDelete && (
+              <Button
+                w="max-content"
+                variant="outline"
+                leftIcon={<IconTrash size={16} />}
+                color="red"
+                disabled={!selectedRecords.length}
+                onClick={() => handleDeleteSelectedRecords(selectedRecords)}
+              >
+                <Text weight={400}>
+                  {selectedRecords.length
+                    ? `Delete ${
+                        selectedRecords.length === 1
+                          ? 'one selected record'
+                          : `${selectedRecords.length} selected records`
+                      }`
+                    : 'Select records to delete'}
+                </Text>
+              </Button>
+            )}
           </Flex>
-          <Button
-            onClick={handleCreateNewRecord}
-            w="max-content"
-            leftIcon={<IconCirclePlus size={16} />}
-          >
-            Create
-          </Button>
+          {!isNotCreateAndDelete && (
+            <Button
+              onClick={handleCreateNewRecord}
+              w="max-content"
+              leftIcon={<IconCirclePlus size={16} />}
+            >
+              Create
+            </Button>
+          )}
         </Flex>
       )}
 

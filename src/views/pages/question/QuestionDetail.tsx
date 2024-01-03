@@ -16,9 +16,10 @@ const QuestionDetail: LayoutComponent = () => {
   const navigate = useNavigate();
   const questionId = params.question_id;
   const [questionDetail, setQuestionDetail] = useState<QuestionType | undefined>();
+  const isCreateMode = questionId === '-';
 
   useEffect(() => {
-    if (questionId !== '-') {
+    if (!isCreateMode) {
       fetchQuestionDetail(questionId!);
     }
   }, [questionId]);
@@ -32,6 +33,10 @@ const QuestionDetail: LayoutComponent = () => {
           data: question,
         }
       );
+      notifications.show({
+        message: 'Save question successfully',
+        color: 'green',
+      });
     } else {
       const res = await callApiWithAuth(
         getApiPath(PATHS.QUESTIONS.CREATE, { workspaceName: workspace }),
@@ -47,7 +52,7 @@ const QuestionDetail: LayoutComponent = () => {
           message: 'Create question successfully',
           color: 'green',
         });
-        navigate(PageURL.QUESTIONS)
+        navigate(PageURL.QUESTIONS);
       } else {
         notifications.show({
           message: res.message,
@@ -67,7 +72,13 @@ const QuestionDetail: LayoutComponent = () => {
       setQuestionDetail(res.data);
     }
   };
-  return <QuestionForm content={questionDetail} onSaveQuestion={handleSaveQuestion} />;
+  return (
+    <QuestionForm
+      isCreateMode={isCreateMode}
+      content={questionDetail}
+      onSaveQuestion={handleSaveQuestion}
+    />
+  );
 };
 
 QuestionDetail.layout = Shell;

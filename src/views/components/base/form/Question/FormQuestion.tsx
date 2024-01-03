@@ -10,17 +10,16 @@ import {
   NumberInput,
   SegmentedControl,
   Table,
+  Text,
   TextInput,
   createStyles,
   rem,
-  Text,
 } from '@mantine/core';
 import {
   IconBrandTelegram,
   IconCirclePlus,
   IconEye,
   IconForms,
-  IconMicrophone,
   IconPencil,
   IconPlaystationCircle,
   IconServer2,
@@ -55,11 +54,12 @@ const useStyle = createStyles<string, {}>(() => ({
 }));
 
 interface QuestionFormProps {
+  isCreateMode: boolean;
   content?: QuestionType;
   onSaveQuestion: (question: QuestionType) => Promise<void>;
 }
 const QuestionForm = (props: QuestionFormProps) => {
-  const { content, onSaveQuestion } = props;
+  const { isCreateMode, content, onSaveQuestion } = props;
   const { classes } = useStyle({}, { name: 'QuestionForm' });
   const [type, setType] = useState<QUESTION_TYPE | undefined>();
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
@@ -190,7 +190,7 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   const handleChangeType = (value: QUESTION_TYPE) => {
     setType(value);
-    form.setFieldValue('type', value);
+    // form.setFieldValue('type', value);
   };
 
   const handleAcceptChangeType = () => {
@@ -270,15 +270,15 @@ const QuestionForm = (props: QuestionFormProps) => {
                 ),
                 value: QUESTION_TYPE.Essay,
               },
-              {
-                label: (
-                  <Center>
-                    <IconMicrophone strokeWidth={1.5} />
-                    <Box ml={10}>Record</Box>
-                  </Center>
-                ),
-                value: QUESTION_TYPE.Record,
-              },
+              // {
+              //   label: (
+              //     <Center>
+              //       <IconMicrophone strokeWidth={1.5} />
+              //       <Box ml={10}>Record</Box>
+              //     </Center>
+              //   ),
+              //   value: QUESTION_TYPE.Record,
+              // },
             ]}
           />
 
@@ -556,7 +556,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                 Preview
               </Button>
               <Button type="submit" rightIcon={<IconBrandTelegram strokeWidth={1.5} />}>
-                Publish
+                {isCreateMode ? 'Publish' : 'Save'}
               </Button>
             </Group>
           </Box>
