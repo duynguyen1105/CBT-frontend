@@ -16,10 +16,13 @@ import { ConfirmModal } from 'views/components/modal/confirmModal';
 import { UserInfoModal } from 'views/components/modal/userInfoModal';
 import Shell from 'views/layout/Shell';
 import { CreateClassModal } from 'views/components/modal/createClassModal';
+import { useNavigate } from 'react-router';
+import PageURL from 'apps/PageURL';
 
 const { padding } = defaultTheme.layout;
 
 const ClassPage: LayoutComponent = () => {
+  const navigate = useNavigate();
   const columns: DataTableColumn<TableType>[] = [
     { accessor: '_id', width: '20%', sortable: true, title: 'ID' },
     { accessor: 'name', sortable: true, title: 'Class name' },
@@ -40,10 +43,7 @@ const ClassPage: LayoutComponent = () => {
         <Group spacing={4} position="center" noWrap>
           <ActionIcon
             color="blue"
-            onClick={() => {
-              setCreateModalOpened(true);
-              setClickedClass(user as UserType);
-            }}
+            onClick={() => navigate(PageURL.CLASS_DETAIL.replace(':class_id', user._id))}
           >
             <IconEye size={16} />
           </ActionIcon>
@@ -197,11 +197,12 @@ const ClassPage: LayoutComponent = () => {
         handleSortStatusChange={sortStatusChange}
       />
       <CreateClassModal
-      opened={createModalOpened}
-      onClose={() => {
-        setCreateModalOpened(false);
-        setClickedClass(null);
-      }} />
+        opened={createModalOpened}
+        onClose={() => {
+          setCreateModalOpened(false);
+          setClickedClass(null);
+        }}
+      />
       <ConfirmModal
         title="Delete user?"
         description="This action can not be undo! Are you sure you want to do this?"

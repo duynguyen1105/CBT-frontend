@@ -71,7 +71,7 @@ export const primaryNavbar: NavItem[] = [
     pattern: PageURL.MY_TESTS,
     label: 'My Tests',
     icon: <IconStack2 size={20} strokeWidth={1} />,
-    roles: [ROLE.USER, ROLE.ADMIN_WORKSPACE],
+    roles: [ROLE.USER],
   },
   {
     url: PageURL.CLASSES,

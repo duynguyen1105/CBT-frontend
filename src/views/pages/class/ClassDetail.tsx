@@ -86,8 +86,24 @@ const ClassDetail: LayoutComponent = () => {
     <Box>
       <Text fz={35}>Class Detail</Text>
       <Flex gap="xl">
-        <TextInput placeholder="Class name" label="Class name" withAsterisk />
-        <TextInput placeholder="Class name" label="Description" withAsterisk />
+        <TextInput
+          placeholder="Class name"
+          label="Class name"
+          withAsterisk
+          value={classDetail?.name}
+          onChange={(e) => {
+            setClassDetail({ ...classDetail, name: e.currentTarget.value } as ClassType);
+          }}
+        />
+        <TextInput
+          placeholder="Class name"
+          label="Description"
+          withAsterisk
+          value={classDetail?.description}
+          onChange={(e) => {
+            setClassDetail({ ...classDetail, description: e.currentTarget.value } as ClassType);
+          }}
+        />
       </Flex>
       <Box mt={20}>
         <Flex justify="space-between" mb={10}>

@@ -19,6 +19,7 @@ import Shell from 'views/layout/Shell';
 import { DoughnutChart } from '../workspace/components/DoughnutChart';
 import { MultilineChart } from '../workspace/components/MultilineChart';
 import StatsGrid from '../workspace/components/StatsGrid';
+import { BarChartVertical } from '../workspace/components/BarchartVertical';
 
 const { padding } = defaultTheme.layout;
 
@@ -73,10 +74,10 @@ const Overview: LayoutComponent = () => {
   }, [workspaceInfo]);
 
   const statsGridData = [
-    { title: 'Total Workspaces', icon: IconWorldWww, value: '13,456', diff: 34 },
-    { title: 'Total Users', icon: IconUser, value: '188', diff: -30 },
-    { title: 'Total Questions', icon: IconStack2, value: '4,145', diff: -13 },
-    { title: 'Total Tests', icon: IconBook, value: '745', diff: 18 },
+    { title: 'Total Workspaces', icon: IconWorldWww, value: '134', diff: 34 },
+    { title: 'Total Users', icon: IconUser, value: '18', diff: -30 },
+    { title: 'Total Questions', icon: IconStack2, value: '14', diff: -13 },
+    { title: 'Total Tests', icon: IconBook, value: '45', diff: 18 },
   ];
 
   return (
@@ -97,6 +98,7 @@ const Overview: LayoutComponent = () => {
             <Title pb={10} order={6}>
               Total Users, Questions and Tests
             </Title>
+            <BarChartVertical />
           </Box>
           <Box p={10} sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
             <Title pb={10} order={6}>
@@ -112,16 +114,9 @@ const Overview: LayoutComponent = () => {
               sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem', height: '100%' }}
             >
               <Title pb={10} order={6}>
-                Utilisation %
+                Gender %
               </Title>
               <DoughnutChart />
-            </Box>
-          </Grid.Col>
-          <Grid.Col md={9}>
-            <Box p={10} sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
-              <Title pb={10} order={6}>
-                Courses
-              </Title>
             </Box>
           </Grid.Col>
         </Grid>

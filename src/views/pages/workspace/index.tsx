@@ -148,36 +148,6 @@ const Workspace: LayoutComponent = () => {
             <MultilineChart />
           </Box>
         </SimpleGrid>
-        <Grid gutter="xl" mt="sm">
-          <Grid.Col md={3}>
-            <Box
-              p={10}
-              sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem', height: '100%' }}
-            >
-              <Title pb={10} order={6}>
-                Utilisation %
-              </Title>
-              <DoughnutChart />
-            </Box>
-          </Grid.Col>
-          <Grid.Col md={9}>
-            <Box p={10} sx={{ border: '1px solid #dee2e6', borderRadius: '0.5rem' }}>
-              <Title pb={10} order={6}>
-                Courses
-              </Title>
-              <DataTable
-                columns={[
-                  { accessor: 'title' },
-                  { accessor: 'watched' },
-                  { accessor: 'spent' },
-                  { accessor: 'rating' },
-                  { accessor: 'avgRating' },
-                ]}
-                records={fakeDataTable}
-              />
-            </Box>
-          </Grid.Col>
-        </Grid>
       </Box>
     </Box>
   );

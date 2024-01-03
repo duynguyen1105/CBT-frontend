@@ -92,10 +92,16 @@ export const AddQuestionsToTestModal = ({
         totalRecord={totalRecord}
         query={search}
         setQuery={setSearch}
-        isNotCreateAndDelete
+        // isNotCreateAndDelete
+        isAdding
         handleCreateNewRecord={() => null}
         handleDeleteSelectedRecords={() => null}
         handleSortStatusChange={sortStatusChange}
+        // isAdding
+        handleAddRecord={(records) => {
+          onConfirm?.(records as QuestionType[]);
+          onClose();
+        }}
       />
       <PreviewQuestionModal
         data={clickedQuestion}

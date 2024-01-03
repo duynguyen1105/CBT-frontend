@@ -43,7 +43,8 @@ const MyTest: LayoutComponent = () => {
               (test) =>
                 !!test.test &&
                 new Date(test.test.timeSetting.startTime) < new Date() &&
-                new Date(test.test.timeSetting.finishTime) > new Date()
+                new Date(test.test.timeSetting.finishTime) > new Date() &&
+                !test.userAnswer
             )
             .map((test) => (
               <TestCard test={test.test} status={TEST_STATUS.ONGOING} />
@@ -75,7 +76,9 @@ const MyTest: LayoutComponent = () => {
         <Flex align="center" wrap="wrap" gap="lg">
           {tests
             .filter(
-              (test) => !!test.test && new Date(test.test.timeSetting.finishTime) < new Date()
+              (test) =>
+                !!test.test &&
+                (new Date(test.test.timeSetting.finishTime) < new Date() || !!test.userAnswer)
             )
             .map((test) => (
               <TestCard

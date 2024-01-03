@@ -9,9 +9,10 @@ import { DataTableColumn, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import { LayoutComponent } from 'types/layout';
 import { UserType } from 'types/user';
+import { WorkspaceType } from 'types/workspace';
 import { DataTable, TableType } from 'views/components/base/dataTable';
 import { ConfirmModal } from 'views/components/modal/confirmModal';
-import { UserInfoModal } from 'views/components/modal/userInfoModal';
+import { WorkspaceInfoModal } from 'views/components/modal/workspaceInfoModal';
 import Shell from 'views/layout/Shell';
 
 const { padding } = defaultTheme.layout;
@@ -35,7 +36,7 @@ const Workspaces: LayoutComponent = () => {
             color="blue"
             onClick={() => {
               setCreateModalOpened(true);
-              setClickedUser(user as UserType);
+              setClickedWorkspace(user as WorkspaceType);
             }}
           >
             <IconEdit size={16} />
@@ -44,7 +45,7 @@ const Workspaces: LayoutComponent = () => {
             color="red"
             onClick={() => {
               setDeleteModalOpened(true);
-              setClickedUser(user as UserType);
+              setClickedWorkspace(user as WorkspaceType);
             }}
           >
             <IconTrash size={16} />
@@ -61,9 +62,9 @@ const Workspaces: LayoutComponent = () => {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('');
   const [createModalOpened, setCreateModalOpened] = useState(false);
-  const [deleteUserModalOpened, setDeleteModalOpened] = useState(false);
-  const [clickedUser, setClickedUser] = useState<UserType | null>(null);
-  const [workspaces, setWorkspaces] = useState<UserType[]>([]);
+  const [deleteWorkspaceModalOpened, setDeleteModalOpened] = useState(false);
+  const [clickedWorkspace, setClickedWorkspace] = useState<WorkspaceType | null>(null);
+  const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([]);
 
   const deleteSelectedRecords = (records: TableType[]) => {
     deleteUsers(records.map((user) => user._id));
@@ -106,41 +107,30 @@ const Workspaces: LayoutComponent = () => {
     }
   };
 
-  const createUser = async (userData: UserType) => {
-    const createUserRes = await callApiWithAuth(
-      getApiPath(PATHS.USERS.REGISTER, { workspaceName: workspace }),
+  const createWorkspace = async (workspaceData: WorkspaceType) => {
+    const createWorkspaceRes = await callApiWithAuth(
+      getApiPath(PATHS.WORKSPACES.CREATE_WORKSPACE),
       'POST',
       {
-        data: userData,
+        data: workspaceData,
       }
     );
-
-    if (createUserRes.ok) {
-      const addUserRes = await callApiWithAuth(
-        getApiPath(PATHS.USERS.ADD_TO_WORKSPACE, { workspaceName: workspace }),
-        'POST',
-        {
-          data: { email: userData.email },
-        }
-      );
-
-      if (addUserRes.ok) {
-        await fetchListWorkspaces();
-        notifications.show({
-          message: 'Create user successfully',
-          color: 'green',
-        });
-        setCreateModalOpened(false);
-      } else {
-        notifications.show({
-          message: 'Create user failed',
-          color: 'red',
-        });
-      }
+    if (createWorkspaceRes.ok) {
+      await fetchListWorkspaces();
+      notifications.show({
+        message: 'Create workspace successfully',
+        color: 'green',
+      });
+      setCreateModalOpened(false);
+    } else {
+      notifications.show({
+        message: 'Create user failed',
+        color: 'red',
+      });
     }
   };
 
-  const editUser = async (userData: UserType) => {
+  const editUser = async (userData: WorkspaceType) => {
     if (!userData?._id) return;
 
     const res = await callApiWithAuth(
@@ -202,27 +192,27 @@ const Workspaces: LayoutComponent = () => {
         handleCreateNewRecord={() => setCreateModalOpened(true)}
         handleDeleteSelectedRecords={deleteSelectedRecords}
         handleSortStatusChange={sortStatusChange}
-        handleAddRecord={() => null}
+        handleAddRecord={() => setCreateModalOpened(true)}
         isAdding
       />
-      <UserInfoModal
+      <WorkspaceInfoModal
         opened={createModalOpened}
         onClose={() => {
           setCreateModalOpened(false);
-          setClickedUser(null);
+          setClickedWorkspace(null);
         }}
-        onSubmit={clickedUser ? editUser : createUser}
-        userData={clickedUser}
+        onSubmit={clickedWorkspace ? editUser : createWorkspace}
+        workspaceData={clickedWorkspace}
       />
       <ConfirmModal
-        title="Delete user?"
+        title="Delete workspace?"
         description="This action can not be undo! Are you sure you want to do this?"
-        opened={deleteUserModalOpened}
+        opened={deleteWorkspaceModalOpened}
         onClose={() => {
           setDeleteModalOpened(false);
-          setClickedUser(null);
+          setClickedWorkspace(null);
         }}
-        onConfirm={() => clickedUser?._id && deleteUser(clickedUser._id)}
+        onConfirm={() => clickedWorkspace?._id && deleteUser(clickedWorkspace._id)}
       />
     </Box>
   );

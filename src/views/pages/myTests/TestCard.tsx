@@ -78,8 +78,8 @@ export const TestCard = ({ test, status, userAnswer }: Props) => {
             </Button>
           )}
           {status === TEST_STATUS.UPCOMING && (
-            <Button variant="light" color="teal" w={200}>
-              Join
+            <Button variant="light" color="teal" w={200} disabled>
+              Start
             </Button>
           )}
           {status === TEST_STATUS.FINISHED && (

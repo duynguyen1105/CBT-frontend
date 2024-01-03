@@ -66,7 +66,9 @@ const Lessons: LayoutComponent = () => {
                   <Group spacing={4} position="center" noWrap>
                     <ActionIcon
                       color="blue"
-                      onClick={() => navigate(PageURL.LESSONS.replace(':lesson_id', _id as string))}
+                      onClick={() =>
+                        navigate(PageURL.LESSONS_DETAIL.replace(':lesson_id', _id as string))
+                      }
                     >
                       <IconEdit size={16} />
                     </ActionIcon>

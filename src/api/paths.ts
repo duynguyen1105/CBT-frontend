@@ -15,6 +15,7 @@ const CLASSES = {
 
 const WORKSPACES = {
   GET_ALL_WORKSPACES: 'workspaces?search={search}&page={page}&sort={sort}',
+  CREATE_WORKSPACE: 'workspaces',
   GET_LIST_CLASSES: 'workspaces/{workspace_id}/classes',
   CREATE_CLASS: 'workspaces/{workspace_id}/classes',
   GET_DETAIL: 'workspaces/{workspaceName}',

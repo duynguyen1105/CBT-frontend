@@ -10,7 +10,7 @@ export const data = {
   responsive: true,
   datasets: [
     {
-      label: 'Utilisation',
+      label: 'Gender',
       data: [42, 58],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
