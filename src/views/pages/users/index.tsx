@@ -196,8 +196,6 @@ const Users: LayoutComponent = () => {
         handleCreateNewRecord={() => setCreateModalOpened(true)}
         handleDeleteSelectedRecords={deleteSelectedRecords}
         handleSortStatusChange={sortStatusChange}
-        handleAddRecord={() => null}
-        isAdding
       />
       <UserInfoModal
         opened={createModalOpened}
