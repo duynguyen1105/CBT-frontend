@@ -182,7 +182,13 @@ export const AutoAddQuestionsTest = ({ opened, onClose, onConfirm }: Props) => {
           color="green"
           rightIcon={<IconCirclePlus strokeWidth={1.5} />}
           onClick={() => {
-            setAutoGenOptions([...autoGenOptions, defaultAutoGenOption]);
+            const newOptions = [...autoGenOptions];
+            newOptions.push({
+              categories: [],
+              labels: [],
+              number: 1,
+            });
+            setAutoGenOptions(newOptions);
           }}
         >
           Add option
